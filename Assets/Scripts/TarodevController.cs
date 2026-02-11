@@ -23,6 +23,10 @@ namespace TarodevController
         private float _dashEndTime;
         private bool _dashAvailable = true;
 
+        private float _pogoWindowEndTime;
+        private bool _pogoAvailable;
+        //idk where else to put this variable tbh
+        [SerializeField] private float _pogoWindowDuration = 0.25f;
 
         public Vector2 Velocity => _rb.linearVelocity;
         public ScriptableStats Stats => _stats;
@@ -209,11 +213,24 @@ namespace TarodevController
 
         private void HandleJump()
         {
+            if (_pogoAvailable && _time > _pogoWindowEndTime)
+            {
+                _pogoAvailable = false;
+            }
+
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.linearVelocity.y > 0) _endedJumpEarly = true;
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            if (_grounded || CanUseCoyote)
+            {
+                ExecuteJump();
+            }
+            else if (_pogoAvailable && _time <= _pogoWindowEndTime)
+            {
+                ExecuteJump();
+                _pogoAvailable = false;
+            }
 
             _jumpToConsume = false;
         }
@@ -289,6 +306,19 @@ namespace TarodevController
         private void ApplyMovement() => _rb.linearVelocity = _frameVelocity;
 
         public bool DashAvailable => _dashAvailable;
+
+        public void ActivatePogoWindow()
+        {
+            _pogoAvailable = true;
+            _pogoWindowEndTime = _time + _pogoWindowDuration;
+
+            // If jump was buffered BEFORE pogo became active
+            if (HasBufferedJump)
+            {
+                ExecuteJump();
+                _pogoAvailable = false;
+            }
+        }
 
 #if UNITY_EDITOR
         private void OnValidate()

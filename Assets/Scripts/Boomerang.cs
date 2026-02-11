@@ -1,3 +1,4 @@
+using TarodevController;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
@@ -26,10 +27,15 @@ public class Boomerang : MonoBehaviour
     private bool isThrown = false;
     private bool hasDeflected = false;
 
+    private SpriteRenderer rangSprite;
+    private TrailRenderer rangTrail;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+        rangSprite = GetComponent<SpriteRenderer>();
+        rangTrail = GetComponent<TrailRenderer>();
 
         rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -38,6 +44,9 @@ public class Boomerang : MonoBehaviour
 
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
+
+        rangSprite.enabled = false;
+        rangTrail.enabled = false;
     }
 
     void Update()
@@ -114,6 +123,9 @@ public class Boomerang : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
 
         rb.linearVelocity = cachedDirection * throwPower;
+
+        rangSprite.enabled = true;
+        rangTrail.enabled = true;
     }
 
     Vector2 SnapTo8Directions(Vector2 dir)
@@ -155,6 +167,19 @@ public class Boomerang : MonoBehaviour
 
     void Catch()
     {
+        // Check pogo condition BEFORE resetting velocity
+        bool caughtFromBelow = false;
+
+        Vector2 boomerangVelocity = rb.linearVelocity;
+        float playerY = player.transform.position.y;
+        float boomerangY = transform.position.y;
+
+        // Was moving upward AND player was above?
+        if (boomerangVelocity.y > 0f && playerY > boomerangY)
+        {
+            caughtFromBelow = true;
+        }
+
         isThrown = false;
 
         rb.linearVelocity = Vector2.zero;
@@ -162,5 +187,18 @@ public class Boomerang : MonoBehaviour
 
         transform.position = player.transform.position;
         transform.parent = player.transform;
+
+        // Trigger pogo
+        if (caughtFromBelow)
+        {
+            PlayerController controller = player.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                controller.ActivatePogoWindow();
+            }
+        }
+
+        rangSprite.enabled = false;
+        rangTrail.enabled = false;
     }
 }
