@@ -5,14 +5,13 @@ using TarodevController;
 public class PlayerAnimator : MonoBehaviour
 {
     private Animator _anim;
-    private PlayerController _controller;
+    public PlayerController _controller;
 
     [SerializeField] Transform _visuals;
 
     private void Awake()
     {
         _anim = GetComponent<Animator>();
-        _controller = GetComponent<PlayerController>();
     }
 
     private void Update()

@@ -25,8 +25,7 @@ namespace TarodevController
 
 
         public Vector2 Velocity => _rb.linearVelocity;
-        public bool Grounded => _grounded;
-
+        public ScriptableStats Stats => _stats;
 
         #region Interface
 
@@ -96,6 +95,16 @@ namespace TarodevController
 
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
+        public bool Grounded => _grounded;
+
+        private void OnCollisionStay2D(Collision2D collision)
+        {
+            // Horror Code
+            if (_grounded)
+            {
+                if (_stats.DashRefreshOnGround) _dashAvailable = true;
+            }
+        }
 
         private void CheckCollisions()
         {
@@ -168,7 +177,12 @@ namespace TarodevController
             // If no input, dash in facing direction (based on last horizontal movement)
             if (inputDirection == Vector2.zero)
             {
-                inputDirection = new Vector2(Mathf.Sign(_frameVelocity.x != 0 ? _frameVelocity.x : 1), 0);
+                inputDirection = new Vector2(
+                    Mathf.Sign(_frameVelocity.x != 0 ? _frameVelocity.x : _facingDirection),
+                    0
+                );
+
+                Debug.Log(inputDirection);
             }
 
             _dashDirection = inputDirection.normalized;
@@ -218,10 +232,17 @@ namespace TarodevController
 
         #region Horizontal
 
+        private int _facingDirection = 1;
+
         private void HandleDirection()
         {
             // Skip direction handling during dash
             if (_isDashing) return;
+
+            if (_frameInput.Move.x != 0)
+            {
+                _facingDirection = (int)Mathf.Sign(_frameInput.Move.x);
+            }
 
             if (_frameInput.Move.x == 0)
             {
@@ -230,7 +251,11 @@ namespace TarodevController
             }
             else
             {
-                _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, _frameInput.Move.x * _stats.MaxSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+                _frameVelocity.x = Mathf.MoveTowards(
+                    _frameVelocity.x,
+                    _frameInput.Move.x * _stats.MaxSpeed,
+                    _stats.Acceleration * Time.fixedDeltaTime
+                );
             }
         }
 
