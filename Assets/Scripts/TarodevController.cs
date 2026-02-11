@@ -19,6 +19,9 @@ namespace TarodevController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        private Vector2 _dashDirection;
+        private float _dashEndTime;
+        private bool _dashAvailable = true;
 
 
         public Vector2 Velocity => _rb.linearVelocity;
@@ -55,7 +58,8 @@ namespace TarodevController
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
                 JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
-                Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
+                Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")),
+                DashDown = Input.GetKeyDown(KeyCode.LeftShift)
             };
 
             if (_stats.SnapInput)
@@ -69,12 +73,18 @@ namespace TarodevController
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
             }
+
+            if (_frameInput.DashDown)
+            {
+                _dashToConsume = true;
+            }
         }
 
         private void FixedUpdate()
         {
             CheckCollisions();
 
+            HandleDash();
             HandleJump();
             HandleDirection();
             HandleGravity();
@@ -105,6 +115,7 @@ namespace TarodevController
                 _coyoteUsable = true;
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
+                if (_stats.DashRefreshOnGround) _dashAvailable = true;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
             }
             // Left the Ground
@@ -120,6 +131,56 @@ namespace TarodevController
 
         #endregion
 
+
+        #region Dash
+
+        private bool _dashToConsume;
+        private bool _isDashing;
+
+        private void HandleDash()
+        {
+            // Update dash state
+            if (_time >= _dashEndTime)
+            {
+                if (_isDashing)
+                {
+                    // Preserve momentum from dash
+                    _frameVelocity *= _stats.DashMomentumRetention;
+                }
+                _isDashing = false;
+            }
+
+            if (!_dashToConsume || !_dashAvailable) 
+            {
+                _dashToConsume = false;
+                return;
+            }
+
+            ExecuteDash();
+            _dashToConsume = false;
+        }
+
+        private void ExecuteDash()
+        {
+            // Determine dash direction based on input
+            Vector2 inputDirection = _frameInput.Move;
+
+            // If no input, dash in facing direction (based on last horizontal movement)
+            if (inputDirection == Vector2.zero)
+            {
+                inputDirection = new Vector2(Mathf.Sign(_frameVelocity.x != 0 ? _frameVelocity.x : 1), 0);
+            }
+
+            _dashDirection = inputDirection.normalized;
+            _frameVelocity = _dashDirection * _stats.DashSpeed;
+            _isDashing = true;
+            _dashEndTime = _time + _stats.DashDuration;
+            _dashAvailable = false;
+        }
+
+        public bool IsDashing => _isDashing;
+
+        #endregion
 
         #region Jumping
 
@@ -159,6 +220,9 @@ namespace TarodevController
 
         private void HandleDirection()
         {
+            // Skip direction handling during dash
+            if (_isDashing) return;
+
             if (_frameInput.Move.x == 0)
             {
                 var deceleration = _grounded ? _stats.GroundDeceleration : _stats.AirDeceleration;
@@ -176,6 +240,13 @@ namespace TarodevController
 
         private void HandleGravity()
         {
+            // Reduce gravity during dash for better control
+            if (_isDashing)
+            {
+                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, 0, _stats.FallAcceleration * Time.fixedDeltaTime);
+                return;
+            }
+
             if (_grounded && _frameVelocity.y <= 0f)
             {
                 _frameVelocity.y = _stats.GroundingForce;
@@ -192,6 +263,8 @@ namespace TarodevController
 
         private void ApplyMovement() => _rb.linearVelocity = _frameVelocity;
 
+        public bool DashAvailable => _dashAvailable;
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -204,6 +277,7 @@ namespace TarodevController
     {
         public bool JumpDown;
         public bool JumpHeld;
+        public bool DashDown;
         public Vector2 Move;
     }
 

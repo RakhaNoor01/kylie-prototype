@@ -56,5 +56,21 @@ namespace TarodevController
 
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
+
+        [Header("DASH")]
+        [Tooltip("The speed of the dash")]
+        public float DashSpeed = 40;
+
+        [Tooltip("How long the dash lasts in seconds")]
+        public float DashDuration = 0.15f;
+
+        [Tooltip("Cooldown between dashes in seconds (0 for Celeste-like instant refresh)")]
+        public float DashCooldown = 0f;
+
+        [Tooltip("Percentage of dash speed preserved after dash ends")]
+        public float DashMomentumRetention = 0.3f;
+
+        [Tooltip("Whether the player gets a dash reset when touching the ground")]
+        public bool DashRefreshOnGround = true;
     }
 }
