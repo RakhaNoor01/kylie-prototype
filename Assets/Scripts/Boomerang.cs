@@ -15,8 +15,7 @@ public class Boomerang : MonoBehaviour
     public float distanceMult = 10f;
 
     [Header("Aiming")]
-    private bool isCharging = false;
-    private Vector2 cachedDirection;
+    public float slowDown = 0.25f;
 
     [Header("Visuals")]
     public GameObject directionIndicator;
@@ -29,6 +28,12 @@ public class Boomerang : MonoBehaviour
 
     private SpriteRenderer rangSprite;
     private TrailRenderer rangTrail;
+
+    private bool isCharging = false;
+    private Vector2 cachedDirection;
+
+    private float ogTime;
+    private float ogDelta;
 
     void Awake()
     {
@@ -47,6 +52,9 @@ public class Boomerang : MonoBehaviour
 
         rangSprite.enabled = false;
         rangTrail.enabled = false;
+
+        ogTime = Time.timeScale;
+        ogDelta = Time.fixedDeltaTime;
     }
 
     void Update()
@@ -77,6 +85,10 @@ public class Boomerang : MonoBehaviour
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 directionIndicator.transform.rotation = Quaternion.Euler(0, 0, angle);
             }
+
+            // Slow time down
+            Time.timeScale = slowDown;
+            Time.fixedDeltaTime = ogDelta*slowDown;
         }
 
         // Release to throw
@@ -86,6 +98,9 @@ public class Boomerang : MonoBehaviour
 
             if (directionIndicator != null)
                 directionIndicator.SetActive(false);
+
+            Time.timeScale = ogTime;
+            Time.fixedDeltaTime = ogDelta;
 
             Throw();
         }
