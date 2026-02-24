@@ -307,6 +307,50 @@ namespace TarodevController
 
         public bool DashAvailable => _dashAvailable;
 
+        /// <summary>
+        /// Immediately restores the ability to dash.  External systems (eg. pickups) can
+        /// call this to give the player another dash.
+        /// </summary>
+        public void RechargeDash()
+        {
+            _dashAvailable = true;
+        }
+
+        /// <summary>
+        /// Called by moving platforms (or other external movers) to apply additional
+        /// velocity to the controller for the duration of the frame.  This is used to
+        /// "fix" the player to a platform even though the controller overwrites the
+        /// rigidbody velocity each tick.
+        /// </summary>
+        /// <param name="externalVelocity">Velocity to add.</param>
+        public void AddPlatformVelocity(Vector2 externalVelocity)
+        {
+            _frameVelocity += externalVelocity;
+        }
+
+        /// <summary>
+        /// External systems (bounce pads, launchers, etc.) can call this to force a vertical
+        /// velocity on the player.  The implementation uses the same velocity field that the
+        /// controller's jump code does so that the gravity, coyote time, buffering, etc. all
+        /// continue to operate normally.
+        /// </summary>
+        /// <param name="strength">The y‑velocity to apply to the player.</param>
+        public void ApplyBounce(float strength)
+        {
+            // clear jump buffers / coyote so that the player isn't able to immediately
+            // double‑jump or perform other ground‑based tricks right after being thrown.
+            _endedJumpEarly = false;
+            _bufferedJumpUsable = false;
+            _coyoteUsable = false;
+
+            // make sure we treat the player as having just left the ground
+            _grounded = false;
+            _frameLeftGrounded = _time;
+
+            _frameVelocity.y = strength;
+            Jumped?.Invoke();
+        }
+
         public void ActivatePogoWindow()
         {
             _pogoAvailable = true;
@@ -342,5 +386,25 @@ namespace TarodevController
 
         public event Action Jumped;
         public Vector2 FrameInput { get; }
+
+        /// <summary>
+        /// Apply an immediate vertical velocity to the controller.  Implementations should
+        /// use their internal movement logic so that gravity/coyote/jump buffer etc. remain
+        /// consistent.
+        /// </summary>
+        /// <param name="strength">Y velocity to set (positive = up)</param>
+        public void ApplyBounce(float strength);
+
+        /// <summary>
+        /// Restores dash availability; picked up by dash recharge pickups.
+        /// </summary>
+        public void RechargeDash();
+
+        /// <summary>
+        /// Add an external velocity such as from a moving platform.  This is applied on
+        /// top of whatever the controller computes internally.
+        /// </summary>
+        /// <param name="externalVelocity">Horizontal/vertical velocity to add.</param>
+        public void AddPlatformVelocity(Vector2 externalVelocity);
     }
 }
