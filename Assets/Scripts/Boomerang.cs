@@ -13,12 +13,14 @@ public class Boomerang : MonoBehaviour
     public float returnLerpStrength = 1f;
     public float maxSpeed = 25f;
     public float distanceMult = 10f;
+    public float distMultDelayTime = 1f;
 
     [Header("Aiming")]
     public float slowDown = 0.25f;
 
     [Header("Visuals")]
     public GameObject directionIndicator;
+    public TeleportEffect tpeffect;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -34,6 +36,8 @@ public class Boomerang : MonoBehaviour
 
     private float ogTime;
     private float ogDelta;
+
+    private float distmulttimer;
 
     void Awake()
     {
@@ -59,7 +63,15 @@ public class Boomerang : MonoBehaviour
 
     void Update()
     {
-        if (isThrown) return;
+        // Teleport while thrown
+        if (isThrown)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                ICameToGoon();
+            }
+            return;
+        }
 
         // Start aiming
         if (Input.GetMouseButtonDown(0))
@@ -108,15 +120,26 @@ public class Boomerang : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Timer until distmult begins affecting the boomerang
+        if (distmulttimer < distMultDelayTime)
+        {
+            distmulttimer += Time.deltaTime;
+        }
+
         if (!isThrown) return;
 
         Vector2 toPlayer = player.transform.position - transform.position;
         float distance = toPlayer.magnitude;
         Vector2 direction = toPlayer.normalized;
 
-        // Stronger pull when closer
+        // Stronger pull when closer and distmult timer is up
         float distanceFactor = Mathf.Clamp01(1f / (distance + 0.1f));
-        float scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
+        float scaledSpeed = 1f;
+
+        if (distmulttimer > distMultDelayTime)
+        {
+            scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
+        }
 
         // Steer velocity toward player direction
         rb.linearVelocity = Vector2.Lerp(
@@ -141,6 +164,13 @@ public class Boomerang : MonoBehaviour
 
         rangSprite.enabled = true;
         rangTrail.enabled = true;
+
+        distmulttimer = 0;
+    }
+
+    void ICameToGoon()
+    {
+        player.gameObject.transform.position = transform.position;
     }
 
     Vector2 SnapTo8Directions(Vector2 dir)
