@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TarodevController;
 using UnityEngine;
 
@@ -170,7 +171,12 @@ public class Boomerang : MonoBehaviour
 
     void ICameToGoon()
     {
-        player.gameObject.transform.position = transform.position;
+        tpeffect.ToggleTrail(true);
+        player.gameObject.transform.DOMove(transform.position, 0.1f, false)
+            .OnComplete(() => {
+                tpeffect.ToggleTrail(false);
+                tpeffect.teleport();
+            });
     }
 
     Vector2 SnapTo8Directions(Vector2 dir)
