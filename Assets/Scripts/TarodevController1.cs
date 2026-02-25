@@ -22,6 +22,7 @@ namespace TarodevController
         private Vector2 _dashDirection;
         private float _dashEndTime;
         private bool _dashAvailable = true;
+        private MovablePlatform _groundedPlatform;
 
         private float _pogoWindowEndTime;
         private bool _pogoAvailable;
@@ -94,7 +95,6 @@ namespace TarodevController
 
             ApplyMovement();
         }
-
         #region Collisions
 
         private float _frameLeftGrounded = float.MinValue;
@@ -115,34 +115,61 @@ namespace TarodevController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            //bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            RaycastHit2D groundHit = Physics2D.CapsuleCast( _col.bounds.center, _col.size,_col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+
+            bool isGrounded = groundHit;
             bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
 
             // Landed on the Ground
-            if (!_grounded && groundHit)
+            if (!_grounded && isGrounded)
             {
                 _grounded = true;
+
                 _coyoteUsable = true;
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
+
                 if (_stats.DashRefreshOnGround) _dashAvailable = true;
+
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
             }
             // Left the Ground
-            else if (_grounded && !groundHit)
+            else if (_grounded && !isGrounded)
             {
                 _grounded = false;
                 _frameLeftGrounded = _time;
+
                 GroundedChanged?.Invoke(false, 0);
+            }
+
+            // Detect moving platform only if grounded
+            if (isGrounded)
+            {
+                _groundedPlatform = groundHit.collider.GetComponent<MovablePlatform>();
+            }
+            else
+            {
+                _groundedPlatform = null;
             }
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
         }
 
         #endregion
+
+
+        private void ApplyPlatformMovement()
+        {
+            if (_groundedPlatform == null) return;
+
+            Vector2 platformVelocity = _groundedPlatform.Delta / Time.deltaTime;
+
+            _frameVelocity += platformVelocity;
+        }
 
 
         #region Dash
@@ -303,7 +330,20 @@ namespace TarodevController
 
         #endregion
 
-        private void ApplyMovement() => _rb.linearVelocity = _frameVelocity;
+        private void ApplyMovement()
+        {
+            Vector2 finalVelocity = _frameVelocity;
+
+            if (_groundedPlatform != null)
+            {
+                Vector2 platformVelocity =
+                    _groundedPlatform.Delta / Time.fixedDeltaTime;
+
+                finalVelocity += platformVelocity;
+            }
+
+            _rb.linearVelocity = finalVelocity;
+        }
 
         public bool DashAvailable => _dashAvailable;
 
