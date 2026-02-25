@@ -40,6 +40,9 @@ public class Boomerang : MonoBehaviour
 
     private float distmulttimer;
 
+    private PlayerController imLowkTrolling;
+    private bool hasTped;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -60,10 +63,19 @@ public class Boomerang : MonoBehaviour
 
         ogTime = Time.timeScale;
         ogDelta = Time.fixedDeltaTime;
+
+        hasTped = false;
+
+        imLowkTrolling = player.GetComponent<PlayerController>();
     }
 
     void Update()
     {
+        if (imLowkTrolling.Grounded == true)
+        {
+            hasTped = false;
+        }
+
         // Teleport while thrown
         if (isThrown)
         {
@@ -102,6 +114,12 @@ public class Boomerang : MonoBehaviour
             // Slow time down
             Time.timeScale = slowDown;
             Time.fixedDeltaTime = ogDelta*slowDown;
+
+            imLowkTrolling.doWeDeserveDestruction = true;
+
+        } else
+        {
+            imLowkTrolling.doWeDeserveDestruction = false;
         }
 
         // Release to throw
@@ -171,12 +189,16 @@ public class Boomerang : MonoBehaviour
 
     void ICameToGoon()
     {
+        if (hasTped) return;
+
         tpeffect.ToggleTrail(true);
         player.gameObject.transform.DOMove(transform.position, 0.1f, false)
             .OnComplete(() => {
                 tpeffect.ToggleTrail(false);
                 tpeffect.teleport();
             });
+
+        hasTped = true;
     }
 
     Vector2 SnapTo8Directions(Vector2 dir)

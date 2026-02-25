@@ -19,13 +19,6 @@ public class TeleportEffect : MonoBehaviour
         StartCoroutine(dude());
     }
 
-    public void trail()
-    {
-        ToggleTrail(true);
-
-        StartCoroutine(buddy());
-    }
-
     IEnumerator dude()
     {
         yield return new WaitForSeconds(effectDuration);
@@ -33,13 +26,6 @@ public class TeleportEffect : MonoBehaviour
         teleportEffect.SetActive(false);
         teleportEffect.transform.position = player.transform.position;
         teleportEffect.transform.parent = player.transform;
-    }
-
-    IEnumerator buddy()
-    {
-        yield return new WaitForSeconds(trailDuration);
-
-        ToggleTrail(false);
     }
 
     public void ToggleTrail(bool state)
