@@ -1197,8 +1197,10 @@ MonoBehaviour:
   returnLerpStrength: 1.1
   maxSpeed: 30
   distanceMult: 1.2
+  distMultDelayTime: 1
   slowDown: 0.25
   directionIndicator: {fileID: 379566792}
+  tpeffect: {fileID: 0}
 --- !u!1 &498716098
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,7 +1437,7 @@ Transform:
   m_GameObject: {fileID: 501654379}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.4, y: -6.7, z: -0.53}
+  m_LocalPosition: {x: 24.35, y: -4.74, z: -0.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2250,6 +2252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.PlayerController
   _stats: {fileID: 11400000, guid: 9229fbd6fa80cf24c85008c8be4b6c34, type: 2}
   _pogoWindowDuration: 0.5
+  doWeDeserveDestruction: 0
 --- !u!70 &873666595
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
