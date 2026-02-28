@@ -7,10 +7,13 @@ public class BirbController : MonoBehaviour
     private bool isFlying = false;
 
     [Header("Fly Settings")]
-    public float flySpeedX = 3f;   // kecepatan horizontal
-    public float flySpeedY = 2f;   // kecepatan naik
-    public float waveAmplitude = 1f;  // besar gelombang naik turun
-    public float waveFrequency = 2f;  // kecepatan gelombang
+    public float flySpeedX = 3f;
+    public float flySpeedY = 2f; 
+    public float waveAmplitude = 1f;
+    public float waveFrequency = 2f;
+
+    [Header("Sleep Settings")]
+    public float sleepAnimOffset = -1f; // -1 = random, 0~1 = manual offset
 
     void Start()
     {
@@ -18,6 +21,10 @@ public class BirbController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        // Sleeping Bird Offset
+        float offset = sleepAnimOffset < 0f ? Random.Range(0f, 1f) : sleepAnimOffset;
+        animator.Play("birbidle", 0, offset);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -39,7 +46,7 @@ public class BirbController : MonoBehaviour
             isFlying = true;
             animator.SetBool("isFlying", true);
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-            rb.gravityScale = 0f; // gravity tetap 0 biar ga jatuh
+            rb.gravityScale = 0f;
         }
     }
 
@@ -47,11 +54,9 @@ public class BirbController : MonoBehaviour
     {
         if (!isFlying) return;
 
-        // Gerak horizontal + naik turun seperti burung terbang
         float verticalWave = Mathf.Sin(Time.time * waveFrequency) * waveAmplitude;
         rb.linearVelocity = new Vector2(-flySpeedX, flySpeedY + verticalWave);
 
-        // Hapus burung kalau udah keluar layar
         if (transform.position.x < -20f || transform.position.x > 20f)
             Destroy(gameObject);
     }

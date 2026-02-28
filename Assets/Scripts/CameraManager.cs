@@ -5,6 +5,8 @@ public class CameraManager : MonoBehaviour
     public float moveSpeed = 5f;
     private Vector3 targetPosition;
 
+    public event System.Action OnRoomChanged;
+
     void Start()
     {
         targetPosition = transform.position;
@@ -26,5 +28,8 @@ public class CameraManager : MonoBehaviour
             newPosition.y,
             transform.position.z
         );
+
+        // Trigger event → Dog akan lanjut jalan
+        OnRoomChanged?.Invoke();
     }
 }
