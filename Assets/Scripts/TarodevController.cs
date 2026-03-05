@@ -178,6 +178,13 @@ namespace TarodevController
 
         private void ExecuteDash()
         {
+            // disable any variable jump grav tweaks
+
+            _endedJumpEarly = true;
+            _bufferedJumpUsable = false;
+            _jumpToConsume = false;
+            _timeJumpWasPressed = float.MinValue;
+
             // Determine dash direction based on input
             Vector2 inputDirection = _frameInput.Move;
 
@@ -191,6 +198,9 @@ namespace TarodevController
 
                 Debug.Log(inputDirection);
             }
+
+            _coyoteUsable = false;
+                
 
             _dashDirection = inputDirection.normalized;
             _frameVelocity = _dashDirection * _stats.DashSpeed;
@@ -216,12 +226,18 @@ namespace TarodevController
 
         private void HandleJump()
         {
+            if (_isDashing)
+            {
+                _jumpToConsume = false;
+                return;
+            }
+
             if (_pogoAvailable && _time > _pogoWindowEndTime)
             {
                 _pogoAvailable = false;
             }
 
-            if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.linearVelocity.y > 0) _endedJumpEarly = true;
+            if (!_isDashing && !_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _frameVelocity.y > 0) _endedJumpEarly = true;
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
@@ -288,7 +304,8 @@ namespace TarodevController
             // Reduce gravity during dash for better control
             if (_isDashing)
             {
-                _frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, 0, _stats.FallAcceleration * Time.fixedDeltaTime);
+                //_frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, 0, _stats.FallAcceleration * Time.fixedDeltaTime);
+                //commented the stuff above, shouldnt do anything
                 return;
             }
 
