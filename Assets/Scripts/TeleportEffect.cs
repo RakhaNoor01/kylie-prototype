@@ -12,20 +12,20 @@ public class TeleportEffect : MonoBehaviour
 
     public void teleport()
     {
-        teleportEffect.SetActive(true);
-        teleportEffect.GetComponent<Animator>().Play("tpeffect");
-        teleportEffect.transform.parent = null;
+        var tpEffect = Instantiate(teleportEffect, transform);
 
-        StartCoroutine(dude());
+        tpEffect.SetActive(true);
+        tpEffect.GetComponent<Animator>().Play("tpeffect");
+        tpEffect.transform.parent = null;
+
+        StartCoroutine(dude(tpEffect));
     }
 
-    IEnumerator dude()
+    IEnumerator dude(GameObject test)
     {
         yield return new WaitForSeconds(effectDuration);
 
-        teleportEffect.SetActive(false);
-        teleportEffect.transform.position = player.transform.position;
-        teleportEffect.transform.parent = player.transform;
+        Destroy(test);
     }
 
     public void ToggleTrail(bool state)
