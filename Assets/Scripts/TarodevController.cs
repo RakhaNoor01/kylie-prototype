@@ -149,9 +149,12 @@ namespace TarodevController
 
         private bool _dashToConsume;
         private bool _isDashing;
+        public bool doWeDeserveDestruction;
 
         private void HandleDash()
         {
+            if (doWeDeserveDestruction) return;
+
             // Update dash state
             if (_time >= _dashEndTime)
             {

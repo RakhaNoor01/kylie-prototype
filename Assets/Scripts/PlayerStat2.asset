@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 226d03008ff2d1f4c82e55390c9610b7, type: 3}
-  m_Name: PlayerStat
+  m_Name: PlayerStat2
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.ScriptableStats
   PlayerLayer:
     serializedVersion: 2
@@ -24,14 +24,14 @@ MonoBehaviour:
   AirDeceleration: 30
   GroundingForce: -1.5
   GrounderDistance: 0.05
-  JumpPower: 10
+  JumpPower: 13
   MaxFallSpeed: 40
-  FallAcceleration: 25
+  FallAcceleration: 50
   JumpEndEarlyGravityModifier: 1
   CoyoteTime: 0.15
   JumpBuffer: 0.2
-  DashSpeed: 10
-  DashDuration: 0.02
+  DashSpeed: 20
+  DashDuration: 0.15
   DashCooldown: 1
   DashMomentumRetention: 1
   DashRefreshOnGround: 1
