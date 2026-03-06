@@ -177,6 +177,13 @@ namespace TarodevController
                 _grounded = false;
                 _frameLeftGrounded = _time;
 
+                // Momentum carry by adding the platform's velocity with the player's current framevelocity
+                if (_groundedPlatform != null)
+                {
+                    Vector2 platformVelocity = _groundedPlatform.Delta / Time.deltaTime;
+                    _frameVelocity += platformVelocity;
+                }
+
                 GroundedChanged?.Invoke(false, 0);
             }
 
