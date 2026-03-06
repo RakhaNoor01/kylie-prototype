@@ -16,8 +16,8 @@ public class CameraController : MonoBehaviour
 
     [Header("Clamp")]
     // Set by CameraCollider — clamps camera edges to these world-space bounds
-    [HideInInspector] public bool clampEnabled = false;
-    [HideInInspector] public Bounds clampBounds;
+    public bool clampEnabled = false;
+    public Bounds clampBounds;
 
     void LateUpdate()
     {
