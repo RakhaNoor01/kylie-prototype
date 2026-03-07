@@ -83,6 +83,8 @@ namespace TarodevController
             }
         }
 
+        public bool fuck;
+
         private void FixedUpdate()
         {
             CheckCollisions();
@@ -93,6 +95,8 @@ namespace TarodevController
             HandleGravity();
 
             ApplyMovement();
+
+            fuck = _grounded;
         }
 
         #region Collisions
