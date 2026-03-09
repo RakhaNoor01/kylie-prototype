@@ -1,6 +1,7 @@
 using DG.Tweening;
 using TarodevController;
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Boomerang : MonoBehaviour
@@ -54,6 +55,7 @@ public class Boomerang : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
 
         col.isTrigger = true;
+        col.enabled = false;
 
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
@@ -175,6 +177,7 @@ public class Boomerang : MonoBehaviour
     {
         isThrown = true;
         hasDeflected = false;
+        col.enabled = false;
 
         transform.parent = null;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -185,6 +188,13 @@ public class Boomerang : MonoBehaviour
         rangTrail.enabled = true;
 
         distmulttimer = 0;
+
+        StartCoroutine(FUCK());
+    }
+
+    private IEnumerator FUCK(){
+        yield return new WaitForSeconds(0.1f);
+        col.enabled = true;
     }
 
     void ICameToGoon()
@@ -218,6 +228,12 @@ public class Boomerang : MonoBehaviour
         if (other.gameObject == player)
         {
             Catch();
+            return;
+        }
+
+        // Skip deflection for breakable objects - they break but don't stop boomerang
+        if (other.gameObject.CompareTag("Solid Vine"))
+        {
             return;
         }
 
@@ -273,5 +289,6 @@ public class Boomerang : MonoBehaviour
 
         rangSprite.enabled = false;
         rangTrail.enabled = false;
+        col.enabled = false;
     }
 }
