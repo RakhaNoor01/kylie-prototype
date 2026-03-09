@@ -1,5 +1,8 @@
+// RoomManager.cs
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviour
 {
@@ -9,12 +12,13 @@ public class RoomManager : MonoBehaviour
     public Room firstRoom;
     public List<Room> allRooms = new List<Room>();
 
-    // The room the player is currently in
     public Room CurrentRoom { get; private set; }
+
+    // Tracks which room scenes are currently loaded
+    private readonly HashSet<string> loadedScenes = new HashSet<string>();
 
     void Awake()
     {
-        // slenderman: collect my rooms
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
@@ -24,44 +28,71 @@ public class RoomManager : MonoBehaviour
 
     void Start()
     {
-        //firstRoom takes priority if assigned, otherwise falls back to allRooms[0] as before.
         Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
         if (startRoom != null)
             LoadRoom(startRoom);
         else
-            foreach (var room in allRooms)
-                room.Unload();
+            StartCoroutine(UnloadAllCoroutine());
     }
 
-    /// <summary>Called by Room.OnTriggerEnter2D when the player steps into a room.</summary>
     public void EnterRoom(Room room)
     {
         if (room == CurrentRoom) return;
-
         CurrentRoom = room;
         LoadRoom(room);
     }
 
-    /// <summary>Enable a room and its adjacent rooms; unload everything else.</summary>
     public void LoadRoom(Room room)
     {
-        var shouldBeActive = new HashSet<Room> { room };
-        foreach (var adjacent in room.adjacentRooms)
-            if (adjacent != null)
-                shouldBeActive.Add(adjacent);
+        var shouldBeLoaded = new HashSet<string>();
 
-        foreach (var r in allRooms)
-        {
-            if (shouldBeActive.Contains(r)) r.Load();
-            else r.Unload();
-        }
+        if (!string.IsNullOrEmpty(room.roomScene.SceneName))
+            shouldBeLoaded.Add(room.roomScene.SceneName);
+
+        foreach (var adjacent in room.adjacentRooms)
+            if (adjacent != null && !string.IsNullOrEmpty(adjacent.roomScene.SceneName))
+                shouldBeLoaded.Add(adjacent.roomScene.SceneName);
+
+        StartCoroutine(SyncScenesCoroutine(shouldBeLoaded));
     }
 
-    /// <summary>Force-unload every room.</summary>
     public void UnloadAll()
     {
         CurrentRoom = null;
-        foreach (var room in allRooms)
-            room.Unload();
+        StartCoroutine(UnloadAllCoroutine());
+    }
+
+    private IEnumerator SyncScenesCoroutine(HashSet<string> shouldBeLoaded)
+    {
+        // Load scenes that should be active but aren't
+        foreach (var sceneName in shouldBeLoaded)
+        {
+            if (!loadedScenes.Contains(sceneName))
+            {
+                yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                loadedScenes.Add(sceneName);
+            }
+        }
+
+        // Unload scenes that are loaded but shouldn't be
+        var toUnload = new List<string>();
+        foreach (var sceneName in loadedScenes)
+            if (!shouldBeLoaded.Contains(sceneName))
+                toUnload.Add(sceneName);
+
+        foreach (var sceneName in toUnload)
+        {
+            yield return SceneManager.UnloadSceneAsync(sceneName);
+            loadedScenes.Remove(sceneName);
+        }
+    }
+
+    private IEnumerator UnloadAllCoroutine()
+    {
+        foreach (var sceneName in new List<string>(loadedScenes))
+        {
+            yield return SceneManager.UnloadSceneAsync(sceneName);
+        }
+        loadedScenes.Clear();
     }
 }
