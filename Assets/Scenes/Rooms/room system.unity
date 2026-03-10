@@ -385,7 +385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 350642684}
   - component: {fileID: 350642685}
-  m_Layer: 3
+  m_Layer: 8
   m_Name: boomerarrow_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1080,8 +1080,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00830941faf7eb2488d766aa66417bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SyncCamera
-  size: 0.2
-  texture: {fileID: 8400000, guid: dca88451968433f4fa5fb8600f429525, type: 2}
 --- !u!1 &590006631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,7 +1570,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 4
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -2331,15 +2329,15 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 2
-          outSlope: 2
+          inSlope: 0
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 1
-          value: 1
+          time: 0.96673584
+          value: 0.5
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -2384,15 +2382,15 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 0
-          outSlope: 0
+          inSlope: 2
+          outSlope: 2
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0.3799214
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -2479,7 +2477,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    separateAxes: 0
+    separateAxes: 1
   RotationModule:
     enabled: 0
     x:
@@ -11519,8 +11517,8 @@ Canvas:
   m_GameObject: {fileID: 1063621369}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 634913975}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -11530,7 +11528,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1719088111
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1063621373
