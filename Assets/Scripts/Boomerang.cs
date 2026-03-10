@@ -20,6 +20,9 @@ public class Boomerang : MonoBehaviour
     [Header("Aiming")]
     public float slowDown = 0.25f;
 
+    [Header("Teleport")]
+    public float tpSpeed = 0.1f;
+
     [Header("Visuals")]
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
@@ -43,6 +46,7 @@ public class Boomerang : MonoBehaviour
 
     private PlayerController imLowkTrolling;
     private bool hasTped;
+    private bool isTping;
 
     void Awake()
     {
@@ -73,20 +77,14 @@ public class Boomerang : MonoBehaviour
 
     void Update()
     {
-        if (imLowkTrolling.Grounded == true)
-        {
-            hasTped = false;
-        }
-
         // Teleport while thrown
-        if (isThrown)
+        if (isThrown && Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                ICameToGoon();
-            }
+            ICameToGoon();
             return;
         }
+
+        if (isThrown) return;
 
         // Start aiming
         if (Input.GetMouseButtonDown(0))
@@ -141,13 +139,18 @@ public class Boomerang : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (imLowkTrolling.Grounded == true && !isTping)
+        {
+            hasTped = false;
+        }
+
+        if (!isThrown) return;
+
         // Timer until distmult begins affecting the boomerang
         if (distmulttimer < distMultDelayTime)
         {
             distmulttimer += Time.deltaTime;
         }
-
-        if (!isThrown) return;
 
         Vector2 toPlayer = player.transform.position - transform.position;
         float distance = toPlayer.magnitude;
@@ -201,14 +204,19 @@ public class Boomerang : MonoBehaviour
     {
         if (hasTped) return;
 
+        hasTped = true;
+        isTping = true;
+
         tpeffect.ToggleTrail(true);
-        player.gameObject.transform.DOMove(transform.position, 0.1f, false)
+
+        float distance = Vector2.Distance(player.transform.position, transform.position);
+        float tweenDuration = distance * tpSpeed;
+        player.gameObject.transform.DOMove(transform.position, tweenDuration, false)
             .OnComplete(() => {
                 tpeffect.ToggleTrail(false);
                 tpeffect.teleport();
+                isTping = false;
             });
-
-        hasTped = true;
     }
 
     Vector2 SnapTo8Directions(Vector2 dir)
