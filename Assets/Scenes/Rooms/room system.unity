@@ -1068,6 +1068,7 @@ GameObject:
   - component: {fileID: 519603390}
   - component: {fileID: 519603393}
   - component: {fileID: 519603391}
+  - component: {fileID: 519603394}
   m_Layer: 0
   m_Name: Pixel Camera
   m_TagString: Untagged
@@ -1185,6 +1186,20 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &519603394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519603389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00830941faf7eb2488d766aa66417bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SyncCamera
+  size: 0.2
+  texture: {fileID: 8400000, guid: dca88451968433f4fa5fb8600f429525, type: 2}
 --- !u!1 &590006631
 GameObject:
   m_ObjectHideFlags: 0
