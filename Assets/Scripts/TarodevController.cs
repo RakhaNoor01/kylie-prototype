@@ -98,8 +98,6 @@ namespace TarodevController
             }
         }
 
-        public bool fuck;
-
         private void FixedUpdate()
         {
             CheckCollisions();
@@ -110,8 +108,6 @@ namespace TarodevController
             HandleGravity();
 
             ApplyMovement();
-
-            fuck = _grounded;
         }
 
         #region Collisions
@@ -238,6 +234,8 @@ namespace TarodevController
             _dashToConsume = false;
         }
 
+        [SerializeField] private DashEffect _dashEffect;
+
         private void ExecuteDash()
         {
             // disable any variable jump grav tweaks
@@ -260,12 +258,12 @@ namespace TarodevController
 
             _coyoteUsable = false;
 
-
             _dashDirection = inputDirection.normalized;
             _frameVelocity = _dashDirection * _stats.DashSpeed;
             _isDashing = true;
             _dashEndTime = _time + _stats.DashDuration;
             _dashAvailable = false;
+            _dashEffect.OnDash(_dashDirection);
         }
 
         public bool IsDashing => _isDashing;

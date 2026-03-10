@@ -33,7 +33,7 @@ public class Boomerang : MonoBehaviour
     private bool hasDeflected = false;
 
     private SpriteRenderer rangSprite;
-    private TrailRenderer rangTrail;
+    public TrailRenderer rangTrail;
 
     private bool isCharging = false;
     private Vector2 cachedDirection;
@@ -52,7 +52,6 @@ public class Boomerang : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         rangSprite = GetComponent<SpriteRenderer>();
-        rangTrail = GetComponent<TrailRenderer>();
 
         rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;

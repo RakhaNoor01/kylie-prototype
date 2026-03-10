@@ -4,8 +4,6 @@ public class SyncCamera : MonoBehaviour
 {
     private Camera mainCam;
     private Camera cam;
-    public float size = 0.2f;
-    public RenderTexture texture;
 
     private void Awake()
     {
