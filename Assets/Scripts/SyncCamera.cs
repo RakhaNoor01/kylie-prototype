@@ -9,6 +9,7 @@ public class SyncCamera : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         mainCam = Camera.main;
+        cam.clearFlags = CameraClearFlags.Depth;
     }
 
     void LateUpdate()
