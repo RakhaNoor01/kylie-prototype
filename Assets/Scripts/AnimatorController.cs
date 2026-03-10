@@ -1,25 +1,55 @@
 using UnityEngine;
 using TarodevController;
 
-[RequireComponent(typeof(Animator))]
 public class PlayerAnimator : MonoBehaviour
 {
     private Animator _anim;
-    public PlayerController _controller;
+    private bool _isDead;
 
     [SerializeField] Transform _visuals;
 
+    public PlayerController _controller;
+
     private void Awake()
     {
-        _anim = GetComponent<Animator>();
+        _anim = GetComponentInChildren<Animator>();
+        //_controller = GetComponent<PlayerController>();
     }
-
+    private void OnEnable()
+    {
+        // Make sure controller reference is valid after respawn
+        if (_controller == null)
+            _controller = GetComponent<PlayerController>();
+    }
+    public void SetController(PlayerController controller)
+    {
+        _controller = controller;
+    }
     private void Update()
     {
-        HandleAnimations();
+        if (_controller == null) return;
+        if (_isDead) return; // dead = skip animations
+
+        HandleAnimations(); // this reads velocity and sets animator
+    }
+    public void ResetDeath()
+    {
+        _isDead = false;
+        _anim.ResetTrigger("Dead");
+        _anim.SetBool("Respawn", true); // NEW parameter for Animator transitions
+        _anim.Play("Idle", 0, 0f);       // force Idle at time 0
+        _anim.Update(0f);                // flush Animator state immediately
     }
 
-    private void HandleAnimations()
+    public void PlayDeath()
+    {
+        Debug.Log("Death animation triggered!");
+        _isDead = true;
+        _anim.SetTrigger("Dead");
+        _anim.SetBool("Respawn", false);
+    }
+
+    public void HandleAnimations()
     {
         Vector2 velocity = _controller.Velocity;
         bool grounded = _controller.Grounded;

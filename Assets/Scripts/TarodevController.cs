@@ -22,6 +22,7 @@ namespace TarodevController
         private Vector2 _dashDirection;
         private float _dashEndTime;
         private bool _dashAvailable = true;
+        private PlayerKnockback _knockback;
 
         private float _pogoWindowEndTime;
         private bool _pogoAvailable;
@@ -43,8 +44,10 @@ namespace TarodevController
 
         private void Awake()
         {
+  
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
+            _knockback = GetComponent<PlayerKnockback>();
 
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
@@ -83,10 +86,15 @@ namespace TarodevController
             }
         }
 
-        public bool fuck;
+        public bool fuck;   
 
         private void FixedUpdate()
         {
+            if (_knockback != null && _knockback.IsKnockedBack())
+            {
+                return;
+            }
+
             CheckCollisions();
 
             HandleDash();
