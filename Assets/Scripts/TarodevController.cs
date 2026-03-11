@@ -263,7 +263,11 @@ namespace TarodevController
             _isDashing = true;
             _dashEndTime = _time + _stats.DashDuration;
             _dashAvailable = false;
-            _dashEffect.OnDash(_dashDirection);
+
+            if (_dashEffect != null)
+            {
+                _dashEffect.OnDash(_dashDirection);
+            }
         }
 
         public bool IsDashing => _isDashing;

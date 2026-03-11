@@ -20,7 +20,6 @@ public class DashEffect : MonoBehaviour
             var main = particle.main;
             main.startRotation = -angle * Mathf.Deg2Rad; // MainModule uses radians
 
-            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             particle.Play();
         }
     }
