@@ -157,7 +157,7 @@ public class Boomerang : MonoBehaviour
         float distanceFactor = Mathf.Clamp01(1f / (distance + 0.1f));
         float scaledSpeed = 1f;
 
-        if (distmulttimer > distMultDelayTime)
+        if (distmulttimer >= distMultDelayTime)
         {
             scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
         }
@@ -239,6 +239,7 @@ public class Boomerang : MonoBehaviour
     void Deflect(Collider2D other)
     {
         Vector2 toPlayer = (player.transform.position - transform.position).normalized;
+        distmulttimer = distMultDelayTime;
 
         // Keep current speed but redirect toward player
         float currentSpeed = rb.linearVelocity.magnitude;
