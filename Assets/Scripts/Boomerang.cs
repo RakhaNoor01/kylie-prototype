@@ -240,7 +240,7 @@ public class Boomerang : MonoBehaviour
         }
 
         // Skip deflection for breakable objects - they break but don't stop boomerang
-        if (other.gameObject.CompareTag("Solid Vine"))
+        if (other.gameObject.CompareTag("Breakable Vines"))
         {
             return;
         }
