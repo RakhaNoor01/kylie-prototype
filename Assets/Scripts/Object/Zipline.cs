@@ -1,7 +1,4 @@
-using DG.Tweening;
-using System.Collections;
 using TarodevController;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -37,7 +34,7 @@ public class Zipline : MonoBehaviour
 
     private void Update()
     {
-        if (Application.isPlaying || line != null) LineToSpline();
+        if (line != null && spline != null) LineToSpline();
     }
 
     private void LineToSpline()
@@ -60,6 +57,7 @@ public class Zipline : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
+        playerSplineAnim.NormalizedTime = 0f;
         playerSplineAnim.Container = spline;
         playerSplineAnim.MaxSpeed = speed;
         playerSplineAnim.Play();
