@@ -17,7 +17,8 @@ public class Zipline : MonoBehaviour
 
     private ScriptableStats stats;
     private float ogFallAccel;
-    private bool zippin;
+
+    private SplineAnimate playerSplineAnim;
 
     private void Awake()
     {
@@ -26,6 +27,9 @@ public class Zipline : MonoBehaviour
         var goog = FindFirstObjectByType<PlayerController>();
         if (goog != null)
         {
+            playerSplineAnim = goog.GetComponent<SplineAnimate>();
+            playerSplineAnim.Completed += StopZipline;
+
             stats = goog.Stats;
             ogFallAccel = stats.FallAcceleration;
         }
@@ -56,21 +60,15 @@ public class Zipline : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
-        zippin = true;
+        playerSplineAnim.Container = spline;
+        playerSplineAnim.MaxSpeed = speed;
+        playerSplineAnim.Play();
+        stats.FallAcceleration = 0f;
     }
 
-    private float GetSplineLength()
+    private void StopZipline()
     {
-        float length = 0f;
-        Vector3 prev = transform.TransformPoint(spline.EvaluatePosition(0f));
-
-        for (int i = 1; i <= resolution; i++)
-        {
-            Vector3 curr = transform.TransformPoint(spline.EvaluatePosition(i / resolution));
-            length += Vector3.Distance(prev, curr);
-            prev = curr;
-        }
-
-        return Mathf.Max(length, 0.001f);
+        stats.FallAcceleration = ogFallAccel;
+        playerSplineAnim.Container = null;
     }
 }
