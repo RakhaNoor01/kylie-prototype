@@ -8,6 +8,7 @@ public class Zipline : MonoBehaviour
 {
     public int resolution = 20;
     public float speed = 5f;
+    public ParticleSystem ziplineFx;
 
     private SplineContainer spline;
     private LineRenderer line;
@@ -30,6 +31,7 @@ public class Zipline : MonoBehaviour
             stats = goog.Stats;
             ogFallAccel = stats.FallAcceleration;
         }
+        ziplineFx.Stop();
     }
 
     private void Update()
@@ -62,11 +64,14 @@ public class Zipline : MonoBehaviour
         playerSplineAnim.MaxSpeed = speed;
         playerSplineAnim.Play();
         stats.FallAcceleration = 0f;
+
+        ziplineFx.Play();
     }
 
     private void StopZipline()
     {
-        stats.FallAcceleration = ogFallAccel;
         playerSplineAnim.Container = null;
+        stats.FallAcceleration = ogFallAccel;
+        ziplineFx.Stop();
     }
 }
