@@ -649,7 +649,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9117087471710887068, guid: b51b837bc38c88841bf7b1b47c992fbf, type: 3}
       propertyPath: m_Size.x
-      value: 1.4425716
+      value: 0.67088795
       objectReference: {fileID: 0}
     - target: {fileID: 9117087471710887068, guid: b51b837bc38c88841bf7b1b47c992fbf, type: 3}
       propertyPath: m_Size.y
@@ -657,7 +657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9117087471710887068, guid: b51b837bc38c88841bf7b1b47c992fbf, type: 3}
       propertyPath: m_Offset.x
-      value: 0.58910275
+      value: 0.2032609
       objectReference: {fileID: 0}
     - target: {fileID: 9117087471710887068, guid: b51b837bc38c88841bf7b1b47c992fbf, type: 3}
       propertyPath: m_Offset.y
@@ -7817,7 +7817,7 @@ GameObject:
   - component: {fileID: 621962785}
   - component: {fileID: 621962784}
   - component: {fileID: 621962786}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10555,6 +10555,13 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
   fuck: 0
+  _maxClingTime: 3
+  _wallCheckDistance: 0.4
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _wallSlideSpeed: 2
+  _wallCoyoteTime: 0.2
   doWeDeserveDestruction: 0
 --- !u!70 &873666595
 CapsuleCollider2D:
@@ -10590,8 +10597,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
+  m_Offset: {x: -0.01040339, y: -0.10097027}
+  m_Size: {x: 0.6268716, y: 0.85043716}
   m_Direction: 0
 --- !u!4 &873666597
 Transform:
@@ -10602,7 +10609,7 @@ Transform:
   m_GameObject: {fileID: 873666590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.637, y: -5.66, z: 0}
+  m_LocalPosition: {x: -7.637, y: -5.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace TarodevController
@@ -26,6 +26,7 @@ namespace TarodevController
 
         private float _pogoWindowEndTime;
         private bool _pogoAvailable;
+        private PlayerAnimator _anim;
         //idk where else to put this variable tbh
         [SerializeField] private float _pogoWindowDuration = 0.25f;
 
@@ -48,7 +49,7 @@ namespace TarodevController
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
             _knockback = GetComponent<PlayerKnockback>();
-
+            _anim = GetComponentInChildren<PlayerAnimator>();
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
@@ -97,6 +98,11 @@ namespace TarodevController
 
             CheckCollisions();
 
+            CheckWallContact();
+            HandleWallCling();
+            HandleWallJump();
+            HandleWallSlide();
+
             HandleDash();
             HandleJump();
             HandleDirection();
@@ -106,6 +112,9 @@ namespace TarodevController
 
             fuck = _grounded;
         }
+
+        
+
 
         #region Collisions
 
@@ -156,6 +165,168 @@ namespace TarodevController
 
         #endregion
 
+        private float _clingTimer;
+        [SerializeField] private float _maxClingTime = 1.5f; // seconds
+
+        public bool IsClinging => _isClinging;
+        public bool IsWallSliding => _isWallSliding;
+
+        public bool TouchingLeftWall { get; private set; }
+        public bool TouchingRightWall { get; private set; }
+
+        #region WallInteraction
+
+        [SerializeField] private float _wallCheckDistance = 0.1f;
+        [SerializeField] private LayerMask _wallLayer;
+        [SerializeField] private float _wallSlideSpeed = 2f;
+        [SerializeField] private float _wallCoyoteTime = 0.2f;
+
+        private bool _isTouchingWall;
+        private bool _isClinging;
+        private bool _isWallSliding;
+        private float _wallCoyoteTimer;
+
+        public void ForceGroundedRespawn()
+        {
+            _grounded = true;
+            _isClinging = false;
+            _isWallSliding = false;
+            _isTouchingWall = false;
+            _isDashing = false;
+            _jumpToConsume = false;
+            _frameVelocity = Vector2.zero;
+        }
+
+
+
+        private void CheckWallContact()
+        {
+            float verticalOffset = _col.size.y * 0.4f;
+            Vector2 top = new Vector2(transform.position.x, transform.position.y + verticalOffset);
+            Vector2 bottom = new Vector2(transform.position.x, transform.position.y - verticalOffset);
+
+            TouchingLeftWall = Physics2D.Raycast(top, Vector2.left, _wallCheckDistance, _wallLayer) ||
+                               Physics2D.Raycast(bottom, Vector2.left, _wallCheckDistance, _wallLayer);
+
+            TouchingRightWall = Physics2D.Raycast(top, Vector2.right, _wallCheckDistance, _wallLayer) ||
+                                Physics2D.Raycast(bottom, Vector2.right, _wallCheckDistance, _wallLayer);
+
+            _isTouchingWall = TouchingLeftWall || TouchingRightWall;
+        }
+        private bool _wasClinging; // track cling history
+
+        private void HandleWallCling()
+        {
+            if (_grounded)
+            {
+                _isClinging = false;
+                _wasClinging = false;
+                return;
+            }
+
+            if (_isTouchingWall && Input.GetKey(KeyCode.F))
+            {
+                if (_clingTimer < _maxClingTime)
+                {
+                    _isClinging = true;
+                    _wasClinging = true;
+                    _isWallSliding = false;
+                    _frameVelocity = Vector2.zero;
+                    _clingTimer += Time.deltaTime;
+                }
+                else
+                {
+                    _isClinging = false;
+                    _isWallSliding = true; // transition into slide
+                }
+            }
+            else
+            {
+                // Released Fah → clear cling AND slide
+                _isClinging = false;
+                _isWallSliding = false;
+                _clingTimer = 0;
+            }
+
+            if (_anim != null) _anim.SetCling(_isClinging);
+        }
+
+        private void HandleWallSlide()
+        {
+            if (_grounded)
+            {
+                _isWallSliding = false;
+                _wasClinging = false;
+                return;
+            }
+
+            // Only slide if still touching wall AND F is held
+            if (!_isClinging && _wasClinging && _isTouchingWall && Input.GetKey(KeyCode.F))
+            {
+                _isWallSliding = true;
+                if (_frameVelocity.y < -_wallSlideSpeed)
+                    _frameVelocity.y = -_wallSlideSpeed;
+            }
+            else
+            {
+                _isWallSliding = false;
+            }
+
+            if (_anim != null) _anim.SetWallSlide(_isWallSliding);
+        }
+
+        private void HandleWallJump()
+        {
+            // Update wall coyote timer
+            if (_isTouchingWall)
+            {
+                _wallCoyoteTimer = _wallCoyoteTime;
+            }
+            else
+            {
+                _wallCoyoteTimer -= Time.deltaTime;
+            }
+
+            // Can we jump off a wall? ony one way to find out
+            bool canWallJump = _isClinging || _isWallSliding;
+            if (canWallJump && _jumpToConsume)
+            {
+                int wallDir = TouchingLeftWall ? -1 : (TouchingRightWall ? 1 : _facingDirection);
+                Vector2 jumpDir = new Vector2(-wallDir, 1);
+
+                _frameVelocity = new Vector2(
+                    jumpDir.x * _stats.MaxSpeed,
+                    jumpDir.y * _stats.JumpPower
+                );
+
+                // Reset states so slide doesn’t override jump
+                _isClinging = false;
+                _isWallSliding = false;
+                _wallCoyoteTimer = 0;
+
+                _jumpToConsume = false;
+            }
+            // Reset cling/slide when grounded
+            if (_grounded)
+            {
+                _isClinging = false;
+                _isWallSliding = false;
+            }
+        }
+
+
+
+
+        public void ResetWallStates()
+        {
+            _isClinging = false;
+            _isWallSliding = false;
+            _isTouchingWall = false;
+            _wallCoyoteTimer = 0;
+        }
+
+
+        #endregion
 
         #region Dash
 
@@ -297,6 +468,12 @@ namespace TarodevController
 
         private void HandleGravity()
         {
+            if (_isClinging)
+            {
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
+                return;
+            }
+
             // Reduce gravity during dash for better control
             if (_isDashing)
             {
