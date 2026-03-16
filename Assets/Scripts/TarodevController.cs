@@ -130,27 +130,43 @@ namespace TarodevController
             Physics2D.queriesStartInColliders = false;
 
             // Ground and Ceiling
-            RaycastHit2D groundHit = Physics2D.CapsuleCast(
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useTriggers = false;
+            filter.SetLayerMask(~_stats.PlayerLayer);
+            filter.useLayerMask = true;
+
+            RaycastHit2D[] results = new RaycastHit2D[1];
+            int hitCount = Physics2D.CapsuleCast(
                 _col.bounds.center,
                 _col.size,
                 _col.direction,
                 0,
                 Vector2.down,
-                _stats.GrounderDistance,
-                ~_stats.PlayerLayer
+                filter,
+                results,
+                _stats.GrounderDistance
             );
+
+            RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
 
             bool isGrounded = groundHit;
 
+            ContactFilter2D ceilFilter = new ContactFilter2D();
+            ceilFilter.useTriggers = false;
+            ceilFilter.SetLayerMask(~_stats.PlayerLayer);
+            ceilFilter.useLayerMask = true;
+
+            RaycastHit2D[] ceilResults = new RaycastHit2D[1];
             bool ceilingHit = Physics2D.CapsuleCast(
                 _col.bounds.center,
                 _col.size,
                 _col.direction,
                 0,
                 Vector2.up,
-                _stats.GrounderDistance,
-                ~_stats.PlayerLayer
-            );
+                ceilFilter,
+                ceilResults,
+                _stats.GrounderDistance
+            ) > 0;
 
             // Hit a Ceiling
             if (ceilingHit)
