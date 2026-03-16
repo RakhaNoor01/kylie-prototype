@@ -65,6 +65,8 @@ public class Zipline : MonoBehaviour
         playerSplineAnim.Play();
         stats.FallAcceleration = 0f;
 
+        ziplineFx.transform.parent = collision.gameObject.transform;
+        ziplineFx.transform.position = collision.gameObject.transform.position;
         ziplineFx.Play();
     }
 
@@ -72,6 +74,9 @@ public class Zipline : MonoBehaviour
     {
         playerSplineAnim.Container = null;
         stats.FallAcceleration = ogFallAccel;
+
+        ziplineFx.transform.parent = transform;
+        ziplineFx.transform.position = transform.position;
         ziplineFx.Stop();
     }
 }

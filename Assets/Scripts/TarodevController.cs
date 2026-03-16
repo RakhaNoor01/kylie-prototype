@@ -283,7 +283,7 @@ namespace TarodevController
 
         private float _timeJumpWasPressed;
 
-        private bool HasBufferedJump =>
+        public bool HasBufferedJump =>
             _bufferedJumpUsable &&
             _time < _timeJumpWasPressed + _stats.JumpBuffer;
 
