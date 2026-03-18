@@ -13,7 +13,6 @@ public class OrbitByMindcap : MonoBehaviour
     private Collider2D playercol;
     private SpriteRenderer sr;
     private ParticleSystem particle;
-
     private Vector3 ogSize;
     private float cdTimer;
 
