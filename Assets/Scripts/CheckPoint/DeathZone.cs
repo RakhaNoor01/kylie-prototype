@@ -1,6 +1,6 @@
 using UnityEngine;
 using TarodevController;
-
+using UnityEngine.SceneManagement;
 public class DeathZone : MonoBehaviour
 {
     [Header("Effects")]
@@ -83,8 +83,7 @@ public class DeathZone : MonoBehaviour
     private void RespawnPlayer()
     {
         _playerDead = false;
-        if (_player != null && CheckpointManager.Instance != null)
-            CheckpointManager.Instance.PlayerDied();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); //relaods the whole scene
     }
 
     private void Update()

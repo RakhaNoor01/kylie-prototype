@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using TarodevController;
+using UnityEngine.SceneManagement;
 
 public class CheckpointManager : MonoBehaviour
 {
@@ -64,11 +65,17 @@ public class CheckpointManager : MonoBehaviour
             {
                 rb.linearVelocity = Vector2.zero;
                 rb.angularVelocity = 0f;
-                rb.gravityScale = 1f;
+                rb.gravityScale = 0f;
             }
 
             PlayerController controller = player.GetComponent<PlayerController>();
-            if (controller != null) controller.enabled = true;
+            if (controller != null)
+            {
+                controller.ResetWallStates();
+                controller.ForceGroundedRespawn();
+                controller.enabled = true;
+            }
+
 
             PlayerAnimator anim = player.GetComponentInChildren<PlayerAnimator>();
             if (anim != null)
@@ -81,6 +88,7 @@ public class CheckpointManager : MonoBehaviour
 
             invincibilityTimer = invincibilityTime;
         }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         isRespawning = false;
     }

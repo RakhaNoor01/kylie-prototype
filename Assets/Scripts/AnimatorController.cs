@@ -41,6 +41,20 @@ public class PlayerAnimator : MonoBehaviour
         _anim.Update(0f);                // flush Animator state immediately
     }
 
+    public void SetCling(bool clinging)
+    {
+        if (_anim != null)
+            _anim.SetBool("IsClinging", clinging);
+    }
+
+
+    public void SetWallSlide(bool sliding)
+    {
+        if (_anim != null)
+            _anim.SetBool("WallSlide", sliding);
+    }
+
+
     public void PlayDeath()
     {
         Debug.Log("Death animation triggered!");
@@ -54,12 +68,15 @@ public class PlayerAnimator : MonoBehaviour
         Vector2 velocity = _controller.Velocity;
         bool grounded = _controller.Grounded;
         bool isDashing = _controller.IsDashing;
+        bool isClinging = _controller.IsClinging;
+        bool isWallSliding = _controller.IsWallSliding;
 
         _anim.SetFloat("Speed", Mathf.Abs(velocity.x));
         _anim.SetFloat("VerticalSpeed", velocity.y);
         _anim.SetBool("Grounded", grounded);
         _anim.SetBool("Dashing", isDashing);
         _anim.SetBool("DashAvailable", _controller.DashAvailable);
+        _anim.SetBool("IsClinging", isClinging);
 
         // Set dash direction for 8-way animations
         if (isDashing)
@@ -90,13 +107,21 @@ public class PlayerAnimator : MonoBehaviour
 
     private void HandleFlip(float xVelocity)
     {
-        if (Mathf.Abs(xVelocity) < 0.01f) return;
+        if (_controller.IsClinging || _controller.IsWallSliding)
+        {
+            if (_controller.TouchingLeftWall)
+                _visuals.localScale = new Vector3(-1, 1, 1); // face left
+            else if (_controller.TouchingRightWall)
+                _visuals.localScale = new Vector3(1, 1, 1);  // face right
+            return;
+        }
 
-        _visuals.localScale = new Vector3(
-            Mathf.Sign(xVelocity),
-            1,
-            1
-        );
+        if (Mathf.Abs(xVelocity) > 0.01f)
+        {
+            _visuals.localScale = new Vector3(Mathf.Sign(xVelocity), 1, 1);
+        }
     }
+
+
 
 }
