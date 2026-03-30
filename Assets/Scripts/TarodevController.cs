@@ -268,8 +268,6 @@ namespace TarodevController
             _frameVelocity = Vector2.zero;
         }
 
-
-
         private void CheckWallContact()
         {
             float verticalOffset = _col.size.y * 0.4f;

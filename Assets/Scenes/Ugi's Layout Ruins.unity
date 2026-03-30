@@ -7152,7 +7152,7 @@ GameObject:
   - component: {fileID: 462426866}
   - component: {fileID: 462426867}
   - component: {fileID: 462426868}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Boomerang
   m_TagString: Goonerang
   m_Icon: {fileID: 0}
@@ -7459,6 +7459,7 @@ MonoBehaviour:
   tpSpeed: 0.1
   directionIndicator: {fileID: 379566792}
   tpeffect: {fileID: 0}
+  rangTrail: {fileID: 462426867}
 --- !u!1 &498716098
 GameObject:
   m_ObjectHideFlags: 0
@@ -10563,6 +10564,7 @@ MonoBehaviour:
   _wallSlideSpeed: 2
   _wallCoyoteTime: 0.2
   doWeDeserveDestruction: 0
+  _dashEffect: {fileID: 0}
 --- !u!70 &873666595
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
