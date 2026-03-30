@@ -30993,13 +30993,6 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
   fuck: 0
-  _maxClingTime: 3
-  _wallCheckDistance: 0.4
-  _wallLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _wallSlideSpeed: 2
-  _wallCoyoteTime: 0.2
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
 --- !u!4 &450797597
@@ -72926,7 +72919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c487e7b9c2c4bac448e86027dd06db50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CosmicClone
-  player: {fileID: 1001379874}
+  playerVisual: {fileID: 0}
   recordingRate: 0.02
   spriteContainer: {fileID: 190955161}
   sprites:

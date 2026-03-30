@@ -72,5 +72,22 @@ namespace TarodevController
 
         [Tooltip("Whether the player gets a dash reset when touching the ground")]
         public bool DashRefreshOnGround = true;
+
+        [Header("WALL CLIMBING")]
+
+        [Tooltip("How long the player can cling onto walls before sliding")]
+        public float maxClingTime = 3f;
+
+        [Tooltip("Raycast distance for wall checks")]
+        public float wallCheckDistance = 0.4f;
+
+        [Tooltip("Walla")]
+        public LayerMask wallLayer;
+
+        [Tooltip("How fast the player slides down walls")]
+        public float wallSlideSpeed = 2f;
+
+        [Tooltip("idk what this one does tbh")]
+        public float wallCoyoteTime = 0.2f;
     }
 }

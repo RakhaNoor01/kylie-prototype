@@ -7,7 +7,7 @@ using UnityEngine;
 public class CosmicClone : MonoBehaviour
 {
     [Header("References")]
-    public GameObject player;
+    public GameObject playerVisual;
 
     [Header("Movement")]
     public float recordingRate = 0.05f;
@@ -66,7 +66,7 @@ public class CosmicClone : MonoBehaviour
         _posRecord.Clear();
         _sprRecord.Clear();
 
-        _playerSR = player.GetComponent<SpriteRenderer>();
+        _playerSR = playerVisual.GetComponent<SpriteRenderer>();
         _lastSprite = null;
 
         _recordCoroutine ??= StartCoroutine(RecordLoop());
@@ -110,7 +110,7 @@ public class CosmicClone : MonoBehaviour
             float now = Time.time;
 
             // position 
-            _posRecord.Add((now, player.transform.position));
+            _posRecord.Add((now, playerVisual.transform.position));
 
             // dispatch playback for the position recorded <delay> seconds ago
             DispatchPositionPlayback(now);
@@ -119,7 +119,7 @@ public class CosmicClone : MonoBehaviour
             if (_playerSR != null && _playerSR.sprite != _lastSprite)
             {
                 _lastSprite = _playerSR.sprite;
-                _lastScale = Mathf.Sign(player.transform.localScale.x);
+                _lastScale = Mathf.Sign(playerVisual.transform.localScale.x);
                 _sprRecord.Add((now, _lastSprite, _lastScale));
             }
 

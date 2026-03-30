@@ -237,7 +237,6 @@ namespace TarodevController
         #endregion
 
         private float _clingTimer;
-        [SerializeField] private float _maxClingTime = 1.5f; // seconds
 
         public bool IsClinging => _isClinging;
         public bool IsWallSliding => _isWallSliding;
@@ -246,11 +245,6 @@ namespace TarodevController
         public bool TouchingRightWall { get; private set; }
 
         #region WallInteraction
-
-        [SerializeField] private float _wallCheckDistance = 0.1f;
-        [SerializeField] private LayerMask _wallLayer;
-        [SerializeField] private float _wallSlideSpeed = 2f;
-        [SerializeField] private float _wallCoyoteTime = 0.2f;
 
         private bool _isTouchingWall;
         private bool _isClinging;
@@ -274,11 +268,11 @@ namespace TarodevController
             Vector2 top = new Vector2(transform.position.x, transform.position.y + verticalOffset);
             Vector2 bottom = new Vector2(transform.position.x, transform.position.y - verticalOffset);
 
-            TouchingLeftWall = Physics2D.Raycast(top, Vector2.left, _wallCheckDistance, _wallLayer) ||
-                               Physics2D.Raycast(bottom, Vector2.left, _wallCheckDistance, _wallLayer);
+            TouchingLeftWall = Physics2D.Raycast(top, Vector2.left, _stats.wallCheckDistance, _stats.wallLayer) ||
+                               Physics2D.Raycast(bottom, Vector2.left, _stats.wallCheckDistance, _stats.wallLayer);
 
-            TouchingRightWall = Physics2D.Raycast(top, Vector2.right, _wallCheckDistance, _wallLayer) ||
-                                Physics2D.Raycast(bottom, Vector2.right, _wallCheckDistance, _wallLayer);
+            TouchingRightWall = Physics2D.Raycast(top, Vector2.right, _stats.wallCheckDistance, _stats.wallLayer) ||
+                                Physics2D.Raycast(bottom, Vector2.right, _stats.wallCheckDistance, _stats.wallLayer);
 
             _isTouchingWall = TouchingLeftWall || TouchingRightWall;
         }
@@ -295,7 +289,7 @@ namespace TarodevController
 
             if (_isTouchingWall && Input.GetKey(KeyCode.F))
             {
-                if (_clingTimer < _maxClingTime)
+                if (_clingTimer < _stats.maxClingTime)
                 {
                     _isClinging = true;
                     _wasClinging = true;
@@ -333,8 +327,8 @@ namespace TarodevController
             if (!_isClinging && _wasClinging && _isTouchingWall && Input.GetKey(KeyCode.F))
             {
                 _isWallSliding = true;
-                if (_frameVelocity.y < -_wallSlideSpeed)
-                    _frameVelocity.y = -_wallSlideSpeed;
+                if (_frameVelocity.y < -_stats.wallSlideSpeed)
+                    _frameVelocity.y = -_stats.wallSlideSpeed;
             }
             else
             {
@@ -349,7 +343,7 @@ namespace TarodevController
             // Update wall coyote timer
             if (_isTouchingWall)
             {
-                _wallCoyoteTimer = _wallCoyoteTime;
+                _wallCoyoteTimer = _stats.wallSlideSpeed;
             }
             else
             {
