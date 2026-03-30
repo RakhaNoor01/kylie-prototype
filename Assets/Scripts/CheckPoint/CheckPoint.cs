@@ -5,6 +5,9 @@ public class Checkpoint : MonoBehaviour
     [Header("Settings")]
     public bool isStartingPoint = false;
 
+    [Tooltip("if this field is not null, the checkpoint will respawn at the setLocation instead of this gameObject's transform")]
+    public Transform setLocation;
+
     [Header("Visual Feedback")]
     public Sprite inactiveSprite; // Gray flag
     public Sprite activeSprite;   // Colored flag
@@ -21,22 +24,27 @@ public class Checkpoint : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         checkpointCollider = GetComponent<Collider2D>();
+
     }
 
     private void Start()
     {
-        // Set initial sprite to inactive
         if (spriteRenderer != null && inactiveSprite != null)
             spriteRenderer.sprite = inactiveSprite;
 
-        // If this is the starting point, activate it
-        if (isStartingPoint)
-        {
-            // Deactivate any previously active checkpoint
-            if (currentlyActiveCheckpoint != null && currentlyActiveCheckpoint != this)
-                currentlyActiveCheckpoint.DeactivateCheckpoint();
+        currentlyActiveCheckpoint = null;
 
-            ActivateCheckpoint();
+        var cpPos = setLocation == null ? transform.position : setLocation.position;
+
+        if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsCurrentCheckpoint(cpPos))
+        {
+            RestoreActiveVisual(); // scene reloaded — restore visual only, don't touch manager
+            return;
+        }
+
+        if (isStartingPoint && CheckpointManager.Instance != null && !CheckpointManager.Instance.HasCheckpoint)
+        {
+            ActivateCheckpoint(); // very first load, no checkpoint saved yet
         }
     }
 
@@ -44,54 +52,57 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isActivated)
         {
-            // Deactivate the previous checkpoint if it exists
             if (currentlyActiveCheckpoint != null && currentlyActiveCheckpoint != this)
-            {
                 currentlyActiveCheckpoint.DeactivateCheckpoint();
-            }
 
             ActivateCheckpoint();
         }
     }
 
+    private void RestoreActiveVisual()
+    {
+        isActivated = true;
+        currentlyActiveCheckpoint = this;
+
+        if (spriteRenderer != null && activeSprite != null)
+            spriteRenderer.sprite = activeSprite;
+
+        if (checkpointCollider != null)
+            checkpointCollider.enabled = false;
+    }
     private void ActivateCheckpoint()
     {
         isActivated = true;
         currentlyActiveCheckpoint = this;
 
-        // Tell the manager this is the new spawn point
-        if (CheckpointManager.Instance != null)
-            CheckpointManager.Instance.SetCheckpoint(transform.position);
+        // BEFORE: var cpPos = setLocation == null ? transform.position : setLocation.position;
+        // This was correct but the Debug.Log was showing transform.position, causing confusion
+        var cpPos = setLocation == null ? transform.position : setLocation.position;
 
-        // Update visual to active
+        if (CheckpointManager.Instance != null)
+            CheckpointManager.Instance.SetCheckpoint(cpPos); // ? this is correct
+
         if (spriteRenderer != null && activeSprite != null)
             spriteRenderer.sprite = activeSprite;
 
-        // Play sound
         if (activateSound != null)
             AudioSource.PlayClipAtPoint(activateSound, transform.position);
 
-        // Disable trigger so it can't be activated again (until deactivated)
         if (checkpointCollider != null)
             checkpointCollider.enabled = false;
 
-        Debug.Log($"Checkpoint activated at: {transform.position}");
+        Debug.Log($"Checkpoint activated at: {cpPos}"); // FIXED: log cpPos not transform.position
     }
 
-    // New method to deactivate this checkpoint
     private void DeactivateCheckpoint()
     {
         isActivated = false;
 
-        // Change back to inactive sprite
         if (spriteRenderer != null && inactiveSprite != null)
             spriteRenderer.sprite = inactiveSprite;
 
-        // Re-enable trigger so it can be activated again if player comes back
         if (checkpointCollider != null)
             checkpointCollider.enabled = true;
-
-        Debug.Log($"Checkpoint deactivated at: {transform.position}");
     }
 
     // Optional: Visualize in editor

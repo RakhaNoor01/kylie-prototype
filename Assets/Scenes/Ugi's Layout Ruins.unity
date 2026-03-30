@@ -10213,6 +10213,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CheckPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 5046262491296246927, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
+      propertyPath: setLocation
+      value: 
+      objectReference: {fileID: 1913714615}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10507,6 +10511,7 @@ GameObject:
   - component: {fileID: 873666595}
   - component: {fileID: 873666593}
   - component: {fileID: 873666598}
+  - component: {fileID: 873666599}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -10556,13 +10561,6 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
   fuck: 0
-  _maxClingTime: 3
-  _wallCheckDistance: 0.4
-  _wallLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _wallSlideSpeed: 2
-  _wallCoyoteTime: 0.2
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 0}
 --- !u!70 &873666595
@@ -10661,6 +10659,25 @@ MonoBehaviour:
     m_RotationOrder: 4
   useFacingDirection: 1
   useHitDirection: 1
+--- !u!114 &873666599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873666590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc55e8d54c823945824ea11dba2f30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  deathEffect: {fileID: 0}
+  deathSound: {fileID: 0}
+  enableCameraShake: 1
+  shakeDuration: 0.2
+  shakeMagnitude: 0.15
+  enableKnockback: 1
+  voidThreshold: -40
 --- !u!1 &874988711
 GameObject:
   m_ObjectHideFlags: 0
@@ -19417,7 +19434,7 @@ Transform:
   m_GameObject: {fileID: 1913714613}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 14.810735, y: 0.19721901, z: 0}
+  m_LocalPosition: {x: -5.3, y: -5.32, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

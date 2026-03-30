@@ -48,13 +48,17 @@ public class CosmicClone : MonoBehaviour
     private Coroutine _recordCoroutine;
     private Coroutine _aftImgCoroutine;
 
+    private Collider2D _col;
+
     // public API 
 
     private void Start()
     {
+        _col = GetComponent<Collider2D>();
         Deactivate();
     }
 
+    // waiting for delay
     public void Activate(float delay, Vector2 startpos)
     {
         transform.position = startpos;
@@ -76,6 +80,23 @@ public class CosmicClone : MonoBehaviour
         psSpawn.Play();
     }
 
+    
+    // start moving
+    private IEnumerator ChaseStart(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        psSpawn.Stop();
+        psStart.Play();
+        psStart2.Play();
+
+        _col.enabled = true;
+
+        _waiting = false;
+        spriteContainer.SetActive(true);
+        _aftImgCoroutine ??= StartCoroutine(AfterimageLoop());
+    }
+
+    // stopping
     public void Deactivate()
     {
         _active = false;
@@ -87,22 +108,11 @@ public class CosmicClone : MonoBehaviour
 
         psDespawn.Play();
         spriteContainer.SetActive(false);
-    }
 
-    private IEnumerator ChaseStart(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        psSpawn.Stop();
-        psStart.Play();
-        psStart2.Play();
-
-        _waiting = false;
-        spriteContainer.SetActive(true);
-        _aftImgCoroutine ??= StartCoroutine(AfterimageLoop());
+        _col.enabled = false;
     }
 
     // recording loop 
-
     private IEnumerator RecordLoop()
     {
         while (_active || _waiting)

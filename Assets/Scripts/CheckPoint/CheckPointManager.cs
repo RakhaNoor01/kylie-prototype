@@ -15,6 +15,10 @@ public class CheckpointManager : MonoBehaviour
     private GameObject player;
     private float invincibilityTimer = 0f;
     private bool isRespawning = false;
+    private bool hasCheckpoint = false;
+    public bool HasCheckpoint => hasCheckpoint;
+    public bool IsCurrentCheckpoint(Vector3 pos) =>
+        hasCheckpoint && Vector3.Distance(currentCheckpoint, pos) < 0.1f;
 
     private void Awake()
     {
@@ -22,15 +26,43 @@ public class CheckpointManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded; // NEW: subscribe to scene load event
         }
         else Destroy(gameObject);
     }
 
-    private void Start()
+    // NEW: called after scene fully finishes loading
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            currentCheckpoint = player.transform.position;
+        if (player == null) return;
+
+        if (hasCheckpoint)
+        {
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.gravityScale = 0f;
+            }
+
+            player.transform.position = currentCheckpoint; // currentCheckpoint is already set correctly by SetCheckpoint()
+
+            StartCoroutine(RestoreGravity(rb));
+        }
+    }
+
+    private IEnumerator RestoreGravity(Rigidbody2D rb)
+    {
+        yield return new WaitForEndOfFrame(); // wait one frame for position to stick
+        if (rb != null)
+            rb.gravityScale = 3f; // set this to whatever your normal gravity scale is
+    }
+
+    // Also add OnDestroy to unsubscribe cleanly
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Update()
@@ -43,7 +75,11 @@ public class CheckpointManager : MonoBehaviour
         else ResetSpriteColor();
     }
 
-    public void SetCheckpoint(Vector3 newCheckpoint) => currentCheckpoint = newCheckpoint;
+    public void SetCheckpoint(Vector3 newCheckpoint)
+    {
+        currentCheckpoint = newCheckpoint;
+        hasCheckpoint = true; // NEW: mark that a real checkpoint exists
+    }
 
     public void PlayerDied()
     {
