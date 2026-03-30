@@ -132,6 +132,8 @@ public class Boomerang : MonoBehaviour
             Time.timeScale = ogTime;
             Time.fixedDeltaTime = ogDelta;
 
+            imLowkTrolling.doWeDeserveDestruction = false;
+
             Throw();
         }
     }

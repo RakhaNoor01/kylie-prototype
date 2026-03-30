@@ -30992,6 +30992,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.PlayerController
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
+  fuck: 0
+  _maxClingTime: 1.5
+  _wallCheckDistance: 0.1
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _wallSlideSpeed: 2
+  _wallCoyoteTime: 0.2
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
 --- !u!4 &450797597
@@ -36441,7 +36449,7 @@ GameObject:
   - component: {fileID: 716025456}
   - component: {fileID: 716025455}
   - component: {fileID: 716025454}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Boomerang
   m_TagString: Goonerang
   m_Icon: {fileID: 0}
@@ -42628,8 +42636,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a689f524d3c1a646bfb45683a4a3d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  _controller: {fileID: 450797596}
   _visuals: {fileID: 1001379875}
+  _controller: {fileID: 450797596}
 --- !u!95 &1001379877
 Animator:
   serializedVersion: 7
@@ -88456,7 +88464,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 639
+    m_Bits: 767
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -93822,7 +93830,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1730297107}
   - component: {fileID: 1730297108}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
