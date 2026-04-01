@@ -49,13 +49,17 @@ public class CosmicClone : MonoBehaviour
     private Coroutine _aftImgCoroutine;
 
     private Collider2D _col;
+    private PlayerHealth _plrHp;
 
     // public API 
 
     private void Start()
     {
         _col = GetComponent<Collider2D>();
+        _plrHp = FindFirstObjectByType<PlayerHealth>();
         Deactivate();
+
+        _plrHp.death += Deactivate;
     }
 
     // waiting for delay

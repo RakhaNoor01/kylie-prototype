@@ -1,6 +1,8 @@
 using UnityEngine;
 using TarodevController;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using System;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class PlayerHealth : MonoBehaviour
     public float voidThreshold = -40f;
 
     private bool _isDead = false;
+
+    public event Action death;
 
     private void Update()
     {
@@ -72,6 +76,8 @@ public class PlayerHealth : MonoBehaviour
         PlayerAnimator anim = GetComponentInChildren<PlayerAnimator>();
         if (anim != null)
             anim.PlayDeath();
+
+        death.Invoke();
 
         // Fade out UI+
         UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
