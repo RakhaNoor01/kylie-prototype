@@ -5,7 +5,7 @@ using UnityEngine;
 public class Room : MonoBehaviour
 {
     [Header("Room Content")]
-    public SceneField roomScene;
+    public string roomName;
 
     [Header("Adjacency")]
     public List<Room> adjacentRooms = new List<Room>();

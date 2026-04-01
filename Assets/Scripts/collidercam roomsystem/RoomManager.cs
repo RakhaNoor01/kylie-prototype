@@ -46,12 +46,12 @@ public class RoomManager : MonoBehaviour
     {
         var shouldBeLoaded = new HashSet<string>();
 
-        if (!string.IsNullOrEmpty(room.roomScene.SceneName))
-            shouldBeLoaded.Add(room.roomScene.SceneName);
+        if (!string.IsNullOrEmpty(room.roomName))
+            shouldBeLoaded.Add(room.roomName);
 
         foreach (var adjacent in room.adjacentRooms)
-            if (adjacent != null && !string.IsNullOrEmpty(adjacent.roomScene.SceneName))
-                shouldBeLoaded.Add(adjacent.roomScene.SceneName);
+            if (adjacent != null && !string.IsNullOrEmpty(adjacent.roomName))
+                shouldBeLoaded.Add(adjacent.roomName);
 
         StartCoroutine(SyncScenesCoroutine(shouldBeLoaded));
     }
@@ -67,6 +67,13 @@ public class RoomManager : MonoBehaviour
         // Load scenes that should be active but aren't
         foreach (var sceneName in shouldBeLoaded)
         {
+            // Scene may already be loaded before RoomManager runs
+            if (SceneManager.GetSceneByName(sceneName).isLoaded)
+            {
+                loadedScenes.Add(sceneName); // trac the already loaded room
+                continue;
+            }
+
             if (!loadedScenes.Contains(sceneName))
             {
                 yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
@@ -94,5 +101,10 @@ public class RoomManager : MonoBehaviour
             yield return SceneManager.UnloadSceneAsync(sceneName);
         }
         loadedScenes.Clear();
+    }
+
+    public Room GetRoomByName(string sceneName)
+    {
+        return allRooms.Find(r => r.roomName == sceneName);
     }
 }

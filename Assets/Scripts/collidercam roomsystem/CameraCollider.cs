@@ -1,6 +1,5 @@
+ï»¿using UnityEngine;
 using DG.Tweening;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Collider2D))]
 public class CameraCollider : MonoBehaviour
@@ -23,7 +22,7 @@ public class CameraCollider : MonoBehaviour
     private CameraController camCtrl;
     private Collider2D col;
 
-    // Tracks which zone currently owns the camera — shared across all instances
+    // Tracks which zone currently owns the camera â€” shared across all instances
     private static CameraCollider activeZone = null;
 
     // All zones the player is currently overlapping, in entry order.
@@ -39,45 +38,23 @@ public class CameraCollider : MonoBehaviour
     private bool defaultLockY;
     private float defaultZoom;
 
-    private void Awake()
+    private void Start()
     {
-        // Try to find the camera immediately (works if player scene is already loaded)
-        TryInitCamera();
+        mainCam = Camera.main;
+        col = GetComponent<Collider2D>();
+        col.isTrigger = true;
+        camCtrl = mainCam.GetComponent<CameraController>();
 
-        // If not found yet, listen for when any scene finishes loading
-        if (mainCam == null)
-            SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+        if (camCtrl == null)
+            Debug.LogWarning("[CameraCollider] No CameraController found on Main Camera.");
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        TryInitCamera();
-
-        if (mainCam != null)
-            SceneManager.sceneLoaded -= OnSceneLoaded; // unsubscribe once found
-    }
-
-    private void TryInitCamera()
-    {
-        if (mainCam != null) return;
-
-        Camera cam = FindFirstObjectByType<Camera>();
-        if (cam != null && cam.CompareTag("MainCamera"))
-        {
-            mainCam = cam;
-            col = GetComponent<Collider2D>();
-            col.isTrigger = true;
-            camCtrl = mainCam.GetComponent<CameraController>();
-
-            if (camCtrl == null)
-                Debug.LogWarning("[CameraCollider] No CameraController found on Main Camera.");
-        }
-    }
-
-    private void OnDestroy()
-    {
-        // Always clean up the event subscription to prevent memory leaks
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        // Snapshot the camera's default state so we can restore it when the player leaves all zones
+        defaultTarget = camCtrl.target;
+        defaultOffset = camCtrl.offset;
+        defaultFollowSpeed = camCtrl.followSpeed;
+        defaultLockX = camCtrl.lockX;
+        defaultLockY = camCtrl.lockY;
+        defaultZoom = mainCam.orthographicSize;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -105,7 +82,7 @@ public class CameraCollider : MonoBehaviour
 
         if (overlappingZones.Count > 0)
         {
-            // Player is still inside another zone — hand control to the most recently entered one.
+            // Player is still inside another zone â€” hand control to the most recently entered one.
             // This handles the case where the player entered zoneB without fully leaving zoneA:
             // exiting zoneB should restore zoneA's settings, not the global defaults.
             CameraCollider fallback = overlappingZones[overlappingZones.Count - 1];
@@ -114,7 +91,7 @@ public class CameraCollider : MonoBehaviour
         }
         else
         {
-            // Player has left all zones — restore the original camera defaults
+            // Player has left all zones â€” restore the original camera defaults
             activeZone = null;
             RestoreDefaults();
         }
@@ -162,7 +139,7 @@ public class CameraCollider : MonoBehaviour
         }
         else
         {
-            // No fixed target — just update the controller's follow parameters immediately
+            // No fixed target â€” just update the controller's follow parameters immediately
             camCtrl.offset = offset;
             camCtrl.followSpeed = lerpSpeed;
             camCtrl.lockX = lockX;

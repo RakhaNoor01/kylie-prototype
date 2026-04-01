@@ -32,8 +32,6 @@ public class Checkpoint : MonoBehaviour
         if (spriteRenderer != null && inactiveSprite != null)
             spriteRenderer.sprite = inactiveSprite;
 
-        currentlyActiveCheckpoint = null;
-
         var cpPos = setLocation == null ? transform.position : setLocation.position;
 
         if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsCurrentCheckpoint(cpPos))
@@ -75,12 +73,14 @@ public class Checkpoint : MonoBehaviour
         isActivated = true;
         currentlyActiveCheckpoint = this;
 
-        // BEFORE: var cpPos = setLocation == null ? transform.position : setLocation.position;
-        // This was correct but the Debug.Log was showing transform.position, causing confusion
         var cpPos = setLocation == null ? transform.position : setLocation.position;
 
         if (CheckpointManager.Instance != null)
-            CheckpointManager.Instance.SetCheckpoint(cpPos); // ? this is correct
+        {
+            // Pass the scene this checkpoint lives in
+            string sceneName = gameObject.scene.name;
+            CheckpointManager.Instance.SetCheckpoint(cpPos, sceneName);
+        }
 
         if (spriteRenderer != null && activeSprite != null)
             spriteRenderer.sprite = activeSprite;

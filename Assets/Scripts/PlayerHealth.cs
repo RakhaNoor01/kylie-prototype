@@ -77,7 +77,7 @@ public class PlayerHealth : MonoBehaviour
         if (anim != null)
             anim.PlayDeath();
 
-        death.Invoke();
+        death?.Invoke();
 
         // Fade out UI+
         UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
