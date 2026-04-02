@@ -26,14 +26,14 @@ public class RoomManager : MonoBehaviour
         allRooms.AddRange(FindObjectsByType<Room>(FindObjectsSortMode.None));
     }
 
-    void Start()
-    {
-        Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
-        if (startRoom != null)
-            LoadRoom(startRoom);
-        else
-            StartCoroutine(UnloadAllCoroutine());
-    }
+    //void Start()
+    //{
+    //    Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
+    //    if (startRoom != null)
+    //        LoadRoom(startRoom);
+    //    else
+    //        StartCoroutine(UnloadAllCoroutine());
+    //}
 
     public void EnterRoom(Room room)
     {
@@ -70,7 +70,7 @@ public class RoomManager : MonoBehaviour
             // Scene may already be loaded before RoomManager runs
             if (SceneManager.GetSceneByName(sceneName).isLoaded)
             {
-                loadedScenes.Add(sceneName); // trac the already loaded room
+                loadedScenes.Add(sceneName); // track the already loaded room
                 continue;
             }
 
