@@ -30,8 +30,16 @@ MonoBehaviour:
   JumpEndEarlyGravityModifier: 1
   CoyoteTime: 0.15
   JumpBuffer: 0.2
+  GlideSpeed: 3
   DashSpeed: 12
   DashDuration: 0.02
   DashCooldown: 1
   DashMomentumRetention: 1
   DashRefreshOnGround: 1
+  maxClingTime: 3
+  wallCheckDistance: 0.4
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallSlideSpeed: 2
+  wallCoyoteTime: 0.2

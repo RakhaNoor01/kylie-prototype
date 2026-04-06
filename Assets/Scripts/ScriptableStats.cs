@@ -57,6 +57,19 @@ namespace TarodevController
         [Tooltip("The amount of time we buffer a jump. This allows jump input before actually hitting the ground")]
         public float JumpBuffer = .2f;
 
+        [Header("GLIDER")]
+        [Tooltip("The constant downward speed when gliding")]
+        public float GlideSpeed = 5f;
+
+        [Tooltip("How long the player can glide before stamina runs out")]
+        public float GlideDuration = 3f;
+
+        [Tooltip("How fast the player transitions into glide speed")]
+        public float GlideEntrySpeed = 30f;
+
+        [Tooltip("Multiplier for horizontal speed while gliding")]
+        public float GlideSpeedMultiplier = 1.2f;
+
         [Header("DASH")]
         [Tooltip("The speed of the dash")]
         public float DashSpeed = 40;
