@@ -32,11 +32,29 @@
         },
         {
             "m_Id": "72ba89ca59a84be9947bd7b5473cdb78"
+        },
+        {
+            "m_Id": "1548f6e476034f62b0ca5ab7a0c07d07"
         }
     ],
     "m_GroupDatas": [],
     "m_StickyNoteDatas": [],
-    "m_Edges": [],
+    "m_Edges": [
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "72ba89ca59a84be9947bd7b5473cdb78"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "1548f6e476034f62b0ca5ab7a0c07d07"
+                },
+                "m_SlotId": 715854929
+            }
+        }
+    ],
     "m_VertexContext": {
         "m_Position": {
             "x": 0.0,
@@ -155,6 +173,56 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SubGraphNode",
+    "m_ObjectId": "1548f6e476034f62b0ca5ab7a0c07d07",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Oitlon",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -572.0000610351563,
+            "y": 105.99996948242188,
+            "width": 208.00006103515626,
+            "height": 302.9999694824219
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "779aa2b8a7f04823af47fa072108bf0c"
+        },
+        {
+            "m_Id": "8bdc04829d974cfca8d49f5ca911e921"
+        },
+        {
+            "m_Id": "1fb6c6d45ecc4cecb92dad9cf5426ea5"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"efeddcd18a3e1f642919b69ed4d41fcd\",\n        \"type\": 3\n    }\n}",
+    "m_PropertyGuids": [
+        "498511c6-fa57-4949-9106-ba3d87a4e083",
+        "ce553508-c3d0-4ab0-a658-f6002fbab8ae"
+    ],
+    "m_PropertyIds": [
+        -1097447033,
+        715854929
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
     "m_ObjectId": "1d721b93de8447f9a40a59695b581839",
     "m_Id": 0,
@@ -175,6 +243,22 @@
     },
     "m_Labels": [],
     "m_Space": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "1fb6c6d45ecc4cecb92dad9cf5426ea5",
+    "m_Id": 1,
+    "m_DisplayName": "alpha",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "alpha",
+    "m_StageCapability": 2,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
 }
 
 {
@@ -281,10 +365,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -620.0,
-            "y": 63.0,
-            "width": 0.0,
-            "height": 0.0
+            "x": -789.0,
+            "y": 212.99998474121095,
+            "width": 132.0,
+            "height": 34.00001525878906
         }
     },
     "m_Slots": [
@@ -303,6 +387,22 @@
     "m_Property": {
         "m_Id": "d9f64e973da8454280643610de71b1da"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "779aa2b8a7f04823af47fa072108bf0c",
+    "m_Id": -1097447033,
+    "m_DisplayName": "size",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_size",
+    "m_StageCapability": 2,
+    "m_Value": 1.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
 }
 
 {
@@ -337,6 +437,24 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Normal"
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
+    "m_ObjectId": "8bdc04829d974cfca8d49f5ca911e921",
+    "m_Id": 715854929,
+    "m_DisplayName": "tecksture",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_tecksture",
+    "m_StageCapability": 2,
+    "m_BareResource": false,
+    "m_Texture": {
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"bc6269d890925d24f913038081363918\",\"type\":3}}",
+        "m_Guid": ""
+    },
+    "m_DefaultType": 0
 }
 
 {
@@ -457,7 +575,7 @@
     "m_PerRendererData": false,
     "m_customAttributes": [],
     "m_Value": {
-        "m_SerializedTexture": "",
+        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"9a658ad2f6cc5eb489b76c92ab462534\",\"type\":3}}",
         "m_Guid": ""
     },
     "isMainTexture": false,

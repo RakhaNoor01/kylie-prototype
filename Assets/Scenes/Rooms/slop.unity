@@ -36545,7 +36545,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 152438a9d2d6354469faa841012a9c28, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -42694,7 +42694,7 @@ GameObject:
   - component: {fileID: 922698337}
   - component: {fileID: 922698340}
   - component: {fileID: 922698339}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Zipline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42871,6 +42871,7 @@ MonoBehaviour:
   resolution: 30
   speed: 30
   ziplineFx: {fileID: 1256126202}
+  canDismount: 1
 --- !u!120 &922698339
 LineRenderer:
   serializedVersion: 3
@@ -48345,7 +48346,7 @@ Transform:
   m_GameObject: {fileID: 1031346861}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.5, y: -5.5, z: 0}
+  m_LocalPosition: {x: 0, y: -5.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53319,7 +53320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045770110}
   - component: {fileID: 1045770111}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: boomerarrow_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73629,7 +73630,7 @@ GameObject:
   - component: {fileID: 1256126200}
   - component: {fileID: 1256126202}
   - component: {fileID: 1256126201}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: ziplineEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88491,7 +88492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1389064635}
   - component: {fileID: 1389064636}
-  m_Layer: 3
+  m_Layer: 10
   m_Name: ThrowIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

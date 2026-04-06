@@ -193,10 +193,10 @@ public class Boomerang : MonoBehaviour
 
         distmulttimer = 0;
 
-        StartCoroutine(FUCK());
+        StartCoroutine(Thing());
     }
 
-    private IEnumerator FUCK(){
+    private IEnumerator Thing(){
         yield return new WaitForSeconds(0.1f);
         col.enabled = true;
     }

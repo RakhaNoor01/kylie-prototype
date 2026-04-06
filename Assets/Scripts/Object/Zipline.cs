@@ -9,6 +9,7 @@ public class Zipline : MonoBehaviour
     public int resolution = 20;
     public float speed = 5f;
     public ParticleSystem ziplineFx;
+    public bool canDismount = false;
 
     private SplineContainer spline;
     private LineRenderer line;
@@ -17,6 +18,7 @@ public class Zipline : MonoBehaviour
     private float ogFallAccel;
 
     private SplineAnimate playerSplineAnim;
+    private PlayerController playerController;
 
     private void Awake()
     {
@@ -25,6 +27,7 @@ public class Zipline : MonoBehaviour
         var goog = FindFirstObjectByType<PlayerController>();
         if (goog != null)
         {
+            playerController = goog;
             playerSplineAnim = goog.GetComponent<SplineAnimate>();
             playerSplineAnim.Completed += StopZipline;
 
@@ -37,6 +40,14 @@ public class Zipline : MonoBehaviour
     private void Update()
     {
         if (line != null && spline != null) LineToSpline();
+
+        if (canDismount && playerSplineAnim != null && playerSplineAnim.IsPlaying)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                DismountZipline();
+            }
+        }
     }
 
     private void LineToSpline()
@@ -78,5 +89,12 @@ public class Zipline : MonoBehaviour
         ziplineFx.transform.parent = transform;
         ziplineFx.transform.position = transform.position;
         ziplineFx.Stop();
+    }
+
+    private void DismountZipline()
+    {
+        playerSplineAnim.Pause();
+        StopZipline();
+        playerController.ForceJump();
     }
 }

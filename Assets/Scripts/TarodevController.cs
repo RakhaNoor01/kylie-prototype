@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Splines;
 
 namespace TarodevController
 {
@@ -50,6 +51,8 @@ namespace TarodevController
 
         private float _time;
 
+        private SplineAnimate _spliner;
+
         private void Awake()
         {
   
@@ -57,6 +60,7 @@ namespace TarodevController
             _col = GetComponent<CapsuleCollider2D>();
             _knockback = GetComponent<PlayerKnockback>();
             _anim = GetComponentInChildren<PlayerAnimator>();
+            _spliner = GetComponent<SplineAnimate>();
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
@@ -287,7 +291,7 @@ namespace TarodevController
                 return;
             }
 
-            if (_isTouchingWall && Input.GetKey(KeyCode.F))
+            if (_isTouchingWall && Input.GetKey(KeyCode.K))
             {
                 if (_clingTimer < _stats.maxClingTime)
                 {
@@ -399,7 +403,11 @@ namespace TarodevController
 
         private void HandleDash()
         {
-            if (doWeDeserveDestruction) return;
+            if (doWeDeserveDestruction || _spliner.IsPlaying)
+            {
+                _dashToConsume = false;
+                return;
+            }
 
             // Update Dash State
             if (_time >= _dashEndTime)
@@ -511,6 +519,12 @@ namespace TarodevController
             }
 
             _jumpToConsume = false;
+        }
+
+        // doom code
+        public void ForceJump()
+        {
+            ExecuteJump();
         }
 
         private void ExecuteJump()
