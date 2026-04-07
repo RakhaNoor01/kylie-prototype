@@ -155,7 +155,8 @@ public class CheckpointManager : MonoBehaviour
         else
         {
             pendingRespawn = true; // let OnSceneLoaded handle teleport
-            SceneManager.LoadScene(checkpointScene);
+            SceneManager.LoadScene(SoloLeveling.playerStatic);
+            SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
             isRespawning = false;
             yield break;
         }
