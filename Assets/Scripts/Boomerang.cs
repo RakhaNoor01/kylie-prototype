@@ -10,6 +10,7 @@ public class Boomerang : MonoBehaviour
 
     [Header("Throw")]
     public float throwPower = 15f;
+    public KeyCode throwKey;
 
     [Header("Return")]
     public float returnLerpStrength = 1f;
@@ -48,6 +49,10 @@ public class Boomerang : MonoBehaviour
     private bool hasTped;
     private bool isTping;
 
+    // --- Alternate throw mode (J + WASD) ---
+    private bool isChargingAlt = false;
+    private Vector2 altWASDDirection = Vector2.right; // default direction
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -77,13 +82,25 @@ public class Boomerang : MonoBehaviour
     void Update()
     {
         // Teleport while thrown
-        if (isThrown && Input.GetMouseButtonDown(0))
+        if (isThrown && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(throwKey)))
         {
             ICameToGoon();
             return;
         }
 
         if (isThrown) return;
+
+        // -----------------------------------------------
+        // Alternate throw mode: hold J, aim with WASD
+        // -----------------------------------------------
+        HandleAltThrow();
+
+        // Don't process mouse throw while alt mode is active
+        if (isChargingAlt) return;
+
+        // -----------------------------------------------
+        // Original mouse throw mode
+        // -----------------------------------------------
 
         // Start aiming
         if (Input.GetMouseButtonDown(0))
@@ -112,11 +129,11 @@ public class Boomerang : MonoBehaviour
 
             // Slow time down
             Time.timeScale = slowDown;
-            Time.fixedDeltaTime = ogDelta*slowDown;
+            Time.fixedDeltaTime = ogDelta * slowDown;
 
             imLowkTrolling.doWeDeserveDestruction = true;
-
-        } else
+        }
+        else
         {
             imLowkTrolling.doWeDeserveDestruction = false;
         }
@@ -135,6 +152,85 @@ public class Boomerang : MonoBehaviour
             imLowkTrolling.doWeDeserveDestruction = false;
 
             Throw();
+        }
+    }
+
+    void HandleAltThrow()
+    {
+        bool jHeld = Input.GetKey(throwKey);
+
+        // Start alt aiming when J is first pressed
+        if (Input.GetKeyDown(throwKey) && !isCharging)
+        {
+            isChargingAlt = true;
+
+            if (directionIndicator != null)
+                directionIndicator.SetActive(true);
+
+            // Slow time down
+            Time.timeScale = slowDown;
+            Time.fixedDeltaTime = ogDelta * slowDown;
+
+            imLowkTrolling.doWeDeserveDestruction = true;
+        }
+
+        if (isChargingAlt && jHeld)
+        {
+            // Read WASD input
+            float h = 0f;
+            float v = 0f;
+
+            if (Input.GetKey(KeyCode.D)) h += 1f;
+            if (Input.GetKey(KeyCode.A)) h -= 1f;
+            if (Input.GetKey(KeyCode.W)) v += 1f;
+            if (Input.GetKey(KeyCode.S)) v -= 1f;
+
+            Vector2 rawDir = new Vector2(h, v);
+
+            // Only update direction if WASD is being pressed
+            if (rawDir.sqrMagnitude > 0.01f)
+            {
+                altWASDDirection = SnapTo8Directions(rawDir.normalized);
+            }
+
+            cachedDirection = altWASDDirection;
+
+            // Rotate indicator
+            if (directionIndicator != null)
+            {
+                float angle = Mathf.Atan2(cachedDirection.y, cachedDirection.x) * Mathf.Rad2Deg;
+                directionIndicator.transform.rotation = Quaternion.Euler(0, 0, angle);
+            }
+        }
+
+        // Release J to throw
+        if (Input.GetKeyUp(throwKey) && isChargingAlt)
+        {
+            isChargingAlt = false;
+
+            if (directionIndicator != null)
+                directionIndicator.SetActive(false);
+
+            Time.timeScale = ogTime;
+            Time.fixedDeltaTime = ogDelta;
+
+            imLowkTrolling.doWeDeserveDestruction = false;
+
+            Throw();
+        }
+
+        // Cancel alt mode if somehow J is no longer held (edge case)
+        if (isChargingAlt && !jHeld)
+        {
+            isChargingAlt = false;
+
+            if (directionIndicator != null)
+                directionIndicator.SetActive(false);
+
+            Time.timeScale = ogTime;
+            Time.fixedDeltaTime = ogDelta;
+
+            imLowkTrolling.doWeDeserveDestruction = false;
         }
     }
 
@@ -196,7 +292,8 @@ public class Boomerang : MonoBehaviour
         StartCoroutine(Thing());
     }
 
-    private IEnumerator Thing(){
+    private IEnumerator Thing()
+    {
         yield return new WaitForSeconds(0.1f);
         col.enabled = true;
     }
