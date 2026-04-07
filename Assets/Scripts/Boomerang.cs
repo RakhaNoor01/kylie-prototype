@@ -27,6 +27,8 @@ public class Boomerang : MonoBehaviour
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
 
+    private PlayerAudio _playerAudio;
+
     private Rigidbody2D rb;
     private Collider2D col;
 
@@ -72,6 +74,8 @@ public class Boomerang : MonoBehaviour
         hasTped = false;
 
         imLowkTrolling = player.GetComponent<PlayerController>();
+
+        _playerAudio = player.GetComponent<PlayerAudio>();
     }
 
     void Update()
@@ -193,6 +197,8 @@ public class Boomerang : MonoBehaviour
 
         distmulttimer = 0;
 
+        _playerAudio?.PlayThrow();
+
         StartCoroutine(FUCK());
     }
 
@@ -217,6 +223,8 @@ public class Boomerang : MonoBehaviour
                 tpeffect.ToggleTrail(false);
                 tpeffect.teleport();
                 isTping = false;
+
+                _playerAudio?.PlayTeleport();
             });
     }
 

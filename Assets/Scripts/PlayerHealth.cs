@@ -69,8 +69,10 @@ public class PlayerHealth : MonoBehaviour
             Instantiate(deathEffect, transform.position, Quaternion.identity);
 
         // Death sound
-        if (deathSound != null)
-            AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position);
+        PlayerAudio audio = GetComponent<PlayerAudio>();
+
+        if (audio != null)
+            audio.PlayDeath();
 
         // Death animation
         PlayerAnimator anim = GetComponentInChildren<PlayerAnimator>();
