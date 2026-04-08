@@ -350,7 +350,7 @@ namespace TarodevController
         private void HandleWallJump()
         {
             // Update wall coyote timer
-            if (_isTouchingWall)
+            if (_isTouchingWall && (_isClinging || _isWallSliding))
             {
                 _wallCoyoteTimer = _stats.wallCoyoteTime;
             }
