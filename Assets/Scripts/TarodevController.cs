@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -248,6 +249,8 @@ namespace TarodevController
         public bool TouchingLeftWall { get; private set; }
         public bool TouchingRightWall { get; private set; }
 
+        public KeyCode wallClingKey;
+
         #region WallInteraction
 
         private bool _isTouchingWall;
@@ -272,13 +275,15 @@ namespace TarodevController
             Vector2 top = new Vector2(transform.position.x, transform.position.y + verticalOffset);
             Vector2 bottom = new Vector2(transform.position.x, transform.position.y - verticalOffset);
 
-            TouchingLeftWall = Physics2D.Raycast(top, Vector2.left, _stats.wallCheckDistance, _stats.wallLayer) ||
-                               Physics2D.Raycast(bottom, Vector2.left, _stats.wallCheckDistance, _stats.wallLayer);
+            Vector2 checkDirection = _facingDirection > 0 ? Vector2.right : Vector2.left;
 
-            TouchingRightWall = Physics2D.Raycast(top, Vector2.right, _stats.wallCheckDistance, _stats.wallLayer) ||
-                                Physics2D.Raycast(bottom, Vector2.right, _stats.wallCheckDistance, _stats.wallLayer);
+            bool touchingWall = Physics2D.Raycast(top, checkDirection, _stats.wallCheckDistance, _stats.wallLayer) ||
+                                Physics2D.Raycast(bottom, checkDirection, _stats.wallCheckDistance, _stats.wallLayer);
 
-            _isTouchingWall = TouchingLeftWall || TouchingRightWall;
+            TouchingLeftWall = _facingDirection < 0 && touchingWall;
+            TouchingRightWall = _facingDirection > 0 && touchingWall;
+
+            _isTouchingWall = touchingWall;
         }
         private bool _wasClinging; // track cling history
 
@@ -291,7 +296,7 @@ namespace TarodevController
                 return;
             }
 
-            if (_isTouchingWall && Input.GetKey(KeyCode.K))
+            if (_isTouchingWall && Input.GetKey(wallClingKey))
             {
                 if (_clingTimer < _stats.maxClingTime)
                 {
@@ -328,7 +333,7 @@ namespace TarodevController
             }
 
             // Only slide if still touching wall AND F is held
-            if (!_isClinging && _wasClinging && _isTouchingWall && Input.GetKey(KeyCode.F))
+            if (!_isClinging && _wasClinging && _isTouchingWall && Input.GetKey(wallClingKey))
             {
                 _isWallSliding = true;
                 if (_frameVelocity.y < -_stats.wallSlideSpeed)
@@ -347,24 +352,28 @@ namespace TarodevController
             // Update wall coyote timer
             if (_isTouchingWall)
             {
-                _wallCoyoteTimer = _stats.wallSlideSpeed;
+                _wallCoyoteTimer = _stats.wallCoyoteTime;
             }
             else
             {
                 _wallCoyoteTimer -= Time.deltaTime;
             }
 
-            // Can we jump off a wall? ony one way to find out
-            bool canWallJump = _isClinging || _isWallSliding;
-            if (canWallJump && _jumpToConsume)
+            // Check if player can wall jump
+            bool canWallJump = (_isClinging || _isWallSliding || _wallCoyoteTimer > 0) && !_grounded;
+            if (canWallJump && (_jumpToConsume || HasBufferedJump))
             {
                 int wallDir = TouchingLeftWall ? -1 : (TouchingRightWall ? 1 : _facingDirection);
-                Vector2 jumpDir = new Vector2(-wallDir, 1);
+                //Vector2 jumpDir = new Vector2(-wallDir, 1);
 
-                _frameVelocity = new Vector2(
-                    jumpDir.x * _stats.MaxSpeed,
-                    jumpDir.y * _stats.JumpPower
-                );
+                _facingDirection = -wallDir;
+
+                //_frameVelocity = new Vector2(
+                //    jumpDir.x * _stats.MaxSpeed,
+                //    jumpDir.y * _stats.JumpPower
+                //);
+
+                ForceJump();
 
                 // Reset states so slide doesn’t override jump
                 _isClinging = false;
@@ -380,9 +389,6 @@ namespace TarodevController
                 _isWallSliding = false;
             }
         }
-
-
-
 
         public void ResetWallStates()
         {
@@ -400,6 +406,8 @@ namespace TarodevController
         private bool _dashToConsume;
         private bool _isDashing;
         public bool doWeDeserveDestruction;
+
+        private Tweener _dashTween;
 
         private void HandleDash()
         {
@@ -694,7 +702,6 @@ namespace TarodevController
             }
         }
 
-
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -722,7 +729,7 @@ namespace TarodevController
         public event Action Jumped;
         public Vector2 FrameInput { get; }
 
-        /// <summary>
+        /// <summary>   
         /// Apply an immediate vertical velocity to the controller.  Implementations should
         /// use their internal movement logic so that gravity/coyote/jump buffer etc. remain
         /// consistent.

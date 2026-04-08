@@ -5617,7 +5617,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 1}
+  m_Size: {x: 0.5, y: 0.9}
   m_Direction: 0
 --- !u!114 &450797596
 MonoBehaviour:
@@ -5634,6 +5634,7 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
   fuck: 0
+  wallClingKey: 0
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
 --- !u!4 &450797597
@@ -11452,7 +11453,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 450797597}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16967,7 +16968,7 @@ Transform:
   m_GameObject: {fileID: 1561298933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 10, y: 5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22592,7 +22593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2134265125
 MonoBehaviour:
   m_ObjectHideFlags: 0

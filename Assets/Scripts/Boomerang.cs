@@ -311,6 +311,7 @@ public class Boomerang : MonoBehaviour
         float tweenDuration = distance * tpSpeed;
         player.gameObject.transform.DOMove(transform.position, tweenDuration, false)
             .OnComplete(() => {
+                imLowkTrolling.ApplyBounce(0);
                 tpeffect.ToggleTrail(false);
                 tpeffect.teleport();
                 isTping = false;
