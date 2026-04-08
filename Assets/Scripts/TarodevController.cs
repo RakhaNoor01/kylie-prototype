@@ -273,11 +273,11 @@ namespace TarodevController
         {
             float verticalOffset = _col.size.y * 0.4f;
             Vector2 top = new Vector2(transform.position.x, transform.position.y + verticalOffset);
-            Vector2 bottom = new Vector2(transform.position.x, transform.position.y - verticalOffset);
+            Vector2 bottom = new Vector2(transform.position.x, transform.position.y);
 
             Vector2 checkDirection = _facingDirection > 0 ? Vector2.right : Vector2.left;
 
-            bool touchingWall = Physics2D.Raycast(top, checkDirection, _stats.wallCheckDistance, _stats.wallLayer) ||
+            bool touchingWall = Physics2D.Raycast(top, checkDirection, _stats.wallCheckDistance, _stats.wallLayer) &&
                                 Physics2D.Raycast(bottom, checkDirection, _stats.wallCheckDistance, _stats.wallLayer);
 
             TouchingLeftWall = _facingDirection < 0 && touchingWall;
