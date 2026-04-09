@@ -74,6 +74,12 @@ namespace TarodevController
 
         private void GatherInput()
         {
+            if (_spliner.IsPlaying)
+            {
+                _frameInput = new FrameInput();
+                return;
+            }
+
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),

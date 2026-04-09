@@ -2,7 +2,6 @@ using TarodevController;
 using UnityEngine;
 using UnityEngine.Splines;
 
-[ExecuteAlways]
 [RequireComponent(typeof(Collider2D), typeof(SplineContainer))]
 public class Zipline : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class Zipline : MonoBehaviour
     public bool inheritVelocity = false;
     public float velocityInheritanceScale = 0.8f;
 
+    private bool isActive = false;
     private SplineContainer spline;
     private LineRenderer line;
     private ScriptableStats stats;
@@ -27,7 +27,7 @@ public class Zipline : MonoBehaviour
         line = GetComponent<LineRenderer>();
         spline = GetComponent<SplineContainer>();
         CleanupFx();
-        var goog = FindFirstObjectByType<PlayerController>();
+        var goog = FindAnyObjectByType<PlayerController>();
         if (goog != null)
         {
             playerController = goog;
@@ -42,13 +42,14 @@ public class Zipline : MonoBehaviour
             Debug.Log("where goo");
         }
         ziplineFx.Stop();
+        LineToSpline();
     }
 
     private void Update()
     {
-        if (line != null && spline != null) LineToSpline();
-        if (canDismount && playerSplineAnim != null && playerSplineAnim.IsPlaying)
+        if (playerSplineAnim != null && playerSplineAnim.IsPlaying)
         {
+            if (!canDismount) return;
             if (Input.GetButtonDown("Jump"))
             {
                 DismountZipline();
@@ -71,8 +72,8 @@ public class Zipline : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
+        isActive = true;
 
-        // Unsubscribe first to avoid double-registering if re-ridden
         playerSplineAnim.Completed -= StopZipline;
         playerSplineAnim.Completed += StopZipline;
 
@@ -89,7 +90,6 @@ public class Zipline : MonoBehaviour
     private Vector2 GetSplineTravelDirection()
     {
         float t = playerSplineAnim.NormalizedTime;
-        // Sample tangent in local spline space, then convert to world
         Vector3 localTangent = (Vector3)spline.EvaluateTangent(t);
         Vector3 worldTangent = transform.TransformDirection(localTangent);
         return new Vector2(worldTangent.x, worldTangent.y).normalized;
@@ -101,10 +101,6 @@ public class Zipline : MonoBehaviour
 
         Vector2 travelDir = GetSplineTravelDirection();
         Vector2 inheritedVel = travelDir * speed * velocityInheritanceScale;
-
-        // Use ApplyBounce for the vertical component, then nudge horizontal
-        // via AddPlatformVelocity for one frame so the controller's own
-        // deceleration takes over naturally from there.
         playerController.SetFrameVelocity(inheritedVel);
 
         Debug.Log($"{travelDir}, {inheritedVel}");
@@ -120,8 +116,8 @@ public class Zipline : MonoBehaviour
 
     private void StopZipline()
     {
+        if (!isActive) return;
         playerSplineAnim.Completed -= StopZipline;
-
         ApplyInheritedVelocity();
         playerSplineAnim.Container = null;
         stats.FallAcceleration = ogFallAccel;
@@ -130,17 +126,7 @@ public class Zipline : MonoBehaviour
 
     private void DismountZipline()
     {
-        if (!canDismount) return;
-
-        playerSplineAnim.Completed -= StopZipline;
-
-        ApplyInheritedVelocity();
-        playerSplineAnim.Pause();
-
-        playerSplineAnim.Container = null;
-        stats.FallAcceleration = ogFallAccel;
-        CleanupFx();
-
+        StopZipline();
         playerController.ForceJump();
     }
 }
