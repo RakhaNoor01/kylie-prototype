@@ -11,6 +11,7 @@ public class CameraCollider : MonoBehaviour
     public float zoom = 8;
     [Header("Transition")]
     public float lerpSpeed = 5f;
+    public bool resetOnExit = true;
     [Header("Lock Axes")]
     public bool lockX = true;
     public bool lockY = false;
@@ -21,6 +22,7 @@ public class CameraCollider : MonoBehaviour
     private Camera mainCam;
     private CameraController camCtrl;
     private Collider2D col;
+    private Bounds cachedBounds;
 
     // Tracks which zone currently owns the camera — shared across all instances
     private static CameraCollider activeZone = null;
@@ -43,6 +45,7 @@ public class CameraCollider : MonoBehaviour
         mainCam = Camera.main;
         col = GetComponent<Collider2D>();
         col.isTrigger = true;
+        cachedBounds = col.bounds;
         camCtrl = mainCam.GetComponent<CameraController>();
 
         if (camCtrl == null)
@@ -60,6 +63,8 @@ public class CameraCollider : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player") || camCtrl == null) return;
+
+        cachedBounds = col.bounds;
 
         // Register this zone as one the player is currently inside
         if (!overlappingZones.Contains(this))
@@ -79,6 +84,8 @@ public class CameraCollider : MonoBehaviour
 
         // If we weren't in control, nothing else to do
         if (activeZone != this) return;
+
+        if (!resetOnExit) return;
 
         if (overlappingZones.Count > 0)
         {
@@ -105,7 +112,7 @@ public class CameraCollider : MonoBehaviour
         // Configure clamping before any tween starts
         camCtrl.clampEnabled = clampToCollider;
         if (clampToCollider)
-            camCtrl.clampBounds = col.bounds;
+            camCtrl.clampBounds = cachedBounds;
 
         // Kill any in-progress tweens to avoid conflicts before starting new ones
         mainCam.DOKill();
@@ -134,14 +141,13 @@ public class CameraCollider : MonoBehaviour
                     camCtrl.lockY = lockY;
                     camCtrl.target = defaultTarget;
                     camCtrl.offset = offset;
-                    camCtrl.followSpeed = lerpSpeed;
+                    camCtrl.followSpeed = defaultFollowSpeed;
                 });
         }
         else
         {
             // No fixed target — just update the controller's follow parameters immediately
             camCtrl.offset = offset;
-            camCtrl.followSpeed = lerpSpeed;
             camCtrl.lockX = lockX;
             camCtrl.lockY = lockY;
         }

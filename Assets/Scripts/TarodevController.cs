@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -364,14 +365,8 @@ namespace TarodevController
             if (canWallJump && (_jumpToConsume || HasBufferedJump))
             {
                 int wallDir = TouchingLeftWall ? -1 : (TouchingRightWall ? 1 : _facingDirection);
-                //Vector2 jumpDir = new Vector2(-wallDir, 1);
 
                 _facingDirection = -wallDir;
-
-                //_frameVelocity = new Vector2(
-                //    jumpDir.x * _stats.MaxSpeed,
-                //    jumpDir.y * _stats.JumpPower
-                //);
 
                 ForceJump();
 
@@ -411,22 +406,21 @@ namespace TarodevController
 
         private void HandleDash()
         {
-            if (doWeDeserveDestruction || _spliner.IsPlaying)
-            {
-                _dashToConsume = false;
-                return;
-            }
-
-            // Update Dash State
+            // Always check if an active dash has expired, regardless of other states
             if (_time >= _dashEndTime)
             {
                 if (_isDashing)
                 {
-                    //Preserve momentum from dash
                     _frameVelocity *= _stats.DashMomentumRetention;
                 }
-
                 _isDashing = false;
+            }
+
+            // Block new dashes while boomerang is charging or on a spline
+            if (doWeDeserveDestruction || _spliner.IsPlaying)
+            {
+                _dashToConsume = false;
+                return;
             }
 
             if (!_dashToConsume || !_dashAvailable)
@@ -553,6 +547,7 @@ namespace TarodevController
         #region Horizontal
 
         private int _facingDirection = 1;
+        public int FacingDirection => _facingDirection;
 
         private void HandleDirection()
         {
@@ -687,6 +682,16 @@ namespace TarodevController
 
             _frameVelocity.y = strength;
             Jumped?.Invoke();
+        }
+
+        /// <summary>
+        /// yeah
+        /// </summary>
+        /// <param name="bro">yeah</param>
+        public void SetFrameVelocity(Vector2 bro)
+        {
+            _frameVelocity = bro;
+
         }
 
         public void ActivatePogoWindow()

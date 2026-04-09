@@ -18,7 +18,7 @@ public class SoloLeveling : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(player);
+        SceneManager.LoadScene(playerStatic);
         SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
     }
 }

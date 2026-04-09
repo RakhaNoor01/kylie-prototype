@@ -164,6 +164,8 @@ public class Boomerang : MonoBehaviour
         {
             isChargingAlt = true;
 
+            altWASDDirection = new Vector2(imLowkTrolling.FacingDirection, 0f);
+
             if (directionIndicator != null)
                 directionIndicator.SetActive(true);
 
