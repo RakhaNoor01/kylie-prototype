@@ -14,6 +14,7 @@ public class Zipline : MonoBehaviour
     public bool inheritVelocity = false;
     public float velocityInheritanceScale = 0.8f;
 
+
     private bool isActive = false;
     private SplineContainer spline;
     private LineRenderer line;
@@ -42,11 +43,11 @@ public class Zipline : MonoBehaviour
             Debug.Log("where goo");
         }
         ziplineFx.Stop();
-        LineToSpline();
     }
 
     private void Update()
     {
+        if (line != null && spline != null) LineToSpline();
         if (playerSplineAnim != null && playerSplineAnim.IsPlaying)
         {
             if (!canDismount) return;
@@ -117,6 +118,7 @@ public class Zipline : MonoBehaviour
     private void StopZipline()
     {
         if (!isActive) return;
+        isActive = false;
         playerSplineAnim.Completed -= StopZipline;
         ApplyInheritedVelocity();
         playerSplineAnim.Container = null;
@@ -126,6 +128,8 @@ public class Zipline : MonoBehaviour
 
     private void DismountZipline()
     {
+        playerSplineAnim.Pause();
+        isActive = false;
         StopZipline();
         playerController.ForceJump();
     }
