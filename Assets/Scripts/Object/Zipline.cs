@@ -2,6 +2,7 @@ using TarodevController;
 using UnityEngine;
 using UnityEngine.Splines;
 
+[ExecuteAlways]
 [RequireComponent(typeof(Collider2D), typeof(SplineContainer))]
 public class Zipline : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class Zipline : MonoBehaviour
     public float ogFallAccel;
     public SplineAnimate playerSplineAnim;
     public PlayerController playerController;
+    public Vector2 cachedTravelDirection;
 
     private void Start()
     {
@@ -47,8 +49,13 @@ public class Zipline : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (line != null && spline != null) LineToSpline();
+#endif
         if (playerSplineAnim != null && playerSplineAnim.IsPlaying)
         {
+            cachedTravelDirection = GetSplineTravelDirection();
+
             if (!canDismount || !isActive) return;
             if (Input.GetButtonDown("Jump"))
             {
@@ -99,11 +106,11 @@ public class Zipline : MonoBehaviour
     {
         if (!inheritVelocity || playerController == null) return;
 
-        Vector2 travelDir = GetSplineTravelDirection();
-        Vector2 inheritedVel = travelDir * speed * velocityInheritanceScale;
+        // Use cached direction instead of sampling at teardown time
+        Vector2 inheritedVel = cachedTravelDirection * speed * velocityInheritanceScale;
         playerController.SetFrameVelocity(inheritedVel);
 
-        Debug.Log($"{travelDir}, {inheritedVel}");
+        Debug.Log($"{cachedTravelDirection}, {inheritedVel}");
     }
 
     private void CleanupFx()
