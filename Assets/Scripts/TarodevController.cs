@@ -33,6 +33,7 @@ namespace TarodevController
         private PlayerKnockback _knockback;
 
         private MovablePlatform _groundedPlatform;
+        private Rigidbody2D _clingPlatformRb;
 
         private float _pogoWindowEndTime;
         private bool _pogoAvailable;
@@ -284,14 +285,29 @@ namespace TarodevController
 
             Vector2 checkDirection = _facingDirection > 0 ? Vector2.right : Vector2.left;
 
-            bool touchingWall = Physics2D.Raycast(top, checkDirection, _stats.wallCheckDistance, _stats.wallLayer) &&
-                                Physics2D.Raycast(bottom, checkDirection, _stats.wallCheckDistance, _stats.wallLayer);
+            RaycastHit2D topHit = Physics2D.Raycast(top, checkDirection, _stats.wallCheckDistance, _stats.wallLayer);
+            RaycastHit2D bottomHit = Physics2D.Raycast(bottom, checkDirection, _stats.wallCheckDistance, _stats.wallLayer);
+
+            bool raysHitWall = topHit && bottomHit;
+
+            ContactFilter2D wallFilter = new ContactFilter2D();
+            wallFilter.SetLayerMask(_stats.wallLayer);
+            wallFilter.useTriggers = false;
+            wallFilter.useLayerMask = true;
+            bool colliderTouchingWall = _col.IsTouching(wallFilter);
+
+            bool touchingWall = raysHitWall && colliderTouchingWall;
 
             TouchingLeftWall = _facingDirection < 0 && touchingWall;
             TouchingRightWall = _facingDirection > 0 && touchingWall;
 
             _isTouchingWall = touchingWall;
+
+            _clingPlatformRb = touchingWall
+                ? (topHit.rigidbody != null ? topHit.rigidbody : bottomHit.rigidbody)
+                : null;
         }
+
         private bool _wasClinging; // track cling history
 
         private void HandleWallCling()
@@ -579,11 +595,16 @@ namespace TarodevController
             }
             else
             {
-                _frameVelocity.x = Mathf.MoveTowards(
-                    _frameVelocity.x,
-                    _frameInput.Move.x * _stats.MaxSpeed,
-                    _stats.Acceleration * Time.fixedDeltaTime
-                );
+                float targetSpeed = _frameInput.Move.x * _stats.MaxSpeed;
+
+                bool exceedingInSameDirection =
+                    Mathf.Sign(_frameVelocity.x) == Mathf.Sign(targetSpeed) &&
+                    Mathf.Abs(_frameVelocity.x) > Mathf.Abs(targetSpeed);
+
+                if (!exceedingInSameDirection)
+                {
+                    _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, targetSpeed, _stats.Acceleration * Time.fixedDeltaTime);
+                }
             }
         }
 
@@ -595,7 +616,11 @@ namespace TarodevController
         {
             if (_isClinging)
             {
-                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
+                Vector2 platformVel = (_clingPlatformRb != null)
+                    ? new Vector2 (_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
+                    : Vector2.zero;
+                _frameVelocity = platformVel;
+                _rb.linearVelocity = _frameVelocity;
                 return;
             }
 
