@@ -5616,8 +5616,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.5, y: 0.9}
+  m_Offset: {x: 0, y: -0.1}
+  m_Size: {x: 0.5, y: 0.8}
   m_Direction: 0
 --- !u!114 &450797596
 MonoBehaviour:
@@ -5646,7 +5646,7 @@ Transform:
   m_GameObject: {fileID: 450797593}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 219, y: 31.75, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -11039,10 +11039,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Boomerang
   player: {fileID: 450797593}
-  throwPower: 15
+  throwPower: 20
   throwKey: 106
+  noCatchPeriod: 0.15
   returnLerpStrength: 1
-  maxSpeed: 30
+  maxSpeed: 50
   distanceMult: 10
   distMultDelayTime: 0.5
   slowDown: 0.1
@@ -16899,7 +16900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   target: {fileID: 450797597}
-  followSpeed: 5
+  followSpeed: 7
   offset: {x: 0, y: 0}
   lockX: 0
   lockY: 0
@@ -16968,7 +16969,7 @@ Transform:
   m_GameObject: {fileID: 1561298933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 173.25, y: 45.75, z: -10}
+  m_LocalPosition: {x: 344.5, y: 73, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22652,7 +22653,6 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_UseReflectionProbes: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -1719088111

@@ -68,6 +68,15 @@ public class BWFallingPlatform : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (waitingForStopCollision && stopCollision != null &&
+            collision.gameObject == stopCollision)
+        {
+            waitingForStopCollision = false;
+        }
+    }
+
     public void StartFalling()
     {
         if (doingAThing) return;
@@ -99,6 +108,12 @@ public class BWFallingPlatform : MonoBehaviour
             {
                 waitingForStopCollision = true;
                 yield return new WaitUntil(() => !waitingForStopCollision);
+
+                if (noRespawn)
+                {
+                    gameObject.SetActive(false);
+                    yield break;
+                }
             }
 
             // --- UNSOLID / DISAPPEAR ---

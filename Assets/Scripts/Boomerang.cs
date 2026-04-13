@@ -11,6 +11,7 @@ public class Boomerang : MonoBehaviour
     [Header("Throw")]
     public float throwPower = 15f;
     public KeyCode throwKey;
+    public float noCatchPeriod = 0.15f;
 
     [Header("Return")]
     public float returnLerpStrength = 1f;
@@ -46,12 +47,17 @@ public class Boomerang : MonoBehaviour
     private float distmulttimer;
 
     private PlayerController imLowkTrolling;
+    private PlayerHealth judgement;
     private bool hasTped;
     private bool isTping;
 
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
     private Vector2 altWASDDirection = Vector2.right; // default direction
+
+    private float noCatchTimer = 0;
+    private bool theplayerisdead = false;
+    
 
     void Awake()
     {
@@ -77,10 +83,20 @@ public class Boomerang : MonoBehaviour
         hasTped = false;
 
         imLowkTrolling = player.GetComponent<PlayerController>();
+        judgement = player.GetComponent<PlayerHealth>();
+
+        judgement.death += ThyEndIsNow;
     }
 
     void Update()
     {
+        if (theplayerisdead) return;
+
+        if (noCatchTimer >= 0)
+        {
+            noCatchTimer -= Time.deltaTime;
+        }
+
         // Teleport while thrown
         if (isThrown && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(throwKey)))
         {
@@ -153,6 +169,19 @@ public class Boomerang : MonoBehaviour
 
             Throw();
         }
+    }
+
+    private void ThyEndIsNow()
+    {
+        isCharging = false;
+
+        if (directionIndicator != null)
+            directionIndicator.SetActive(false);
+
+        Time.timeScale = ogTime;
+        Time.fixedDeltaTime = ogDelta;
+
+        theplayerisdead = true;
     }
 
     void HandleAltThrow()
@@ -279,7 +308,7 @@ public class Boomerang : MonoBehaviour
     {
         isThrown = true;
         hasDeflected = false;
-        col.enabled = false;
+        col.enabled = true;
 
         transform.parent = null;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -290,14 +319,7 @@ public class Boomerang : MonoBehaviour
         rangTrail.enabled = true;
 
         distmulttimer = 0;
-
-        StartCoroutine(Thing());
-    }
-
-    private IEnumerator Thing()
-    {
-        yield return new WaitForSeconds(0.1f);
-        col.enabled = true;
+        noCatchTimer = noCatchPeriod;
     }
 
     void ICameToGoon()
@@ -333,13 +355,6 @@ public class Boomerang : MonoBehaviour
     {
         if (!isThrown) return;
 
-        // Catch player
-        if (other.gameObject == player)
-        {
-            Catch();
-            return;
-        }
-
         // Skip deflection for breakable objects - they break but don't stop boomerang
         if (other.gameObject.CompareTag("Breakable Vines"))
         {
@@ -347,10 +362,18 @@ public class Boomerang : MonoBehaviour
         }
 
         // Deflect off first non-player collision
-        if (!hasDeflected)
+        if (!hasDeflected && !other.gameObject.CompareTag("Player"))
         {
             hasDeflected = true;
+            noCatchTimer = -1;
             Deflect(other);
+        }
+
+        // Catch player
+        if (other.gameObject == player && noCatchTimer <= 0)
+        {
+            Catch();
+            return;
         }
     }
 

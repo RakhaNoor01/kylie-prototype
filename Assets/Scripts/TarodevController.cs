@@ -265,6 +265,8 @@ namespace TarodevController
         private bool _isClinging;
         private bool _isWallSliding;
         private float _wallCoyoteTimer;
+        private int _lastWallDirection;
+        private bool _wasClinging;
 
         public void ForceGroundedRespawn()
         {
@@ -306,9 +308,10 @@ namespace TarodevController
             _clingPlatformRb = touchingWall
                 ? (topHit.rigidbody != null ? topHit.rigidbody : bottomHit.rigidbody)
                 : null;
-        }
 
-        private bool _wasClinging; // track cling history
+            if (touchingWall)
+                _lastWallDirection = _facingDirection;
+        }
 
         private void HandleWallCling()
         {
@@ -321,7 +324,10 @@ namespace TarodevController
 
             if (_isTouchingWall && Input.GetKey(wallClingKey))
             {
-                if (_clingTimer < _stats.maxClingTime)
+                // If we were already clinging, only allow re-cling when falling
+                bool canCling = !_wasClinging || _frameVelocity.y <= 0;
+
+                if (canCling && _clingTimer < _stats.maxClingTime)
                 {
                     _isClinging = true;
                     _wasClinging = true;
@@ -386,17 +392,14 @@ namespace TarodevController
             bool canWallJump = (_isClinging || _isWallSliding || _wallCoyoteTimer > 0) && !_grounded;
             if (canWallJump && (_jumpToConsume || HasBufferedJump))
             {
-                int wallDir = TouchingLeftWall ? -1 : (TouchingRightWall ? 1 : _facingDirection);
-
-                _facingDirection = -wallDir;
+                _facingDirection = -_lastWallDirection;
+                _frameVelocity.x = -_lastWallDirection * _stats.MaxSpeed;
 
                 ForceJump();
 
-                // Reset states so slide doesn’t override jump
                 _isClinging = false;
                 _isWallSliding = false;
                 _wallCoyoteTimer = 0;
-
                 _jumpToConsume = false;
             }
             // Reset cling/slide when grounded
@@ -426,6 +429,7 @@ namespace TarodevController
 
         private Tweener _dashTween;
 
+        private float colY;
         private void HandleDash()
         {
             // Always check if an active dash has expired, regardless of other states
@@ -434,6 +438,7 @@ namespace TarodevController
                 if (_isDashing)
                 {
                     _frameVelocity *= _stats.DashMomentumRetention;
+                    _col.size = new Vector2(_col.size.x, colY);
                 }
                 _isDashing = false;
             }
@@ -478,6 +483,9 @@ namespace TarodevController
             }
 
             _coyoteUsable = false;
+
+            colY = _col.size.y;
+            _col.size = new Vector2 (_col.size.x, _col.size.x);
 
             _dashDirection = inputDirection.normalized;
             _frameVelocity = _dashDirection * _stats.DashSpeed;
@@ -599,7 +607,7 @@ namespace TarodevController
 
                 bool exceedingInSameDirection =
                     Mathf.Sign(_frameVelocity.x) == Mathf.Sign(targetSpeed) &&
-                    Mathf.Abs(_frameVelocity.x) > Mathf.Abs(targetSpeed);
+                    Mathf.Abs(_frameVelocity.x) > Mathf.Abs(targetSpeed) && !_grounded;
 
                 if (!exceedingInSameDirection)
                 {
