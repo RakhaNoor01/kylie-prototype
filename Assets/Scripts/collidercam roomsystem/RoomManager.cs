@@ -46,12 +46,12 @@ public class RoomManager : MonoBehaviour
     {
         var shouldBeLoaded = new HashSet<string>();
 
-        if (!string.IsNullOrEmpty(room.roomName))
-            shouldBeLoaded.Add(room.roomName);
+        if (!string.IsNullOrEmpty(room.sceneName))
+            shouldBeLoaded.Add(room.sceneName);
 
         foreach (var adjacent in room.adjacentRooms)
-            if (adjacent != null && !string.IsNullOrEmpty(adjacent.roomName))
-                shouldBeLoaded.Add(adjacent.roomName);
+            if (adjacent != null && !string.IsNullOrEmpty(adjacent.sceneName))
+                shouldBeLoaded.Add(adjacent.sceneName);
 
         StartCoroutine(SyncScenesCoroutine(shouldBeLoaded));
     }
@@ -105,6 +105,6 @@ public class RoomManager : MonoBehaviour
 
     public Room GetRoomByName(string sceneName)
     {
-        return allRooms.Find(r => r.roomName == sceneName);
+        return allRooms.Find(r => r.sceneName == sceneName);
     }
 }
