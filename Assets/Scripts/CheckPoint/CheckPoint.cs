@@ -79,7 +79,7 @@ public class Checkpoint : MonoBehaviour
         {
             // Pass the scene this checkpoint lives in
             string sceneName = gameObject.scene.name;
-            CheckpointManager.Instance.SetCheckpoint(cpPos, sceneName);
+            CheckpointManager.Instance.SetCheckpoint(cpPos, sceneName, isStartingPoint);
         }
 
         if (spriteRenderer != null && activeSprite != null)

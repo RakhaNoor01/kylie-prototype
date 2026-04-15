@@ -59,7 +59,7 @@ public class CheckpointManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void SetCheckpoint(Vector3 newCheckpoint, string sceneName)
+    public void SetCheckpoint(Vector3 newCheckpoint, string sceneName, bool firsCpoint)
     {
         currentCheckpoint = newCheckpoint;
         checkpointScene = sceneName;
@@ -69,7 +69,7 @@ public class CheckpointManager : MonoBehaviour
         FindPlayer();
 
         // Teleport the player immediately on first checkpoint set
-        if (player != null)
+        if (player != null && firsCpoint)
             player.transform.position = currentCheckpoint;
     }
 
