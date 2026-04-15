@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TarodevController;
 
@@ -31,6 +32,11 @@ public class PlayerAnimator : MonoBehaviour
         if (_isDead) return; // dead = skip animations
 
         HandleAnimations(); // this reads velocity and sets animator
+    }
+        public void SetGlide(bool isGliding)
+    {
+        if (_anim != null)
+            _anim.SetBool("IsGliding", isGliding);
     }
     public void ResetDeath()
     {
@@ -70,6 +76,7 @@ public class PlayerAnimator : MonoBehaviour
         bool isDashing = _controller.IsDashing;
         bool isClinging = _controller.IsClinging;
         bool isWallSliding = _controller.IsWallSliding;
+        bool isGliding = _controller.IsGliding;
 
         _anim.SetFloat("Speed", Mathf.Abs(velocity.x));
         _anim.SetFloat("VerticalSpeed", velocity.y);
@@ -77,6 +84,7 @@ public class PlayerAnimator : MonoBehaviour
         _anim.SetBool("Dashing", isDashing);
         _anim.SetBool("DashAvailable", _controller.DashAvailable);
         _anim.SetBool("IsClinging", isClinging);
+        _anim.SetBool("IsGliding", isGliding);
 
         // Set dash direction for 8-way animations
         if (isDashing)

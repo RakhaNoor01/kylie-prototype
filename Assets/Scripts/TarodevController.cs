@@ -41,6 +41,10 @@ namespace TarodevController
         //idk where else to put this variable tbh
         [SerializeField] private float _pogoWindowDuration = 0.25f;
 
+        private float _glideStamina;
+        private bool _jumpHeldLastFrame;
+        private bool _glideInputReady;
+
         public Vector2 Velocity => _rb.linearVelocity;
         public ScriptableStats Stats => _stats;
 
@@ -65,6 +69,7 @@ namespace TarodevController
             _anim = GetComponentInChildren<PlayerAnimator>();
             _spliner = GetComponent<SplineAnimate>();
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+            _glideStamina = _stats.GlideDuration;
         }
 
         private void Update()
@@ -215,6 +220,8 @@ namespace TarodevController
                 if (_stats.DashRefreshOnGround)
                     _dashAvailable = true;
 
+                _glideStamina = _stats.GlideDuration;
+
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
             }
 
@@ -253,6 +260,7 @@ namespace TarodevController
 
         public bool IsClinging => _isClinging;
         public bool IsWallSliding => _isWallSliding;
+        public bool IsGliding => _isGliding;
 
         public bool TouchingLeftWall { get; private set; }
         public bool TouchingRightWall { get; private set; }
@@ -264,6 +272,7 @@ namespace TarodevController
         private bool _isTouchingWall;
         private bool _isClinging;
         private bool _isWallSliding;
+        private bool _isGliding;
         private float _wallCoyoteTimer;
         private int _lastWallDirection;
         private bool _wasClinging;
@@ -275,6 +284,7 @@ namespace TarodevController
             _isWallSliding = false;
             _isTouchingWall = false;
             _isDashing = false;
+            _isGliding = false;
             _jumpToConsume = false;
             _frameVelocity = Vector2.zero;
         }
@@ -415,6 +425,7 @@ namespace TarodevController
             _isClinging = false;
             _isWallSliding = false;
             _isTouchingWall = false;
+            _isGliding = false;
             _wallCoyoteTimer = 0;
         }
 
@@ -609,6 +620,14 @@ namespace TarodevController
                     Mathf.Sign(_frameVelocity.x) == Mathf.Sign(targetSpeed) &&
                     Mathf.Abs(_frameVelocity.x) > Mathf.Abs(targetSpeed) && !_grounded;
 
+                if (_isGliding) targetSpeed *= _stats.GlideSpeedMultiplier;
+
+                _frameVelocity.x = Mathf.MoveTowards(
+                    _frameVelocity.x,
+                    targetSpeed,
+                    _stats.Acceleration * Time.fixedDeltaTime
+                );
+
                 if (!exceedingInSameDirection)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, targetSpeed, _stats.Acceleration * Time.fixedDeltaTime);
@@ -631,6 +650,42 @@ namespace TarodevController
                 _rb.linearVelocity = _frameVelocity;
                 return;
             }
+
+            // Gliding logic
+            if (_frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0)
+            {
+                _isGliding = true;
+            }
+            else
+            {
+                _isGliding = false;
+            }
+
+            if (_isGliding)
+            {
+                _glideStamina -= Time.fixedDeltaTime;
+                if (_glideStamina <= 0)
+                    _isGliding = false;
+                else
+                {
+                    _frameVelocity.y = Mathf.MoveTowards(
+                        _frameVelocity.y,
+                        -_stats.GlideSpeed,
+                        _stats.GlideEntrySpeed * Time.fixedDeltaTime
+                    );
+                    return;
+                }
+            }
+
+            // Update glide input ready
+            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
+                _glideInputReady = true;
+            if (_grounded)
+                _glideInputReady = false;
+
+            _jumpHeldLastFrame = _frameInput.JumpHeld;
+
+            if (_anim != null) _anim.SetGlide(_isGliding);
 
             // Reduce gravity during dash for better control
             if (_isDashing)
