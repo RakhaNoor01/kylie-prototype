@@ -54,13 +54,6 @@ public class CheckpointManager : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private IEnumerator RestoreGravity(Rigidbody2D rb)
-    {
-        yield return new WaitForEndOfFrame();
-        if (rb != null)
-            rb.gravityScale = 3f;
-    }
-
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -111,7 +104,6 @@ public class CheckpointManager : MonoBehaviour
         }
 
         player.transform.position = currentCheckpoint;
-        StartCoroutine(RestoreGravity(rb));
     }
 
     private IEnumerator RespawnSequence()
@@ -155,7 +147,8 @@ public class CheckpointManager : MonoBehaviour
         else
         {
             pendingRespawn = true; // let OnSceneLoaded handle teleport
-            SceneManager.LoadScene(checkpointScene);
+            SceneManager.LoadScene(SoloLeveling.playerStatic);
+            SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
             isRespawning = false;
             yield break;
         }

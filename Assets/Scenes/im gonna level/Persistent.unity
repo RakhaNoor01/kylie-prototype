@@ -403,7 +403,7 @@ Transform:
   m_GameObject: {fileID: 161139282}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 20.5, y: 51.383446, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5580,7 +5580,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &450797595
 CapsuleCollider2D:
@@ -5634,6 +5634,7 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: 7a215d82b4ce2c145aea1dc5dc97700b, type: 2}
   _pogoWindowDuration: 0.5
   fuck: 0
+  wallClingKey: 324
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
 --- !u!4 &450797597
@@ -5645,7 +5646,7 @@ Transform:
   m_GameObject: {fileID: 450797593}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5.306916, y: 54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -11039,7 +11040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Boomerang
   player: {fileID: 450797593}
   throwPower: 15
-  throwKey: 0
+  throwKey: 106
   returnLerpStrength: 1
   maxSpeed: 30
   distanceMult: 10
@@ -16967,7 +16968,7 @@ Transform:
   m_GameObject: {fileID: 1561298933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35, y: 11, z: -10}
+  m_LocalPosition: {x: 130.5, y: 60.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

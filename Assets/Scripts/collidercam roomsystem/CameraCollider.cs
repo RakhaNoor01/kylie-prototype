@@ -41,12 +41,21 @@ public class CameraCollider : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
+        if (mainCam == null)
+        {
+            Debug.LogError("[CameraCollider] No Main Camera found in the scene.");
+            return;
+        }
+
         col = GetComponent<Collider2D>();
         col.isTrigger = true;
         camCtrl = mainCam.GetComponent<CameraController>();
 
         if (camCtrl == null)
-            Debug.LogWarning("[CameraCollider] No CameraController found on Main Camera.");
+        {
+            Debug.LogError("[CameraCollider] No CameraController found on Main Camera.");
+            return;
+        }
 
         // Snapshot the camera's default state so we can restore it when the player leaves all zones
         defaultTarget = camCtrl.target;

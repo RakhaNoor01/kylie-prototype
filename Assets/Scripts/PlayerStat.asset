@@ -21,19 +21,19 @@ MonoBehaviour:
   MaxSpeed: 7
   Acceleration: 70
   GroundDeceleration: 60
-  AirDeceleration: 30
+  AirDeceleration: 15
   GroundingForce: -1.5
   GrounderDistance: 0.1
-  JumpPower: 10
+  JumpPower: 12
   MaxFallSpeed: 40
-  FallAcceleration: 25
+  FallAcceleration: 40
   JumpEndEarlyGravityModifier: 1
   CoyoteTime: 0.15
   JumpBuffer: 0.2
-  DashSpeed: 12
-  DashDuration: 0.02
+  DashSpeed: 25
+  DashDuration: 0.1
   DashCooldown: 1
-  DashMomentumRetention: 1
+  DashMomentumRetention: 0.3
   DashRefreshOnGround: 1
   maxClingTime: 3
   wallCheckDistance: 0.4
@@ -41,4 +41,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   wallSlideSpeed: 2
-  wallCoyoteTime: 0.2
+  wallCoyoteTime: 0.15
