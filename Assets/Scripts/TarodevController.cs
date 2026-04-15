@@ -44,6 +44,9 @@ namespace TarodevController
         private float _glideStamina;
         private bool _jumpHeldLastFrame;
         private bool _glideInputReady;
+        
+
+        private PlayerAudio _audio;
 
         public Vector2 Velocity => _rb.linearVelocity;
         public ScriptableStats Stats => _stats;
@@ -70,6 +73,7 @@ namespace TarodevController
             _spliner = GetComponent<SplineAnimate>();
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _glideStamina = _stats.GlideDuration;
+            _audio = GetComponent<PlayerAudio>();
         }
 
         private void Update()
@@ -359,6 +363,12 @@ namespace TarodevController
                 _clingTimer = 0;
             }
 
+            // Audio Cling
+            if (_isClinging)
+                _audio?.StartClimb();
+            else
+                _audio?.StopClimb();
+
             if (_anim != null) _anim.SetCling(_isClinging);
         }
 
@@ -382,6 +392,12 @@ namespace TarodevController
             {
                 _isWallSliding = false;
             }
+
+            // audio wall slide
+            if (_isWallSliding)
+                _audio?.StartClimb();
+            else if (!_isClinging)
+                _audio?.StopClimb();
 
             if (_anim != null) _anim.SetWallSlide(_isWallSliding);
         }
@@ -503,6 +519,8 @@ namespace TarodevController
             _isDashing = true;
             _dashEndTime = _time + _stats.DashDuration;
             _dashAvailable = false;
+
+            _audio?.PlayDash();
 
             if (_dashEffect != null)
             {
@@ -660,6 +678,12 @@ namespace TarodevController
             {
                 _isGliding = false;
             }
+
+            // Audio Gliding
+            if (_isGliding)
+                _audio?.StartGlide();
+            else
+                _audio?.StopGlide();
 
             if (_isGliding)
             {
