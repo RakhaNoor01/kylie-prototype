@@ -3618,7 +3618,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 38
+      m_TileSpriteIndex: 42
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -5619,16 +5619,16 @@ Tilemap:
     m_Data: {fileID: -710391909, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
-    m_Data: {fileID: -1407318654, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 11
     m_Data: {fileID: 1535640490, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
   - m_RefCount: 22
     m_Data: {fileID: -823265667, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 1409000939, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: -1407318654, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -2079848550, guid: 030a487a6b99b584c9e91cc34ac4f805, type: 3}
   - m_RefCount: 1
@@ -5687,13 +5687,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1099592894669757420, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1139346667115240266, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
       propertyPath: m_LocalScale.y
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1139346667115240266, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 1139346667115240266, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5737,7 +5741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5046262491296246927, guid: 6234e33c08012834aa5e6df17c7e1b12, type: 3}
       propertyPath: isStartingPoint
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

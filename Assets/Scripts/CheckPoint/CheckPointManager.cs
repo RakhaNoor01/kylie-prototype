@@ -121,6 +121,10 @@ public class CheckpointManager : MonoBehaviour
                 controller.ResetWallStates();
                 controller.ForceGroundedRespawn();
                 controller.enabled = true;
+
+                Boomerang boomerang = player.GetComponentInChildren<Boomerang>();
+                if (boomerang != null)
+                    boomerang.ResetBoomerang();
             }
 
             PlayerAnimator anim = player.GetComponentInChildren<PlayerAnimator>();

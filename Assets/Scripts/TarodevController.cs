@@ -640,12 +640,6 @@ namespace TarodevController
 
                 if (_isGliding) targetSpeed *= _stats.GlideSpeedMultiplier;
 
-                _frameVelocity.x = Mathf.MoveTowards(
-                    _frameVelocity.x,
-                    targetSpeed,
-                    _stats.Acceleration * Time.fixedDeltaTime
-                );
-
                 if (!exceedingInSameDirection)
                 {
                     _frameVelocity.x = Mathf.MoveTowards(_frameVelocity.x, targetSpeed, _stats.Acceleration * Time.fixedDeltaTime);
