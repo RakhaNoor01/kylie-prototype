@@ -23,7 +23,7 @@ namespace TarodevController
         private CapsuleCollider2D _col;
 
         private FrameInput _frameInput;
-        private Vector2 _frameVelocity;
+        [SerializeField] private Vector2 _frameVelocity;
 
         private bool _cachedQueryStartInColliders;
 
@@ -74,6 +74,7 @@ namespace TarodevController
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _glideStamina = _stats.GlideDuration;
             _audio = GetComponent<PlayerAudio>();
+            colY = _col.size.y;
         }
 
         private void Update()
@@ -122,8 +123,6 @@ namespace TarodevController
                 _dashToConsume = true;
             }
         }
-
-        public bool fuck;   
 
         private void FixedUpdate()
         {
@@ -511,7 +510,6 @@ namespace TarodevController
 
             _coyoteUsable = false;
 
-            colY = _col.size.y;
             _col.size = new Vector2 (_col.size.x, _col.size.x);
 
             _dashDirection = inputDirection.normalized;

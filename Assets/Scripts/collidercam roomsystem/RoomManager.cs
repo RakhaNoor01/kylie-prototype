@@ -26,14 +26,30 @@ public class RoomManager : MonoBehaviour
         allRooms.AddRange(FindObjectsByType<Room>(FindObjectsSortMode.None));
     }
 
-    //void Start()
-    //{
-    //    Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
-    //    if (startRoom != null)
-    //        LoadRoom(startRoom);
-    //    else
-    //        StartCoroutine(UnloadAllCoroutine());
-    //}
+    // Call this instead of the old Start() — safe for level selection too
+    public void InitializeStartRoom()
+    {
+        Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
+        if (startRoom == null) return;
+
+        CurrentRoom = startRoom;
+        StartCoroutine(InitCoroutine(startRoom));
+    }
+
+    private IEnumerator InitCoroutine(Room room)
+    {
+        var shouldBeLoaded = new HashSet<string>();
+        if (!string.IsNullOrEmpty(room.sceneName))
+            shouldBeLoaded.Add(room.sceneName);
+        foreach (var adjacent in room.adjacentRooms)
+            if (adjacent != null && !string.IsNullOrEmpty(adjacent.sceneName))
+                shouldBeLoaded.Add(adjacent.sceneName);
+
+        yield return StartCoroutine(SyncScenesCoroutine(shouldBeLoaded));
+
+        // After scenes are loaded, tell CheckpointManager to place the player
+        CheckpointManager.Instance?.SpawnAtRoom(room);
+    }
 
     public void EnterRoom(Room room)
     {

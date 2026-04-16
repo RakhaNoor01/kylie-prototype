@@ -175,5 +175,37 @@ public class CheckpointManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnLoaded;
     }
 
+    public void SpawnAtRoom(Room room)
+    {
+        // Find the starting checkpoint in the room scene, or fall back to room origin
+        Vector3 spawnPos = GetRoomSpawnPosition(room);
+        SetCheckpoint(spawnPos, room.sceneName, false); // false = don't use isStartingPoint logic
+        FindPlayer();
+        if (player != null)
+            player.transform.position = spawnPos;
+    }
+
+    private Vector3 GetRoomSpawnPosition(Room room)
+    {
+        // Look for a Checkpoint with isStartingPoint in the loaded scene
+        Scene scene = SceneManager.GetSceneByName(room.sceneName);
+        if (scene.isLoaded)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                var cp = root.GetComponentInChildren<Checkpoint>();
+                if (cp != null)
+                {
+                    return cp.setLocation != null
+                        ? cp.setLocation.position
+                        : cp.transform.position;
+                }
+            }
+        }
+        // No checkpoint found — you could fall back to a Room-defined spawn point here
+        Debug.LogWarning($"[CheckpointManager] No checkpoint found in {room.sceneName}, using zero");
+        return Vector3.zero;
+    }
+
     public bool IsPlayerInvincible() => invincibilityTimer > 0;
 }

@@ -9,16 +9,14 @@ public class SoloLeveling : MonoBehaviour
 
     public void LoadLevel(string sceneName)
     {
-        // im crine
         playerStatic = player;
-
-        if (sceneName == null || string.IsNullOrEmpty(sceneName))
-        {
-            Debug.LogWarning("[LevelLoader] Provided SceneField is null or has no scene name.");
-            return;
-        }
+        if (string.IsNullOrEmpty(sceneName)) { Debug.LogWarning("..."); return; }
 
         SceneManager.LoadScene(playerStatic);
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        // Use the callback overload so we init *after* both scenes exist
+        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive).completed += _ =>
+        {
+            RoomManager.Instance?.InitializeStartRoom();
+        };
     }
 }
