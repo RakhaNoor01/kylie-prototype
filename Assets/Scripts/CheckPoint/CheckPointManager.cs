@@ -109,10 +109,40 @@ public class CheckpointManager : MonoBehaviour
     private IEnumerator RespawnSequence()
     {
         isRespawning = true;
+
+        UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
+        if (fade != null) fade.PlayFadeOut(); // fade out before anything resets
+
         yield return new WaitForSeconds(respawnDelay);
 
         FindPlayer();
 
+        if (player != null)
+        {
+            PlayerController controller = player.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                controller.enabled = false; // disable during reload
+            }
+        }
+
+        // Reload the room scenes
+        Room targetRoom = RoomManager.Instance?.GetRoomByName(checkpointScene);
+        if (targetRoom != null)
+        {
+            yield return StartCoroutine(RoomManager.Instance.ReloadRoomCoroutine(targetRoom));
+        }
+        else
+        {
+            // Fallback for non-RoomManager setups
+            pendingRespawn = true;
+            SceneManager.LoadScene(SoloLeveling.playerStatic);
+            SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
+            isRespawning = false;
+            yield break;
+        }
+
+        // Scenes are fresh — now reset player
         if (player != null)
         {
             PlayerController controller = player.GetComponent<PlayerController>();
@@ -134,31 +164,12 @@ public class CheckpointManager : MonoBehaviour
                 anim.ResetDeath();
             }
 
-            UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
-            if (fade != null) fade.PlayFadeIn();
-
+            TeleportPlayerToCheckpoint();
             invincibilityTimer = invincibilityTime;
+
+            if (fade != null) fade.PlayFadeIn();
         }
 
-        // Make sure the right room is loaded
-        Room targetRoom = RoomManager.Instance?.GetRoomByName(checkpointScene);
-        if (targetRoom != null)
-        {
-            RoomManager.Instance.LoadRoom(targetRoom);
-            // Wait for RoomManager's coroutine to finish loading scenes
-            yield return StartCoroutine(WaitForSceneLoaded(checkpointScene));
-        }
-        else
-        {
-            pendingRespawn = true; // let OnSceneLoaded handle teleport
-            SceneManager.LoadScene(SoloLeveling.playerStatic);
-            SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
-            isRespawning = false;
-            yield break;
-        }
-
-        // Scene is loaded — teleport directly
-        TeleportPlayerToCheckpoint();
         isRespawning = false;
     }
 

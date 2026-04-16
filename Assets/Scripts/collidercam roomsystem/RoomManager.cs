@@ -119,6 +119,33 @@ public class RoomManager : MonoBehaviour
         loadedScenes.Clear();
     }
 
+    public IEnumerator ReloadRoomCoroutine(Room room)
+    {
+        var shouldBeLoaded = new HashSet<string>();
+        if (!string.IsNullOrEmpty(room.sceneName))
+            shouldBeLoaded.Add(room.sceneName);
+        foreach (var adjacent in room.adjacentRooms)
+            if (adjacent != null && !string.IsNullOrEmpty(adjacent.sceneName))
+                shouldBeLoaded.Add(adjacent.sceneName);
+
+        // Unload all currently loaded room scenes first
+        var toUnload = new List<string>(loadedScenes);
+        foreach (var sceneName in toUnload)
+        {
+            yield return SceneManager.UnloadSceneAsync(sceneName);
+            loadedScenes.Remove(sceneName);
+        }
+
+        // Fresh load
+        foreach (var sceneName in shouldBeLoaded)
+        {
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            loadedScenes.Add(sceneName);
+        }
+
+        CurrentRoom = room;
+    }
+
     public Room GetRoomByName(string sceneName)
     {
         return allRooms.Find(r => r.sceneName == sceneName);
