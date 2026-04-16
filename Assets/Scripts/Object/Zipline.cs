@@ -118,8 +118,12 @@ public class Zipline : MonoBehaviour
     {
         if (ziplineFx == null) return;
         ziplineFx.Stop();
-        ziplineFx.transform.parent = transform;
-        ziplineFx.transform.position = transform.position;
+        // Only re-parent if this object still exists
+        if (this != null && gameObject != null)
+        {
+            ziplineFx.transform.parent = transform;
+            ziplineFx.transform.position = transform.position;
+        }
     }
 
     private void StopZipline()
@@ -138,5 +142,38 @@ public class Zipline : MonoBehaviour
     {
         StopZipline();
         playerController.ForceJump();
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe from events to prevent MissingReferenceException
+        if (playerSplineAnim != null)
+            playerSplineAnim.Completed -= StopZipline;
+
+        if (playerController != null)
+        {
+            PlayerHealth playerHealth = playerController.gameObject.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+                playerHealth.death -= StopZipline;
+        }
+
+        // If destroyed while active, restore gravity and cleanup
+        if (isActive)
+        {
+            if (stats != null)
+                stats.FallAcceleration = ogFallAccel;
+
+            // Detach fx from player before this object dies
+            if (ziplineFx != null)
+            {
+                ziplineFx.Stop();
+                ziplineFx.transform.parent = null; // detach so it isn't destroyed with the scene yet
+            }
+
+            if (playerSplineAnim != null && playerSplineAnim.IsPlaying)
+                playerSplineAnim.Pause();
+
+            isActive = false;
+        }
     }
 }

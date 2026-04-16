@@ -23,6 +23,8 @@ public class CheckpointManager : MonoBehaviour
     private bool pendingRespawn = false;
     private string checkpointScene = "";
 
+    public bool IsRespawning => isRespawning;
+
     private void Awake()
     {
         if (Instance == null)
@@ -76,6 +78,7 @@ public class CheckpointManager : MonoBehaviour
     public void PlayerDied()
     {
         if (isRespawning) return;
+        isRespawning = true;
         StartCoroutine(RespawnSequence());
     }
 
@@ -108,25 +111,31 @@ public class CheckpointManager : MonoBehaviour
 
     private IEnumerator RespawnSequence()
     {
-        isRespawning = true;
-
         UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
-        if (fade != null) fade.PlayFadeOut(); // fade out before anything resets
+        if (fade != null) fade.PlayFadeOut();
 
-        yield return new WaitForSeconds(respawnDelay);
-
+        // Disable player entirely before any scene operations
         FindPlayer();
-
+        PlayerController controller = null;
         if (player != null)
         {
-            PlayerController controller = player.GetComponent<PlayerController>();
-            if (controller != null)
+            controller = player.GetComponent<PlayerController>();
+            if (controller != null) controller.enabled = false;
+
+            // Disable health so death can't re-trigger mid-reload
+            PlayerHealth health = player.GetComponent<PlayerHealth>();
+            if (health != null) health.enabled = false;
+
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
             {
-                controller.enabled = false; // disable during reload
+                rb.linearVelocity = Vector2.zero;
+                rb.simulated = false; // stop physics interactions entirely
             }
         }
 
-        // Reload the room scenes
+        yield return new WaitForSeconds(respawnDelay);
+
         Room targetRoom = RoomManager.Instance?.GetRoomByName(checkpointScene);
         if (targetRoom != null)
         {
@@ -134,7 +143,6 @@ public class CheckpointManager : MonoBehaviour
         }
         else
         {
-            // Fallback for non-RoomManager setups
             pendingRespawn = true;
             SceneManager.LoadScene(SoloLeveling.playerStatic);
             SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
@@ -142,10 +150,16 @@ public class CheckpointManager : MonoBehaviour
             yield break;
         }
 
-        // Scenes are fresh — now reset player
+        // Re-enable physics before teleport
         if (player != null)
         {
-            PlayerController controller = player.GetComponent<PlayerController>();
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.simulated = true;
+                rb.gravityScale = 1f;
+            }
+
             if (controller != null)
             {
                 controller.ResetWallStates();
@@ -164,6 +178,9 @@ public class CheckpointManager : MonoBehaviour
                 anim.ResetDeath();
             }
 
+            PlayerHealth health = player.GetComponent<PlayerHealth>();
+            if (health != null) health.enabled = true;
+
             TeleportPlayerToCheckpoint();
             invincibilityTimer = invincibilityTime;
 
@@ -171,19 +188,6 @@ public class CheckpointManager : MonoBehaviour
         }
 
         isRespawning = false;
-    }
-
-    private IEnumerator WaitForSceneLoaded(string sceneName)
-    {
-        // If already loaded, continue immediately
-        if (SceneManager.GetSceneByName(sceneName).isLoaded)
-            yield break;
-
-        bool loaded = false;
-        void OnLoaded(Scene s, LoadSceneMode m) { if (s.name == sceneName) loaded = true; }
-        SceneManager.sceneLoaded += OnLoaded;
-        yield return new WaitUntil(() => loaded);
-        SceneManager.sceneLoaded -= OnLoaded;
     }
 
     public void SpawnAtRoom(Room room)

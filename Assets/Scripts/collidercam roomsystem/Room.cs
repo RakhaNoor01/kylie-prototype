@@ -33,6 +33,7 @@ public class Room : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         if (!overlappingRooms.Contains(this))
             overlappingRooms.Add(this);
+        if (CheckpointManager.Instance.IsRespawning) return;
         RoomManager.Instance.EnterRoom(this);
     }
 
