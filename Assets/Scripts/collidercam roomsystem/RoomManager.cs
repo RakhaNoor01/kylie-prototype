@@ -17,6 +17,9 @@ public class RoomManager : MonoBehaviour
     // Tracks which room scenes are currently loaded
     private readonly HashSet<string> loadedScenes = new HashSet<string>();
 
+    // Prevent SyncScenes and ReloadRooms from running at the same time, causing a double room reload
+    private bool isSyncing = false;
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -80,6 +83,9 @@ public class RoomManager : MonoBehaviour
 
     private IEnumerator SyncScenesCoroutine(HashSet<string> shouldBeLoaded)
     {
+        if (isSyncing) yield break;
+        isSyncing = true;
+
         // Load scenes that should be active but aren't
         foreach (var sceneName in shouldBeLoaded)
         {
@@ -108,6 +114,8 @@ public class RoomManager : MonoBehaviour
             yield return SceneManager.UnloadSceneAsync(sceneName);
             loadedScenes.Remove(sceneName);
         }
+
+        isSyncing = false;
     }
 
     private IEnumerator UnloadAllCoroutine()
@@ -121,6 +129,9 @@ public class RoomManager : MonoBehaviour
 
     public IEnumerator ReloadRoomCoroutine(Room room)
     {
+        if (isSyncing) yield break;
+        isSyncing = true;
+
         var shouldBeLoaded = new HashSet<string>();
         if (!string.IsNullOrEmpty(room.sceneName))
             shouldBeLoaded.Add(room.sceneName);
@@ -144,6 +155,8 @@ public class RoomManager : MonoBehaviour
         }
 
         CurrentRoom = room;
+
+        isSyncing = false;
     }
 
     public Room GetRoomByName(string sceneName)
