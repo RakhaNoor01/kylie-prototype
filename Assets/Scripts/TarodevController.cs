@@ -661,6 +661,12 @@ namespace TarodevController
                 return;
             }
 
+            // Update glide input ready before checking glide state
+            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
+                _glideInputReady = true;
+            if (_grounded)
+                _glideInputReady = false;
+
             // Gliding logic
             if (_frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0)
             {
@@ -692,12 +698,6 @@ namespace TarodevController
                     return;
                 }
             }
-
-            // Update glide input ready
-            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
-                _glideInputReady = true;
-            if (_grounded)
-                _glideInputReady = false;
 
             _jumpHeldLastFrame = _frameInput.JumpHeld;
 
@@ -757,6 +757,15 @@ namespace TarodevController
         public void RechargeDash()
         {
             _dashAvailable = true;
+        }
+
+        /// <summary>
+        /// kill 9 billion people
+        /// </summary>
+        public void CancelDash()
+        {
+            _isDashing = false;
+            _dashEndTime = 0f;
         }
 
         /// <summary>

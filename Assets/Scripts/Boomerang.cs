@@ -402,6 +402,9 @@ public class Boomerang : MonoBehaviour
                 tpeffect.teleport();
                 isTping = false;
 
+                Catch();
+                imLowkTrolling.ForceJump();
+
                 _playerAudio?.PlayTeleport();
             });
     }
