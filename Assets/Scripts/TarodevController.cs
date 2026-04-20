@@ -23,7 +23,7 @@ namespace TarodevController
         private CapsuleCollider2D _col;
 
         private FrameInput _frameInput;
-        [SerializeField] private Vector2 _frameVelocity;
+        private Vector2 _frameVelocity;
 
         private bool _cachedQueryStartInColliders;
 
