@@ -23,7 +23,7 @@ namespace TarodevController
         private CapsuleCollider2D _col;
 
         private FrameInput _frameInput;
-        private Vector2 _frameVelocity;
+        [SerializeField] private Vector2 _frameVelocity;
 
         private bool _cachedQueryStartInColliders;
 
@@ -44,7 +44,8 @@ namespace TarodevController
         private float _glideStamina;
         private bool _jumpHeldLastFrame;
         private bool _glideInputReady;
-        
+
+        private Vector2 _externalVelocity;
 
         private PlayerAudio _audio;
 
@@ -738,11 +739,12 @@ namespace TarodevController
 
             if (_groundedPlatform != null)
             {
-                Vector2 platformVelocity =
-                    _groundedPlatform.Delta / Time.fixedDeltaTime;
-
+                Vector2 platformVelocity = _groundedPlatform.Delta / Time.fixedDeltaTime;
                 finalVelocity += platformVelocity;
             }
+
+            finalVelocity += _externalVelocity;
+            _externalVelocity = Vector2.zero;
 
             _rb.linearVelocity = finalVelocity;
         }
@@ -778,6 +780,16 @@ namespace TarodevController
         public void AddPlatformVelocity(Vector2 externalVelocity)
         {
             _frameVelocity += externalVelocity;
+        }
+
+        /// <summary>
+        /// Adds a persistent external velocity (e.g. air currents) that is
+        /// applied on top of the controller each frame and decays naturally.
+        /// Call every FixedUpdate from the external system while active.
+        /// </summary>
+        public void AddExternalVelocity(Vector2 velocity)
+        {
+            _externalVelocity += velocity;
         }
 
         /// <summary>
