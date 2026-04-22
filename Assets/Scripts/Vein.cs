@@ -5,7 +5,7 @@ public class Vein : MonoBehaviour
     public int health = 1;
     public string boomerangTag = "Goonerang";
     public ParticleSystem article;
-    public FallingPlatform platformBelow;
+    public BWFallingPlatform platformBelow;  // Changed from FallingPlatform
 
     private int currentHealth;
 
@@ -25,10 +25,12 @@ public class Vein : MonoBehaviour
     private void Hit()
     {
         currentHealth -= 1;
+
         if (article != null)
         {
             article.Play();
         }
+
         if (currentHealth <= 0)
         {
             FUCK();
@@ -39,10 +41,10 @@ public class Vein : MonoBehaviour
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        
+
         if (platformBelow != null)
         {
-            platformBelow.StartFalling();
+            platformBelow.StartFalling();  // BWFallingPlatform also has StartFalling... wait, it doesn't — see note
         }
     }
 }

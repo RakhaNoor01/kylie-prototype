@@ -23,6 +23,8 @@ public class CheckpointManager : MonoBehaviour
     private bool pendingRespawn = false;
     private string checkpointScene = "";
 
+    public bool IsRespawning => isRespawning;
+
     private void Awake()
     {
         if (Instance == null)
@@ -54,19 +56,12 @@ public class CheckpointManager : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private IEnumerator RestoreGravity(Rigidbody2D rb)
-    {
-        yield return new WaitForEndOfFrame();
-        if (rb != null)
-            rb.gravityScale = 3f;
-    }
-
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void SetCheckpoint(Vector3 newCheckpoint, string sceneName)
+    public void SetCheckpoint(Vector3 newCheckpoint, string sceneName, bool firsCpoint)
     {
         currentCheckpoint = newCheckpoint;
         checkpointScene = sceneName;
@@ -76,13 +71,14 @@ public class CheckpointManager : MonoBehaviour
         FindPlayer();
 
         // Teleport the player immediately on first checkpoint set
-        if (player != null)
+        if (player != null && firsCpoint)
             player.transform.position = currentCheckpoint;
     }
 
     public void PlayerDied()
     {
         if (isRespawning) return;
+        isRespawning = true;
         StartCoroutine(RespawnSequence());
     }
 
@@ -111,24 +107,68 @@ public class CheckpointManager : MonoBehaviour
         }
 
         player.transform.position = currentCheckpoint;
-        StartCoroutine(RestoreGravity(rb));
     }
 
     private IEnumerator RespawnSequence()
     {
-        isRespawning = true;
-        yield return new WaitForSeconds(respawnDelay);
+        UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
+        if (fade != null) fade.PlayFadeOut();
 
+        // Disable player entirely before any scene operations
         FindPlayer();
-
+        PlayerController controller = null;
         if (player != null)
         {
-            PlayerController controller = player.GetComponent<PlayerController>();
+            controller = player.GetComponent<PlayerController>();
+            if (controller != null) controller.enabled = false;
+
+            // Disable health so death can't re-trigger mid-reload
+            PlayerHealth health = player.GetComponent<PlayerHealth>();
+            if (health != null) health.enabled = false;
+
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.simulated = false; // stop physics interactions entirely
+            }
+        }
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        Room targetRoom = RoomManager.Instance?.GetRoomByName(checkpointScene);
+        if (targetRoom != null)
+        {
+            yield return StartCoroutine(RoomManager.Instance.ReloadRoomCoroutine(targetRoom));
+        }
+        else
+        {
+            pendingRespawn = true;
+            SceneManager.LoadScene(SoloLeveling.playerStatic);
+            SceneManager.LoadSceneAsync(checkpointScene, LoadSceneMode.Additive);
+            isRespawning = false;
+            yield break;
+        }
+
+        // Re-enable physics before teleport
+        if (player != null)
+        {
+            Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.simulated = true;
+                rb.gravityScale = 1f;
+            }
+
             if (controller != null)
             {
                 controller.ResetWallStates();
                 controller.ForceGroundedRespawn();
                 controller.enabled = true;
+
+                Boomerang boomerang = player.GetComponentInChildren<Boomerang>();
+                if (boomerang != null)
+                    boomerang.ResetBoomerang();
             }
 
             PlayerAnimator anim = player.GetComponentInChildren<PlayerAnimator>();
@@ -138,44 +178,48 @@ public class CheckpointManager : MonoBehaviour
                 anim.ResetDeath();
             }
 
-            UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
-            if (fade != null) fade.PlayFadeIn();
+            PlayerHealth health = player.GetComponent<PlayerHealth>();
+            if (health != null) health.enabled = true;
 
+            TeleportPlayerToCheckpoint();
             invincibilityTimer = invincibilityTime;
+
+            if (fade != null) fade.PlayFadeIn();
         }
 
-        // Make sure the right room is loaded
-        Room targetRoom = RoomManager.Instance?.GetRoomByName(checkpointScene);
-        if (targetRoom != null)
-        {
-            RoomManager.Instance.LoadRoom(targetRoom);
-            // Wait for RoomManager's coroutine to finish loading scenes
-            yield return StartCoroutine(WaitForSceneLoaded(checkpointScene));
-        }
-        else
-        {
-            pendingRespawn = true; // let OnSceneLoaded handle teleport
-            SceneManager.LoadScene(checkpointScene);
-            isRespawning = false;
-            yield break;
-        }
-
-        // Scene is loaded — teleport directly
-        TeleportPlayerToCheckpoint();
         isRespawning = false;
     }
 
-    private IEnumerator WaitForSceneLoaded(string sceneName)
+    public void SpawnAtRoom(Room room)
     {
-        // If already loaded, continue immediately
-        if (SceneManager.GetSceneByName(sceneName).isLoaded)
-            yield break;
+        // Find the starting checkpoint in the room scene, or fall back to room origin
+        Vector3 spawnPos = GetRoomSpawnPosition(room);
+        SetCheckpoint(spawnPos, room.sceneName, false); // false = don't use isStartingPoint logic
+        FindPlayer();
+        if (player != null)
+            player.transform.position = spawnPos;
+    }
 
-        bool loaded = false;
-        void OnLoaded(Scene s, LoadSceneMode m) { if (s.name == sceneName) loaded = true; }
-        SceneManager.sceneLoaded += OnLoaded;
-        yield return new WaitUntil(() => loaded);
-        SceneManager.sceneLoaded -= OnLoaded;
+    private Vector3 GetRoomSpawnPosition(Room room)
+    {
+        // Look for a Checkpoint with isStartingPoint in the loaded scene
+        Scene scene = SceneManager.GetSceneByName(room.sceneName);
+        if (scene.isLoaded)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                var cp = root.GetComponentInChildren<Checkpoint>();
+                if (cp != null)
+                {
+                    return cp.setLocation != null
+                        ? cp.setLocation.position
+                        : cp.transform.position;
+                }
+            }
+        }
+        // No checkpoint found — you could fall back to a Room-defined spawn point here
+        Debug.LogWarning($"[CheckpointManager] No checkpoint found in {room.sceneName}, using zero");
+        return Vector3.zero;
     }
 
     public bool IsPlayerInvincible() => invincibilityTimer > 0;
