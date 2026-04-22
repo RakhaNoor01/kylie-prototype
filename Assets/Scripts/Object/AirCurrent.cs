@@ -6,9 +6,9 @@ public class AirCurrent : MonoBehaviour
     public float slowfall = 1f;
     public float glideAccel = 5f;
     public float maxGlide = 10f;
+    public bool horizontal = false;
     private float internalGlide = 0f;
 
-    // The current's direction in world space, derived from the object's rotation
     private Vector2 CurrentDirection => transform.up;
 
     private void Reset()
@@ -42,13 +42,10 @@ public class AirCurrent : MonoBehaviour
 
         if (wantsGlide)
         {
-            // Ramp up the push along the current's direction
             internalGlide = Mathf.Min(internalGlide + glideAccel * Time.deltaTime, maxGlide);
 
-            // Project current velocity onto current direction
             float velocityAlongCurrent = Vector2.Dot(vel, dir);
 
-            // Only push if we haven't reached max push along that axis
             if (velocityAlongCurrent < internalGlide)
             {
                 pc.AddExternalVelocity(dir * internalGlide);
@@ -58,14 +55,24 @@ public class AirCurrent : MonoBehaviour
         {
             internalGlide = 0f;
 
-            // Slow movement against the current direction (generalised "slowfall")
             float velocityAlongCurrent = Vector2.Dot(vel, dir);
 
-            // If moving opposite to the current direction beyond the slowfall threshold, clamp it
-            if (velocityAlongCurrent < -slowfall)
+            if (horizontal)
             {
-                vel -= dir * velocityAlongCurrent;      // strip the component
-                vel += dir * (-slowfall);               // replace with clamped value
+                // Pushing Current
+                if (velocityAlongCurrent < slowfall)
+                {
+                    pc.AddExternalVelocity(dir * slowfall);
+                }
+            }
+            else
+            {
+                // Slowfall
+                if (velocityAlongCurrent < -slowfall)
+                {
+                    float correction = (-slowfall) - velocityAlongCurrent;
+                    pc.AddExternalVelocity(dir * correction);
+                }
             }
         }
 
