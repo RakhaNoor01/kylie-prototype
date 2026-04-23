@@ -1,23 +1,31 @@
 using UnityEngine;
 using System.Collections;
 
-public class DwiNPC : MonoBehaviour
+public class JacobNPC : MonoBehaviour
 {
     [Header("=== REFERENCES ===")]
     public Animator animator;
     public SpriteRenderer spriteRenderer;
 
+    [Header("=== PORTRAIT CUSTOM ===")]
+    public Sprite dialoguePortrait;
+
     [Header("=== DIALOGUE ===")]
     public DialogueData dialogue;
-    public Sprite dialoguePortrait;
-    public string npcNameFallback = "Dwi";
 
-    [Header("=== INDICATOR ===")]
+    [Tooltip("Fallback nama NPC jika DialogueData.npcDisplayName kosong.")]
+    public string npcNameFallback = "Jacob";
+
+    [Header("=== INTERACTION INDICATOR ===")]
     public SpriteRenderer interactionIndicator;
 
-    [Header("=== ANIMATION ===")]
-    public string idleAnimName = "Idle";
-    public string talkAnimName = "Talk";
+    [Header("=== INDICATOR BOB ===")]
+    public float bobHeight = 0.1f;
+    public float bobSpeed  = 3f;
+
+    [Header("=== ANIMATION NAMES ===")]
+    public string idleAnimName = "Cob-Idle";
+    public string talkAnimName = "Cob-Talk";
 
     private enum State { Idle, Talking, Done }
     private State currentState = State.Idle;
@@ -26,10 +34,14 @@ public class DwiNPC : MonoBehaviour
     private Rigidbody2D playerRb;
 
     private bool playerInRange = false;
+    private Vector3 indicatorOrigin;
 
-    // ─────────────────────────────
+    // ─────────────────────────────────────────────
     private void Start()
     {
+        if (interactionIndicator != null)
+            indicatorOrigin = interactionIndicator.transform.localPosition;
+
         ChangeState(State.Idle);
         RefreshIndicator();
     }
@@ -43,6 +55,7 @@ public class DwiNPC : MonoBehaviour
 
         player = go.transform;
         playerRb = go.GetComponent<Rigidbody2D>();
+
         return true;
     }
 
@@ -50,13 +63,21 @@ public class DwiNPC : MonoBehaviour
     {
         if (!TryGetPlayer()) return;
 
-        // Hadap player (anggap default sprite hadap kiri → sama kayak Jacob)
-        if (currentState != State.Talking && player != null)
+        // 🔻 HADAP KE PLAYER
+        if ((currentState == State.Idle || currentState == State.Done) && player != null)
         {
-            spriteRenderer.flipX = player.position.x < transform.position.x;
+            spriteRenderer.flipX = player.position.x > transform.position.x;
         }
 
-        // Interact
+        // indicator bobbing
+        if (interactionIndicator != null && interactionIndicator.enabled)
+        {
+            float offsetY = Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+            interactionIndicator.transform.localPosition =
+                indicatorOrigin + new Vector3(0f, offsetY, 0f);
+        }
+
+        // interact
         if (playerInRange
             && Input.GetButtonDown("Submit")
             && !DialogueManager.Instance.IsDialogueActive
@@ -66,12 +87,12 @@ public class DwiNPC : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────
+    // ─────────────────────────────────────────────
     private void DoInteract()
     {
         ChangeState(State.Talking);
 
-        // Freeze player
+        // 🔻 MATIIN RIGIDBODY PLAYER
         if (playerRb != null)
         {
             playerRb.linearVelocity = Vector2.zero;
@@ -99,15 +120,16 @@ public class DwiNPC : MonoBehaviour
             playerRb.simulated = true;
     }
 
-    // ─────────────────────────────
+    // ─────────────────────────────────────────────
     private void RefreshIndicator()
     {
         if (interactionIndicator == null) return;
 
-        interactionIndicator.enabled =
-            (currentState == State.Idle && playerInRange);
+        bool canInteract = currentState == State.Idle && playerInRange;
+        interactionIndicator.enabled = canInteract;
     }
 
+    // ─────────────────────────────────────────────
     private void ChangeState(State newState)
     {
         currentState = newState;
@@ -118,7 +140,6 @@ public class DwiNPC : MonoBehaviour
             case State.Done:
                 ForcePlay(idleAnimName);
                 break;
-
             case State.Talking:
                 ForcePlay(talkAnimName);
                 break;
@@ -134,11 +155,10 @@ public class DwiNPC : MonoBehaviour
         animator.Play(stateName, -1, 0f);
     }
 
-    // ─────────────────────────────
+    // ─────────────────────────────────────────────
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = true;
         RefreshIndicator();
     }
@@ -146,7 +166,6 @@ public class DwiNPC : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
         playerInRange = false;
         RefreshIndicator();
     }
