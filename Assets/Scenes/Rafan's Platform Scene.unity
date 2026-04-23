@@ -151,9 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f2e61e2baff774b9d56decf66cb810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovablePlatfrom
-  pointA: {fileID: 221081413}
-  pointB: {fileID: 1797317623}
-  speed: 3.01
+  targets: []
+  pingPong: 0
+  defaultSpeed: 2
 --- !u!50 &3919868
 Rigidbody2D:
   serializedVersion: 5
@@ -333,8 +333,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.PlayerController
   _stats: {fileID: 11400000, guid: 655a7b4943e728d449968cb96e5df019, type: 2}
+  _frameVelocity: {x: 0, y: 0}
   _pogoWindowDuration: 0.25
+  wallClingKey: 0
   doWeDeserveDestruction: 0
+  _dashEffect: {fileID: 0}
 --- !u!50 &208926385
 Rigidbody2D:
   serializedVersion: 5
@@ -554,8 +557,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a689f524d3c1a646bfb45683a4a3d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
-  _controller: {fileID: 208926384}
   _visuals: {fileID: 258791760}
+  _controller: {fileID: 208926384}
 --- !u!95 &258791762
 Animator:
   serializedVersion: 7
@@ -1376,7 +1379,7 @@ SpriteRenderer:
   m_Size: {x: 0.18, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!50 &967460064
 Rigidbody2D:
@@ -1455,13 +1458,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Boomerang
   player: {fileID: 208926379}
   throwPower: 25
+  throwKey: 0
+  noCatchPeriod: 0.15
   returnLerpStrength: 1.1
   maxSpeed: 30
   distanceMult: 1.2
   distMultDelayTime: 1
   slowDown: 0.25
+  tpSpeed: 0.1
   directionIndicator: {fileID: 969857062}
   tpeffect: {fileID: 0}
+  rangTrail: {fileID: 0}
 --- !u!1 &969857062
 GameObject:
   m_ObjectHideFlags: 0
@@ -2198,7 +2205,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467061994}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.00000037252897, w: 1}
   m_LocalPosition: {x: 0.213, y: -7.362, z: 0}
   m_LocalScale: {x: 0.98393935, y: 0.2625, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7674,9 +7681,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f2e61e2baff774b9d56decf66cb810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovablePlatfrom
-  pointA: {fileID: 2095246774}
-  pointB: {fileID: 718420471}
-  speed: 2
+  targets: []
+  pingPong: 0
+  defaultSpeed: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

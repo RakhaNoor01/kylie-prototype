@@ -14,6 +14,6 @@ public class DeathZone : MonoBehaviour
 
         PlayerHealth health = playerObject.GetComponent<PlayerHealth>();
         if (health != null)
-            health.Die(dir);
+            health.Die(-dir);
     }
 }

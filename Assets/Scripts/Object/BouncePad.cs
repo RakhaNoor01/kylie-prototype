@@ -1,35 +1,40 @@
+using TarodevController;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class BouncePad : MonoBehaviour
 {
-    [Tooltip("Vertical strength applied to a PlayerController when the player touches the pad.")]
+    [Tooltip("Launch strength applied in the pad's up direction.")]
     public float force = 10f;
+    [Tooltip("How horizontal the pad can be (0=sideways, 1=upright) before a ForceJump upkick is added.")]
+    [Range(0f, 1f)]
+    public float horizontalThreshold = 0.5f;
 
     private void Reset()
     {
-        // make sure the pad has a trigger collider by default
-        var col = GetComponent<Collider2D>();
-        col.isTrigger = true;
+        GetComponent<Collider2D>().isTrigger = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        // optional tag check if you want to restrict bounce to objects marked as "Player"
         if (!collision.CompareTag("Player")) return;
-
-        var pc = collision.GetComponent<TarodevController.PlayerController>();
+        var pc = collision.GetComponent<PlayerController>();
         if (pc == null) return;
 
-        // use the controller's bounce method instead of fiddling with the rigidbody directly
-        pc.ApplyBounce(force);
+        pc.CancelDash();
+        Vector2 launchVelocity = transform.up * force;
+        pc.SetFrameVelocity(launchVelocity);
+        float uprightness = Vector2.Dot(transform.up, Vector2.up);
+        if (uprightness < horizontalThreshold)
+            pc.ForceJump();
+        pc.RechargeDash();
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.cyan;
         Vector3 start = transform.position;
-        Vector3 end = start + transform.up * force * 0.25f; // scale down for visualization
+        Vector3 end = start + transform.up * force * 0.25f;
         Gizmos.DrawLine(start, end);
     }
 }

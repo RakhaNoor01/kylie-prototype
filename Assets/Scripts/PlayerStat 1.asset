@@ -19,7 +19,7 @@ MonoBehaviour:
   VerticalDeadZoneThreshold: 0.3
   HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 7
-  Acceleration: 70
+  Acceleration: 150
   GroundDeceleration: 60
   AirDeceleration: 15
   GroundingForce: -1.5
@@ -30,6 +30,10 @@ MonoBehaviour:
   JumpEndEarlyGravityModifier: 1
   CoyoteTime: 0.15
   JumpBuffer: 0.2
+  GlideSpeed: 2
+  GlideDuration: 3
+  GlideEntrySpeed: 30
+  GlideSpeedMultiplier: 1.2
   DashSpeed: 25
   DashDuration: 0.1
   DashCooldown: 1

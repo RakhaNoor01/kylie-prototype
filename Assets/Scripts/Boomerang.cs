@@ -90,6 +90,7 @@ public class Boomerang : MonoBehaviour
         judgement = player.GetComponent<PlayerHealth>();
 
         judgement.death += ThyEndIsNow;
+        judgement.tping = false;
 
         _playerAudio = player.GetComponent<PlayerAudio>();
     }
@@ -390,6 +391,7 @@ public class Boomerang : MonoBehaviour
 
         hasTped = true;
         isTping = true;
+        judgement.tping = isTping;
 
         tpeffect.ToggleTrail(true);
 
@@ -401,6 +403,10 @@ public class Boomerang : MonoBehaviour
                 tpeffect.ToggleTrail(false);
                 tpeffect.teleport();
                 isTping = false;
+                judgement.tping = isTping;
+
+                Catch();
+                imLowkTrolling.ForceJump();
 
                 _playerAudio?.PlayTeleport();
             });

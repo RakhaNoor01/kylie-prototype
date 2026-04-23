@@ -11,10 +11,31 @@ public class PlayerAnimator : MonoBehaviour
 
     public PlayerController _controller;
 
+    public GameObject glider;
+
+    private GameObject gliderOff;
+    private GameObject gliderOn;
+    private Animator gloffAnim;
+
+    // Glider state tracking
+    private bool _gliderEquipped = false;
+    private bool _wasGliding = false;
+    private bool _isUnequipping = false;
+    private Transform _gliderOriginalParent;
+    private Vector3 _gliderOriginalLocalPos;
+    private Quaternion _gliderOriginalLocalRot;
+
     private void Awake()
     {
         _anim = GetComponentInChildren<Animator>();
         //_controller = GetComponent<PlayerController>();
+
+        gliderOff = glider.transform.Find("off")?.gameObject;
+        gliderOn = glider.transform.Find("on")?.gameObject;
+        gloffAnim = gliderOff.GetComponent<Animator>();
+
+        gliderOff.GetComponent<SpriteRenderer>().enabled = false;
+        gliderOn.GetComponent<SpriteRenderer>().enabled = false;
     }
     private void OnEnable()
     {
@@ -32,8 +53,9 @@ public class PlayerAnimator : MonoBehaviour
         if (_isDead) return; // dead = skip animations
 
         HandleAnimations(); // this reads velocity and sets animator
+        HandleGliderAnims();
     }
-        public void SetGlide(bool isGliding)
+    public void SetGlide(bool isGliding)
     {
         if (_anim != null)
             _anim.SetBool("IsGliding", isGliding);
@@ -130,6 +152,85 @@ public class PlayerAnimator : MonoBehaviour
         }
     }
 
+    // glider animation
+    private void HandleGliderAnims()
+    {
+        bool controllerGlider = _controller.Glider;
+        bool isGliding = _controller.IsGliding;
 
+        // Equip: Glider just became true
+        if (controllerGlider && !_gliderEquipped && !_isUnequipping)
+        {
+            _gliderEquipped = true;
+
+            glider.SetActive(true);
+            gliderOff.GetComponent<SpriteRenderer>().enabled = true;
+            gliderOn.GetComponent<SpriteRenderer>().enabled = false;
+
+            gloffAnim.Play("gliderEquip", 0, 0f);
+        }
+
+        // Gliding started
+        if (isGliding && !_wasGliding && _gliderEquipped)
+        {
+            gliderOff.GetComponent<SpriteRenderer>().enabled = false;
+            gliderOn.GetComponent<SpriteRenderer>().enabled = true;
+        }
+
+        // Gliding stopped (but still equipped)
+        if (!isGliding && _wasGliding && _gliderEquipped)
+        {
+            gliderOff.GetComponent<SpriteRenderer>().enabled = true;
+            gliderOn.GetComponent<SpriteRenderer>().enabled = false;
+        }
+
+        // Unequip: Glider just became false
+        if (!controllerGlider && _gliderEquipped && !_isUnequipping)
+        {
+            _gliderEquipped = false;
+            _isUnequipping = true;
+
+            // Show "off" sprite for the unequip anim, hide "on"
+            gliderOff.GetComponent<SpriteRenderer>().enabled = true;
+            gliderOn.GetComponent<SpriteRenderer>().enabled = false;
+
+            // Unparent so the glider can fly off independently
+            glider.transform.SetParent(null);
+
+            gloffAnim.Play("gliderUneq", 0, 0f);
+
+            // Wait for the clip to finish, then reparent and disable
+            float clipLength = GetAnimClipLength(gloffAnim, "gliderUneq");
+            StartCoroutine(ReparentAfterDelay(clipLength));
+        }
+
+        _wasGliding = isGliding;
+    }
+
+    private System.Collections.IEnumerator ReparentAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        glider.transform.SetParent(_gliderOriginalParent);
+        glider.transform.localPosition = _gliderOriginalLocalPos;
+        glider.transform.localRotation = _gliderOriginalLocalRot;
+        glider.SetActive(false);
+
+        _isUnequipping = false;
+    }
+
+    private float GetAnimClipLength(Animator animator, string clipName)
+    {
+        if (animator == null || animator.runtimeAnimatorController == null) return 1f;
+
+        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == clipName)
+                return clip.length;
+        }
+
+        Debug.LogWarning($"Clip '{clipName}' not found on {animator.name}, defaulting to 1s");
+        return 1f;
+    }
 
 }
