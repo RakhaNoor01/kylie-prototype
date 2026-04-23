@@ -28,6 +28,12 @@ public class BouncePad : MonoBehaviour
         if (uprightness < horizontalThreshold)
             pc.ForceJump();
         pc.RechargeDash();
+
+        var rang = pc.gameObject.GetComponentInChildren<Boomerang>();
+        if (rang != null)
+        {
+            rang.hasTped = false;
+        }
     }
 
     private void OnDrawGizmos()

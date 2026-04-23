@@ -50,7 +50,7 @@ public class Boomerang : MonoBehaviour
 
     private PlayerController imLowkTrolling;
     private PlayerHealth judgement;
-    private bool hasTped;
+    public bool hasTped;
     private bool isTping;
 
     // --- Alternate throw mode (J + WASD) ---

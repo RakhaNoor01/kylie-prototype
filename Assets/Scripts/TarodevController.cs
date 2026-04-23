@@ -303,6 +303,8 @@ namespace TarodevController
             _frameVelocity = Vector2.zero;
         }
 
+        public bool imgonnatouchyou;
+
         private void CheckWallContact()
         {
             float verticalOffset = _col.size.y * 0.4f;
@@ -328,6 +330,7 @@ namespace TarodevController
             TouchingRightWall = _facingDirection > 0 && touchingWall;
 
             _isTouchingWall = touchingWall;
+            imgonnatouchyou = touchingWall;
 
             _clingPlatformRb = touchingWall
                 ? (topHit.rigidbody != null ? topHit.rigidbody : bottomHit.rigidbody)
@@ -335,6 +338,11 @@ namespace TarodevController
 
             if (touchingWall)
                 _lastWallDirection = _facingDirection;
+
+            if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0)
+            {
+                _frameVelocity.x = 0f;
+            }
         }
 
         private void HandleWallCling()
