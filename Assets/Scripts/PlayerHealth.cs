@@ -24,6 +24,8 @@ public class PlayerHealth : MonoBehaviour
 
     public event Action death;
 
+    public bool tping;
+
     private void Update()
     {
         if (transform.position.y < voidThreshold)
@@ -34,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die(Vector2? hitDirection = null)
     {
-        if (_isDead) return;
+        if (_isDead || tping) return;
         if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsPlayerInvincible()) return;
 
         _isDead = true;

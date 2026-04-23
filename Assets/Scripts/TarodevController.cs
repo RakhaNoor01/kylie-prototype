@@ -196,8 +196,8 @@ namespace TarodevController
             ceilFilter.SetLayerMask(~_stats.PlayerLayer);
             ceilFilter.useLayerMask = true;
 
-            RaycastHit2D[] ceilResults = new RaycastHit2D[1];
-            bool ceilingHit = Physics2D.CapsuleCast(
+            RaycastHit2D[] ceilResults = new RaycastHit2D[2]; // increased buffer to catch One Way objects
+            int ceilHitCount = Physics2D.CapsuleCast(
                 _col.bounds.center,
                 _col.size,
                 _col.direction,
@@ -206,7 +206,17 @@ namespace TarodevController
                 ceilFilter,
                 ceilResults,
                 _stats.GrounderDistance
-            ) > 0;
+            );
+
+            bool ceilingHit = false;
+            for (int i = 0; i < ceilHitCount; i++)
+            {
+                if (!ceilResults[i].collider.CompareTag("One Way"))
+                {
+                    ceilingHit = true;
+                    break;
+                }
+            }
 
             // Hit a Ceiling
             if (ceilingHit)
@@ -650,67 +660,23 @@ namespace TarodevController
 
         #region Gravity
 
+        public bool Glider;
+
         private void HandleGravity()
         {
             if (_isClinging)
             {
                 Vector2 platformVel = (_clingPlatformRb != null)
-                    ? new Vector2 (_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
+                    ? new Vector2(_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
                     : Vector2.zero;
                 _frameVelocity = platformVel;
                 _rb.linearVelocity = _frameVelocity;
                 return;
             }
 
-            // Update glide input ready before checking glide state
-            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
-                _glideInputReady = true;
-            if (_grounded)
-                _glideInputReady = false;
+            if (HandleGlide()) return;
 
-            // Gliding logic
-            if (_frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0)
-            {
-                _isGliding = true;
-            }
-            else
-            {
-                _isGliding = false;
-            }
-
-            // Audio Gliding
-            if (_isGliding)
-                _audio?.StartGlide();
-            else
-                _audio?.StopGlide();
-
-            if (_isGliding)
-            {
-                _glideStamina -= Time.fixedDeltaTime;
-                if (_glideStamina <= 0)
-                    _isGliding = false;
-                else
-                {
-                    _frameVelocity.y = Mathf.MoveTowards(
-                        _frameVelocity.y,
-                        -_stats.GlideSpeed,
-                        _stats.GlideEntrySpeed * Time.fixedDeltaTime
-                    );
-                    return;
-                }
-            }
-
-            _jumpHeldLastFrame = _frameInput.JumpHeld;
-
-            if (_anim != null) _anim.SetGlide(_isGliding);
-
-            // Reduce gravity during dash for better control
-            if (_isDashing)
-            {
-                //_frameVelocity.y = Mathf.MoveTowards(_frameVelocity.y, 0, _stats.FallAcceleration * Time.fixedDeltaTime);
-                //commented the stuff above, shouldnt do anything
-                return;
-            }
+            if (_isDashing) return;
 
             if (_grounded && _frameVelocity.y <= 0f)
             {
@@ -729,6 +695,46 @@ namespace TarodevController
                     inAirGravity * Time.fixedDeltaTime
                 );
             }
+        }
+
+        private bool HandleGlide()
+        {
+            if (!Glider) return false;
+
+            // Track whether jump was released mid-air to ready the glide
+            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
+                _glideInputReady = true;
+            if (_grounded)
+                _glideInputReady = false;
+
+            // Determine glide state
+            _isGliding = _frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0;
+
+            if (_isGliding)
+                _audio?.StartGlide();
+            else
+                _audio?.StopGlide();
+
+            if (_anim != null) _anim.SetGlide(_isGliding);
+
+            _jumpHeldLastFrame = _frameInput.JumpHeld;
+
+            if (!_isGliding) return false;
+
+            _glideStamina -= Time.fixedDeltaTime;
+            if (_glideStamina <= 0)
+            {
+                _isGliding = false;
+                return false;
+            }
+
+            _frameVelocity.y = Mathf.MoveTowards(
+                _frameVelocity.y,
+                -_stats.GlideSpeed,
+                _stats.GlideEntrySpeed * Time.fixedDeltaTime
+            );
+
+            return true;
         }
 
         #endregion

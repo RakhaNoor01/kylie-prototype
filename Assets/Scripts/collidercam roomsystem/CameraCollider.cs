@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using TarodevController;
 
 [RequireComponent(typeof(Collider2D))]
 public class CameraCollider : MonoBehaviour
@@ -94,8 +95,6 @@ public class CameraCollider : MonoBehaviour
         // If we weren't in control, nothing else to do
         if (activeZone != this) return;
 
-        if (!resetOnExit) return;
-
         if (overlappingZones.Count > 0)
         {
             // Player is still inside another zone — hand control to the most recently entered one.
@@ -108,6 +107,7 @@ public class CameraCollider : MonoBehaviour
         else
         {
             // Player has left all zones — restore the original camera defaults
+            if (!resetOnExit) return;
             activeZone = null;
             RestoreDefaults();
         }
