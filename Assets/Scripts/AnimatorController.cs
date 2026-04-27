@@ -22,8 +22,6 @@ public class PlayerAnimator : MonoBehaviour
     private bool _wasGliding = false;
     private bool _isUnequipping = false;
     private Transform _gliderOriginalParent;
-    private Vector3 _gliderOriginalLocalPos;
-    private Quaternion _gliderOriginalLocalRot;
 
     private void Awake()
     {
@@ -211,9 +209,8 @@ public class PlayerAnimator : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        glider.transform.SetParent(_gliderOriginalParent);
-        glider.transform.localPosition = _gliderOriginalLocalPos;
-        glider.transform.localRotation = _gliderOriginalLocalRot;
+        glider.transform.SetParent(gameObject.transform);
+        glider.transform.localPosition = Vector2.zero;
         glider.SetActive(false);
 
         _isUnequipping = false;

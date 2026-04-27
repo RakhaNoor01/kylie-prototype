@@ -41,9 +41,7 @@ namespace TarodevController
         //idk where else to put this variable tbh
         [SerializeField] private float _pogoWindowDuration = 0.25f;
 
-        private float _glideStamina;
-        private bool _jumpHeldLastFrame;
-        private bool _glideInputReady;
+        public float _glideStamina;
 
         private Vector2 _externalVelocity;
 
@@ -283,6 +281,8 @@ namespace TarodevController
 
         #region WallInteraction
 
+        public bool externalVelocityBlocked;
+
         private bool _isTouchingWall;
         private bool _isClinging;
         private bool _isWallSliding;
@@ -302,6 +302,8 @@ namespace TarodevController
             _jumpToConsume = false;
             _frameVelocity = Vector2.zero;
         }
+
+        public bool imgonnatouchyou = false;
 
         private void CheckWallContact()
         {
@@ -335,6 +337,26 @@ namespace TarodevController
 
             if (touchingWall)
                 _lastWallDirection = _facingDirection;
+
+            if (colliderTouchingWall && !imgonnatouchyou && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
+            {
+                _frameVelocity.x = 0f;
+                _externalVelocity = Vector2.zero;
+            }
+
+            if (colliderTouchingWall && !_grounded)
+            {
+                externalVelocityBlocked = true;
+            }
+            else
+            {
+                externalVelocityBlocked = false;
+            }
+
+            if (colliderTouchingWall)
+            {
+                imgonnatouchyou = false;
+            }
         }
 
         private void HandleWallCling()
@@ -701,14 +723,8 @@ namespace TarodevController
         {
             if (!Glider) return false;
 
-            // Track whether jump was released mid-air to ready the glide
-            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
-                _glideInputReady = true;
-            if (_grounded)
-                _glideInputReady = false;
-
             // Determine glide state
-            _isGliding = _frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0;
+            _isGliding = _frameInput.JumpHeld && !_grounded && _frameVelocity.y < 0;
 
             if (_isGliding)
                 _audio?.StartGlide();
@@ -716,8 +732,6 @@ namespace TarodevController
                 _audio?.StopGlide();
 
             if (_anim != null) _anim.SetGlide(_isGliding);
-
-            _jumpHeldLastFrame = _frameInput.JumpHeld;
 
             if (!_isGliding) return false;
 
@@ -795,6 +809,7 @@ namespace TarodevController
         /// </summary>
         public void AddExternalVelocity(Vector2 velocity)
         {
+            if (externalVelocityBlocked) return;
             _externalVelocity += velocity;
         }
 
@@ -892,9 +907,3 @@ namespace TarodevController
         public void AddPlatformVelocity(Vector2 externalVelocity);
     }
 }
-
-
-
-
-
-//THISIS A MARK OF MILESTONE

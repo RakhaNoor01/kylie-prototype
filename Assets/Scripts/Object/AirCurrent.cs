@@ -34,6 +34,11 @@ public class AirCurrent : MonoBehaviour
         var pc = collision.GetComponent<PlayerController>();
         if (pc == null) return;
 
+        if (pc.IsDashing || pc.externalVelocityBlocked) 
+        {
+            internalGlide = 0; return;
+        }
+
         Vector2 dir = CurrentDirection;
         Vector2 vel = pc.Velocity;
 
@@ -42,7 +47,7 @@ public class AirCurrent : MonoBehaviour
 
         if (wantsGlide)
         {
-            internalGlide = Mathf.Min(internalGlide + glideAccel * Time.deltaTime, maxGlide);
+            internalGlide = Mathf.Min(internalGlide + glideAccel * Time.fixedDeltaTime, maxGlide);
 
             float velocityAlongCurrent = Vector2.Dot(vel, dir);
 
@@ -63,6 +68,24 @@ public class AirCurrent : MonoBehaviour
                 if (velocityAlongCurrent < slowfall)
                 {
                     pc.AddExternalVelocity(dir * slowfall);
+                }
+
+                // Guarantee minimum walk speed of 1 when grounded and walking against the current
+                if (pc.Grounded)
+                {
+                    Vector2 moveInput = pc.FrameInput;
+                    // Player is walking against the current direction
+                    if (moveInput.x != 0 && Mathf.Sign(moveInput.x) != Mathf.Sign(dir.x))
+                    {
+                        float resultingX = vel.x + (dir * slowfall).x;
+                        float walkDir = Mathf.Sign(moveInput.x);
+                        // If the current is overpowering the walk, clamp to minimum speed 1 in walk direction
+                        if (Mathf.Sign(resultingX) != walkDir || Mathf.Abs(resultingX) < 1f)
+                        {
+                            vel.x = walkDir * 1f;
+                            pc.SetFrameVelocity(vel);
+                        }
+                    }
                 }
             }
             else
