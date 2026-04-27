@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Vein : MonoBehaviour
 {
@@ -33,18 +35,25 @@ public class Vein : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            FUCK();
+            StartCoroutine(FUCK());
         }
     }
 
-    private void FUCK()
+    private IEnumerator FUCK()
     {
-        gameObject.GetComponent<Collider2D>().enabled = false;
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        var tilem = GetComponentInChildren<Tilemap>();
+        if (tilem != null)
+        {
+            tilem.gameObject.SetActive(false);
+        }
 
         if (platformBelow != null)
         {
             platformBelow.StartFalling();  // BWFallingPlatform also has StartFalling... wait, it doesn't — see note
         }
+
+        yield return new WaitForSeconds(article.main.duration);
+
+        Destroy(gameObject);
     }
 }
