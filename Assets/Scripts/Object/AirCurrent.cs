@@ -34,7 +34,7 @@ public class AirCurrent : MonoBehaviour
         var pc = collision.GetComponent<PlayerController>();
         if (pc == null) return;
 
-        if (pc.IsDashing || pc.externalVelocityBlocked) 
+        if (pc.IsDashing) 
         {
             internalGlide = 0; return;
         }

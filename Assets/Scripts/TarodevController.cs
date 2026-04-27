@@ -281,8 +281,6 @@ namespace TarodevController
 
         #region WallInteraction
 
-        public bool externalVelocityBlocked;
-
         private bool _isTouchingWall;
         private bool _isClinging;
         private bool _isWallSliding;
@@ -303,7 +301,7 @@ namespace TarodevController
             _frameVelocity = Vector2.zero;
         }
 
-        public bool imgonnatouchyou = false;
+        public bool blockExVel;
 
         private void CheckWallContact()
         {
@@ -338,24 +336,19 @@ namespace TarodevController
             if (touchingWall)
                 _lastWallDirection = _facingDirection;
 
-            if (colliderTouchingWall && !imgonnatouchyou && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
+            if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
             {
                 _frameVelocity.x = 0f;
                 _externalVelocity.x = 0f;
             }
 
-            if (colliderTouchingWall && !_grounded && !imgonnatouchyou)
+            if (colliderTouchingWall && !_grounded)
             {
-                externalVelocityBlocked = true;
-            }
+                blockExVel = true;
+            } 
             else
             {
-                externalVelocityBlocked = false;
-            }
-
-            if (imgonnatouchyou)
-            {
-                imgonnatouchyou = false;
+                blockExVel = false;
             }
         }
 
@@ -809,7 +802,6 @@ namespace TarodevController
         /// </summary>
         public void AddExternalVelocity(Vector2 velocity)
         {
-            if (externalVelocityBlocked) return;
             _externalVelocity += velocity;
         }
 
