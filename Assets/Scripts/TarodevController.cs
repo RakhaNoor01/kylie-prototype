@@ -341,10 +341,10 @@ namespace TarodevController
             if (colliderTouchingWall && !imgonnatouchyou && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
             {
                 _frameVelocity.x = 0f;
-                _externalVelocity = Vector2.zero;
+                _externalVelocity.x = 0f;
             }
 
-            if (colliderTouchingWall && !_grounded)
+            if (colliderTouchingWall && !_grounded && !imgonnatouchyou)
             {
                 externalVelocityBlocked = true;
             }
@@ -353,7 +353,7 @@ namespace TarodevController
                 externalVelocityBlocked = false;
             }
 
-            if (colliderTouchingWall)
+            if (imgonnatouchyou)
             {
                 imgonnatouchyou = false;
             }
