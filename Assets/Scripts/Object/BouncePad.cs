@@ -108,12 +108,12 @@ public class BouncePad : MonoBehaviour
 
         // Refresh Mobility
         pc.RechargeDash();
+        pc.ResetGlide();
         var rang = pc.gameObject.GetComponentInChildren<Boomerang>();
         if (rang != null)
         {
             rang.hasTped = false;
         }
-        pc._glideStamina = pc.Stats.GlideDuration;
     }
 
     private void OnDrawGizmos()

@@ -48,6 +48,7 @@ namespace TarodevController
         private PlayerAudio _audio;
 
         public Vector2 Velocity => _rb.linearVelocity;
+        public Vector2 FrameVelocity => _frameVelocity;
         public ScriptableStats Stats => _stats;
 
         #region Interface
@@ -781,6 +782,11 @@ namespace TarodevController
         {
             _isDashing = false;
             _dashEndTime = 0f;
+        }
+
+        public void ResetGlide()
+        {
+            _glideStamina = _stats.GlideDuration;
         }
 
         /// <summary>
