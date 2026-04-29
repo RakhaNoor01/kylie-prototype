@@ -1,12 +1,15 @@
-﻿using TarodevController;
+﻿using System.Threading;
+using TarodevController;
 using UnityEngine;
 
+[ExecuteAlways]
 public class AirCurrent : MonoBehaviour
 {
     public float slowfall = 1f;
     public float glideAccel = 5f;
     public float maxGlide = 10f;
     public bool horizontal = false;
+    public float particleRate = 1;
     private float internalGlide = 0f;
 
     private Vector2 CurrentDirection => transform.up;
@@ -22,9 +25,32 @@ public class AirCurrent : MonoBehaviour
         internalGlide = 0f;
     }
 
+    private void Start()
+    {
+        UpdateParticle();
+    }
+
+    private void Update()
+    {
+#if UNITY_EDITOR
+        UpdateParticle();
+#endif
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!collision.CompareTag("Player")) return;
+
+        var pc = collision.GetComponent<PlayerController>();
+        if (pc != null && internalGlide > 0f)
+        {
+            // Seed the carry velocity so the controller's deceleration bleeds it off naturally
+            Vector2 vel = pc.FrameVelocity;
+            Vector2 carryContrib = CurrentDirection * internalGlide;
+            vel += carryContrib;    
+            pc.SetFrameVelocity(vel);
+        }
+
         internalGlide = 0f;
     }
 
@@ -66,24 +92,19 @@ public class AirCurrent : MonoBehaviour
             // Pushing Current
             if (velocityAlongCurrent < slowfall)
             {
-                pc.AddExternalVelocity(dir * slowfall);
-            }
+                float push = slowfall;
 
-            // Guarantee minimum walk speed of 1 when grounded and walking against the current
-            if (pc.Grounded)
-            {
-                Vector2 moveInput = pc.FrameInput;
-                // Player is walking against the current direction
-                if (moveInput.x != 0 && Mathf.Sign(moveInput.x) != Mathf.Sign(dir.x))
+                // If grounded and walking against the current, cap the push so the
+                // player retains at least 1 unit of walk speed in their own direction.
+                if (pc.Grounded && velocityAlongCurrent < 0f)
                 {
-                    float resultingX = vel.x + (dir * slowfall).x;
-                    float walkDir = Mathf.Sign(moveInput.x);
-                    // If the current is overpowering the walk, clamp to minimum speed 1 in walk direction
-                    if (Mathf.Sign(resultingX) != walkDir || Mathf.Abs(resultingX) < 1f)
-                    {
-                        vel.x = walkDir * 1f;
-                    }
+                    // Player's walk speed in their own direction (positive value)
+                    float playerWalkSpeed = Mathf.Abs(velocityAlongCurrent);
+                    float maxAllowedPush = Mathf.Max(0f, pc.Stats.MaxSpeed - 1f);
+                    push = Mathf.Min(push, maxAllowedPush);
                 }
+
+                pc.AddExternalVelocity(dir * push);
             }
         }
         else
@@ -104,5 +125,22 @@ public class AirCurrent : MonoBehaviour
         Vector3 start = transform.position;
         Vector3 end = start + transform.up * maxGlide * 0.25f;
         Gizmos.DrawLine(start, end);
+    }
+
+    private void UpdateParticle()
+    {
+        var ps = GetComponent<ParticleSystem>();
+        if (ps == null) return;
+
+        var col = GetComponent<Collider2D>();
+        float emitterSize = 1f;
+        if (col != null)
+        {
+            Bounds b = col.bounds;
+            emitterSize = b.size.x * b.size.y / 4;
+        }
+
+        var emission = ps.emission;
+        emission.rateOverTime = emitterSize * particleRate;
     }
 }
