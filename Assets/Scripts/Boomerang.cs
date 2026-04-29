@@ -58,6 +58,8 @@ public class Boomerang : MonoBehaviour
     public bool hasTped;
     private bool isTping;
 
+    private float ogROD;
+
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
     private Vector2 altWASDDirection = Vector2.right; // default direction
@@ -99,6 +101,10 @@ public class Boomerang : MonoBehaviour
         judgement.tping = false;
 
         _playerAudio = player.GetComponent<PlayerAudio>();
+
+        var ok = rangPhaseParticle.emission;
+        ogROD = ok.rateOverDistance.Evaluate(0);
+        ok.rateOverDistance = 0;
     }
 
     void Update()
@@ -380,7 +386,6 @@ public class Boomerang : MonoBehaviour
     {
         isThrown = true;
         hasDeflected = false;
-        col.enabled = false;
 
         transform.parent = null;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -392,14 +397,21 @@ public class Boomerang : MonoBehaviour
         distmulttimer = 0;
         noCatchTimer = noCatchPeriod;
 
+        col.enabled = true;
+
         _playerAudio?.PlayThrow();
 
-        StartCoroutine(FUCK());
+        StartCoroutine(IgnorePlayerBriefly());
     }
 
-    private IEnumerator FUCK(){
-        yield return new WaitForSeconds(noCatchTimer);
-        col.enabled = true;
+    private IEnumerator IgnorePlayerBriefly()
+    {
+        int boomerangLayer = gameObject.layer;
+        int playerLayer = player.layer;
+
+        Physics2D.IgnoreLayerCollision(boomerangLayer, playerLayer, true);
+        yield return new WaitForSeconds(noCatchPeriod);
+        Physics2D.IgnoreLayerCollision(boomerangLayer, playerLayer, false);
     }
 
     void ICameToGoon()
@@ -423,7 +435,10 @@ public class Boomerang : MonoBehaviour
                 judgement.tping = isTping;
 
                 Catch();
-                imLowkTrolling.ForceJump();
+                if (!imLowkTrolling.IsGliding)
+                {
+                    imLowkTrolling.ForceJump();
+                }
 
                 _playerAudio?.PlayTeleport();
             });
@@ -443,7 +458,9 @@ public class Boomerang : MonoBehaviour
         if (!isThrown) return;
 
         // Skip deflection for breakable objects - they break but don't stop boomerang
-        if (other.gameObject.CompareTag("Breakable Vines"))
+        if (other.gameObject.CompareTag("Breakable Vines") || 
+            other.gameObject.layer == LayerMask.NameToLayer("Debug") ||
+            other.gameObject.CompareTag("One Way"))
         {
             return;
         }
@@ -533,7 +550,7 @@ public class Boomerang : MonoBehaviour
         rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
 
         var emission = rangPhaseParticle.emission;
-        emission.rateOverDistance = insideGeometry ? 2 : 0;
+        emission.rateOverDistance = insideGeometry ? ogROD : 0;
         var main = rangPhaseParticle.main;
         main.startRotation = visual.transform.rotation.z;
     }

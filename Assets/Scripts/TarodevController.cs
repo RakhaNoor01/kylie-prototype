@@ -41,15 +41,14 @@ namespace TarodevController
         //idk where else to put this variable tbh
         [SerializeField] private float _pogoWindowDuration = 0.25f;
 
-        private float _glideStamina;
-        private bool _jumpHeldLastFrame;
-        private bool _glideInputReady;
+        public float _glideStamina;
 
         private Vector2 _externalVelocity;
 
         private PlayerAudio _audio;
 
         public Vector2 Velocity => _rb.linearVelocity;
+        public Vector2 FrameVelocity => _frameVelocity;
         public ScriptableStats Stats => _stats;
 
         #region Interface
@@ -303,7 +302,7 @@ namespace TarodevController
             _frameVelocity = Vector2.zero;
         }
 
-        public bool imgonnatouchyou;
+        public bool blockExVel;
 
         private void CheckWallContact()
         {
@@ -330,7 +329,6 @@ namespace TarodevController
             TouchingRightWall = _facingDirection > 0 && touchingWall;
 
             _isTouchingWall = touchingWall;
-            imgonnatouchyou = touchingWall;
 
             _clingPlatformRb = touchingWall
                 ? (topHit.rigidbody != null ? topHit.rigidbody : bottomHit.rigidbody)
@@ -339,9 +337,19 @@ namespace TarodevController
             if (touchingWall)
                 _lastWallDirection = _facingDirection;
 
-            if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0)
+            if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
             {
                 _frameVelocity.x = 0f;
+                _externalVelocity.x = 0f;
+            }
+
+            if (colliderTouchingWall && !_grounded)
+            {
+                blockExVel = true;
+            } 
+            else
+            {
+                blockExVel = false;
             }
         }
 
@@ -709,14 +717,8 @@ namespace TarodevController
         {
             if (!Glider) return false;
 
-            // Track whether jump was released mid-air to ready the glide
-            if (!_frameInput.JumpHeld && _jumpHeldLastFrame && !_grounded)
-                _glideInputReady = true;
-            if (_grounded)
-                _glideInputReady = false;
-
             // Determine glide state
-            _isGliding = _frameInput.JumpHeld && _glideInputReady && !_grounded && _frameVelocity.y < 0;
+            _isGliding = _frameInput.JumpHeld && !_grounded && _frameVelocity.y < 0;
 
             if (_isGliding)
                 _audio?.StartGlide();
@@ -724,8 +726,6 @@ namespace TarodevController
                 _audio?.StopGlide();
 
             if (_anim != null) _anim.SetGlide(_isGliding);
-
-            _jumpHeldLastFrame = _frameInput.JumpHeld;
 
             if (!_isGliding) return false;
 
@@ -782,6 +782,11 @@ namespace TarodevController
         {
             _isDashing = false;
             _dashEndTime = 0f;
+        }
+
+        public void ResetGlide()
+        {
+            _glideStamina = _stats.GlideDuration;
         }
 
         /// <summary>
@@ -900,9 +905,3 @@ namespace TarodevController
         public void AddPlatformVelocity(Vector2 externalVelocity);
     }
 }
-
-
-
-
-
-//THISIS A MARK OF MILESTONE
