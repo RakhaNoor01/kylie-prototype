@@ -457,7 +457,6 @@ public class Boomerang : MonoBehaviour
     {
         if (!isThrown) return;
 
-        // Skip deflection for breakable objects - they break but don't stop boomerang
         if (other.gameObject.CompareTag("Breakable Vines") || 
             other.gameObject.layer == LayerMask.NameToLayer("Debug") ||
             other.gameObject.CompareTag("One Way"))
