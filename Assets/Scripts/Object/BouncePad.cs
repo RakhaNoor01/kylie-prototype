@@ -6,15 +6,21 @@ using UnityEngine;
 public class BouncePad : MonoBehaviour
 {
     public float force = 10f;
+
+    [Header("Horizontal bounce pad slop")]
     public bool horizontal = false;
     [Tooltip("Set to negative to use the air/ground deceleration from player stats")]
     public float horizontalDecel = -1;
     public float decelMult = 0.75f;
+    [Tooltip("Immunity timer against player velocity getting zeroed when crashing into a wall")]
+    public float wallImmunityTimer = 0.1f;
 
     public float internalVelocity = 0;
     public float decel;
     private PlayerController pc;
     private bool boioioing;
+
+    private float getOffThatWallDawg = 0;
 
     public bool gbug;
 
@@ -48,10 +54,11 @@ public class BouncePad : MonoBehaviour
 
     private void HandleHorizontalPads()
     {
-        if (pc.IsDashing || pc.externalVelocityBlocked)
+        if (pc.IsDashing || (pc.blockExVel && getOffThatWallDawg < 0))
         {
             internalVelocity = 0;
         }
+
         if (internalVelocity > 0)
         {
             var stats = pc.Stats;
@@ -68,6 +75,11 @@ public class BouncePad : MonoBehaviour
             pc.AddExternalVelocity(launchVelocity);
         }
 
+        if (getOffThatWallDawg > 0)
+        {
+            getOffThatWallDawg -= Time.fixedDeltaTime;
+        }
+
         if (boioioing)
         {
             pc.SetFrameVelocity(new Vector2(0, pc.Stats.JumpPower));
@@ -81,12 +93,12 @@ public class BouncePad : MonoBehaviour
 
         // Launch
         pc.CancelDash();
-        pc.imgonnatouchyou = true;
 
         if (horizontal)
         {
             internalVelocity = force;
             boioioing = true;
+            getOffThatWallDawg = wallImmunityTimer;
         } 
         else
         {
@@ -96,12 +108,12 @@ public class BouncePad : MonoBehaviour
 
         // Refresh Mobility
         pc.RechargeDash();
+        pc.ResetGlide();
         var rang = pc.gameObject.GetComponentInChildren<Boomerang>();
         if (rang != null)
         {
             rang.hasTped = false;
         }
-        pc._glideStamina = pc.Stats.GlideDuration;
     }
 
     private void OnDrawGizmos()

@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 1029941948745407257}
   - component: {fileID: 1958317516485568086}
   - component: {fileID: 118260168548569409}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: AirCurrent
-  m_TagString: Untagged
+  m_TagString: Breakable Vines
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,9 +156,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirCurrent
   slowfall: 1
-  glideAccel: 5
+  glideAccel: 30
   maxGlide: 10
   horizontal: 0
+  particleRate: 0.25
 --- !u!198 &2953558696872331083
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -294,9 +295,9 @@ ParticleSystem:
         m_RotationOrder: 4
     startSpeed:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 3
-      minScalar: 5
+      minMaxState: 3
+      scalar: 3.5
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -996,7 +997,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 0
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -5031,6 +5032,6 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0

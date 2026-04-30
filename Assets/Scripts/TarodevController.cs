@@ -48,6 +48,7 @@ namespace TarodevController
         private PlayerAudio _audio;
 
         public Vector2 Velocity => _rb.linearVelocity;
+        public Vector2 FrameVelocity => _frameVelocity;
         public ScriptableStats Stats => _stats;
 
         #region Interface
@@ -281,8 +282,6 @@ namespace TarodevController
 
         #region WallInteraction
 
-        public bool externalVelocityBlocked;
-
         private bool _isTouchingWall;
         private bool _isClinging;
         private bool _isWallSliding;
@@ -303,7 +302,7 @@ namespace TarodevController
             _frameVelocity = Vector2.zero;
         }
 
-        public bool imgonnatouchyou = false;
+        public bool blockExVel;
 
         private void CheckWallContact()
         {
@@ -338,24 +337,19 @@ namespace TarodevController
             if (touchingWall)
                 _lastWallDirection = _facingDirection;
 
-            if (colliderTouchingWall && !imgonnatouchyou && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
+            if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
             {
                 _frameVelocity.x = 0f;
-                _externalVelocity = Vector2.zero;
+                _externalVelocity.x = 0f;
             }
 
             if (colliderTouchingWall && !_grounded)
             {
-                externalVelocityBlocked = true;
-            }
+                blockExVel = true;
+            } 
             else
             {
-                externalVelocityBlocked = false;
-            }
-
-            if (colliderTouchingWall)
-            {
-                imgonnatouchyou = false;
+                blockExVel = false;
             }
         }
 
@@ -790,6 +784,11 @@ namespace TarodevController
             _dashEndTime = 0f;
         }
 
+        public void ResetGlide()
+        {
+            _glideStamina = _stats.GlideDuration;
+        }
+
         /// <summary>
         /// Called by moving platforms (or other external movers) to apply additional
         /// velocity to the controller for the duration of the frame.  This is used to
@@ -809,7 +808,6 @@ namespace TarodevController
         /// </summary>
         public void AddExternalVelocity(Vector2 velocity)
         {
-            if (externalVelocityBlocked) return;
             _externalVelocity += velocity;
         }
 
