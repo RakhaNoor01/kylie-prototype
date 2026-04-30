@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,382 +9,407 @@ public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance { get; private set; }
 
-    public static event Action OnDialogueStarted;
-    public static event Action OnDialogueEnded;
+    // ── DialogueCanvas          ← GameObject ini (tempat script)
+    //      └── DialoguePanel     ← dialoguePanel
+    //            ├── DialogueBox ← dialogueBoxImage (Image)
+    //            ├── NextIndicator ← indicator (RectTransform)
+    //            ├── Player      ← rightRoot
+    //            │     ├── Portrait  ← rightPortrait
+    //            │     ├── Speaker   ← rightName
+    //            │     └── Dialogue  ← rightText
+    //            └── NPC         ← leftRoot
+    //                  ├── Portrait  ← leftPortrait
+    //                  ├── Speaker   ← leftName
+    //                  └── Dialogue  ← leftText
 
-    // ─────────────────────────────────────────────
-    //  UI REFERENCES
-    // ─────────────────────────────────────────────
-    [Header("UI References - WAJIB DI ASSIGN SEMUA")]
-    public GameObject dialoguePanel;
-    public Image leftPortrait;
-    public Image rightPortrait;
-    public TextMeshProUGUI speakerNameText;
-    public TextMeshProUGUI dialogueText;
-    public GameObject nextIndicator;
+    [Header("── DialoguePanel ──────────────────────")]
+    public GameObject dialoguePanel;            // DialoguePanel
+    public Image      dialogueBoxImage;         // DialoguePanel/DialogueBox → Image
+    public Sprite     playerDialogueBoxSprite;  // sprite kotak dialog Player (kyliedialoguebox)
 
-    // ─────────────────────────────────────────────
-    //  DEFAULT NAMES  (fallback jika DialogueData tidak isi nama)
-    // ─────────────────────────────────────────────
-    [Header("Default Names (Fallback)")]
-    [Tooltip("Nama NPC fallback jika DialogueData.npcDisplayName kosong.")]
-    public string defaultNpcName = "NPC";
+    [Header("── NextIndicator ──────────────────────")]
+    public RectTransform npcIndicator;      // indicator di sisi NPC (kiri)
+    public RectTransform playerIndicator;   // indicator di sisi Player (kanan)
+    public float indicatorBobHeight = 10f;
+    public float indicatorBobSpeed  = 3f;
 
-    [Tooltip("Nama Player fallback jika DialogueData.playerDisplayName kosong.")]
-    public string defaultPlayerName = "You";
+    [Header("── NPC ────────────────────────────────")]
+    public GameObject      leftRoot;        // NPC
+    public Image           leftPortrait;    // NPC/Portrait
+    public TextMeshProUGUI leftName;        // NPC/Speaker
+    public TextMeshProUGUI leftText;        // NPC/Dialogue
 
-    // ─────────────────────────────────────────────
-    //  PLAYER PORTRAIT
-    // ─────────────────────────────────────────────
-    [Header("Player Portrait (Fallback)")]
-    public Sprite playerPortraitSprite;
+    [Header("── Player ─────────────────────────────")]
+    public GameObject      rightRoot;       // Player
+    public Image           rightPortrait;   // Player/Portrait
+    public TextMeshProUGUI rightName;       // Player/Speaker
+    public TextMeshProUGUI rightText;       // Player/Dialogue
+    [Tooltip("Portrait default player (fallback jika DialogueLine tidak set portrait)")]
+    public Sprite          playerPortrait;
 
-    // ─────────────────────────────────────────────
-    //  PLAYER LOCK
-    // ─────────────────────────────────────────────
-    [Header("Player Lock")]
-    public Rigidbody2D playerRigidbody;
-    public float unlockDelay = 1f;
+    [Header("── Player Movement ────────────────────")]
+    public float unlockDelay = 0.5f;
 
-    // ─────────────────────────────────────────────
-    //  TYPING ANIMATION
-    // ─────────────────────────────────────────────
-    [Header("Typing Animation")]
-    [Tooltip("Kecepatan fade-in per huruf (detik)")]
-    public float typingSpeed = 0.035f;
+    [Header("── Typing ──────────────────────────────")]
+    public float typingSpeed     = 0.035f;
+    public float charPopDuration = 0.14f;
+    public float charPopScale    = 1.55f;
 
-    // ─────────────────────────────────────────────
-    //  AUDIO
-    // ─────────────────────────────────────────────
-    [Header("Voice Audio")]
-    [Tooltip("AudioSource yang dipakai untuk memutar voice clip dari DialogueData.")]
-    public AudioSource voiceAudioSource;
+    [Header("── Panel Animation ────────────────────")]
+    public float panelSlideOffset = 55f;
+    public float panelInDuration  = 0.22f;
+    public float panelOutDuration = 0.16f;
 
-    // ─────────────────────────────────────────────
-    //  PRIVATE STATE
-    // ─────────────────────────────────────────────
-    private RigidbodyConstraints2D originalConstraints;
+    // ── internal ─────────────────────────────────────────────────
+    private RectTransform panelRect;
+    private CanvasGroup   panelGroup;
+    private Vector2       panelOriginPos;
+    private Vector2       npcIndicatorOrigin;
+    private Vector2       playerIndicatorOrigin;
 
     private DialogueData currentData;
-    private Sprite currentNpcPortrait;
-    private string resolvedNpcName;
-    private string resolvedPlayerName;
-    private int currentLineIndex = 0;
-    private bool isDialogueActive = false;
-    private Action onDialogueComplete;
+    private Sprite       currentNpcPortrait;
+    private Sprite       currentNpcBoxSprite;
+    private Sprite       currentPlayerPortrait;
+    private Action       onDialogueComplete;
 
-    private Coroutine currentAnimCoroutine;
+    private int  lineIndex;
+    private bool isTyping;
+    private bool isActive;
+    private bool isPanelAnimating;
+
     private Coroutine typingCoroutine;
 
-    private Vector2 originalLeftPos;
-    private Vector2 originalRightPos;
+    private Rigidbody2D            playerRb;
+    private RigidbodyConstraints2D originalConstraints;
 
-    // ─────────────────────────────────────────────
-    //  UNITY LIFECYCLE
-    // ─────────────────────────────────────────────
+    // ── lifecycle ─────────────────────────────────────────────────
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else { Destroy(gameObject); return; }
 
-        if (dialoguePanel != null) dialoguePanel.SetActive(false);
-        if (nextIndicator != null) nextIndicator.SetActive(false);
+        // Resolve komponen dari DialoguePanel
+        panelRect  = dialoguePanel.GetComponent<RectTransform>();
+        panelGroup = dialoguePanel.GetComponent<CanvasGroup>();
+        if (panelGroup == null)
+            panelGroup = dialoguePanel.AddComponent<CanvasGroup>();
 
-        if (playerRigidbody != null)
-            originalConstraints = playerRigidbody.constraints;
+        panelOriginPos        = panelRect.anchoredPosition;
+        if (npcIndicator != null)    npcIndicatorOrigin    = npcIndicator.anchoredPosition;
+        if (playerIndicator != null) playerIndicatorOrigin = playerIndicator.anchoredPosition;
 
-        if (leftPortrait != null)  originalLeftPos  = leftPortrait.rectTransform.anchoredPosition;
-        if (rightPortrait != null) originalRightPos = rightPortrait.rectTransform.anchoredPosition;
+        dialoguePanel.SetActive(false);
 
-        // Buat AudioSource otomatis jika tidak di-assign
-        if (voiceAudioSource == null)
-            voiceAudioSource = gameObject.AddComponent<AudioSource>();
+        var playerGo = GameObject.FindGameObjectWithTag("Player");
+        if (playerGo != null)
+        {
+            playerRb = playerGo.GetComponent<Rigidbody2D>();
+            if (playerRb != null)
+                originalConstraints = playerRb.constraints;
+        }
     }
 
-    // ─────────────────────────────────────────────
-    //  PUBLIC API
-    // ─────────────────────────────────────────────
+    // ── public API ────────────────────────────────────────────────
+    public bool IsDialogueActive => isActive;
 
-    /// <summary>
-    /// Mulai dialogue.
-    /// npcNameOverride → opsional, untuk override nama NPC dari script NPC.
-    /// Nama di DialogueData lebih prioritas dari override ini.
-    /// </summary>
-    public void StartDialogue(
-        DialogueData data,
-        Sprite npcPortrait,
-        Action onComplete = null,
-        string npcNameOverride = null)
+    /// <param name="npcBoxSprite">Sprite kotak dialog milik NPC ini. Drag di inspector NPC.</param>
+    public void StartDialogue(DialogueData data, Sprite npcPortrait,
+                              Sprite npcBoxSprite = null, Action onComplete = null)
     {
-        if (data == null || data.lines == null || data.lines.Count == 0) return;
+        if (data == null || data.lines.Count == 0) return;
 
-        currentData       = data;
-        currentNpcPortrait = npcPortrait;
-        onDialogueComplete = onComplete;
+        currentData            = data;
+        currentNpcPortrait     = npcPortrait;
+        currentNpcBoxSprite    = npcBoxSprite;
+        currentPlayerPortrait  = playerPortrait;   // portrait default player dari Inspector
+        onDialogueComplete     = onComplete;
 
-        // Resolve nama: DialogueData > override parameter > default fallback
-        resolvedNpcName    = !string.IsNullOrEmpty(data.npcDisplayName)    ? data.npcDisplayName    :
-                             !string.IsNullOrEmpty(npcNameOverride)         ? npcNameOverride         :
-                             defaultNpcName;
-
-        resolvedPlayerName = !string.IsNullOrEmpty(data.playerDisplayName) ? data.playerDisplayName :
-                             defaultPlayerName;
-
-        currentLineIndex  = 0;
-        isDialogueActive  = true;
+        lineIndex = 0;
+        isActive  = true;
 
         LockPlayer();
+        StartCoroutine(OpenPanel());
+    }
+
+    // ── panel animation ───────────────────────────────────────────
+    private IEnumerator OpenPanel()
+    {
+        isPanelAnimating = true;
+
+        // Set state awal SEBELUM SetActive agar tidak ada flash frame
+        panelGroup.alpha           = 0f;
+        panelRect.anchoredPosition = panelOriginPos - new Vector2(0, panelSlideOffset);
         dialoguePanel.SetActive(true);
-        ShowCurrentLine();
-    }
 
-    public bool IsDialogueActive => isDialogueActive;
-
-    // ─────────────────────────────────────────────
-    //  INTERNAL – SHOW LINE
-    // ─────────────────────────────────────────────
-    private void ShowCurrentLine()
-    {
-        DialogueLine line = currentData.lines[currentLineIndex];
-
-        bool npcIsSpeaking = line.speaker == Speaker.NPC;
-
-        speakerNameText.text = npcIsSpeaking ? resolvedNpcName : resolvedPlayerName;
-
-        Image speakerPortrait = npcIsSpeaking ? leftPortrait  : rightPortrait;
-        Image stayPortrait    = npcIsSpeaking ? rightPortrait : leftPortrait;
-
-        ResetPortraitTransform(leftPortrait);
-        ResetPortraitTransform(rightPortrait);
-
-        // Portrait yang sedang bicara
-        Sprite speakerSprite = line.portrait != null
-            ? line.portrait
-            : (npcIsSpeaking ? currentNpcPortrait : playerPortraitSprite);
-        if (speakerSprite != null) speakerPortrait.sprite = speakerSprite;
-
-        // Portrait yang diam (stay)
-        Sprite staySprite = npcIsSpeaking
-            ? (currentData.playerStayPortrait ?? playerPortraitSprite)
-            : (currentData.npcStayPortrait    ?? currentNpcPortrait);
-        if (staySprite != null) stayPortrait.sprite = staySprite;
-
-        // Animasi portrait untuk yang bicara
-        if (currentAnimCoroutine != null) StopCoroutine(currentAnimCoroutine);
-        switch (line.animType)
+        float elapsed = 0f;
+        while (elapsed < panelInDuration)
         {
-            case PortraitAnimType.Bounce: currentAnimCoroutine = StartCoroutine(DoBounce(speakerPortrait)); break;
-            case PortraitAnimType.Spin:   currentAnimCoroutine = StartCoroutine(DoSpin(speakerPortrait));   break;
-            case PortraitAnimType.Flip:   currentAnimCoroutine = StartCoroutine(DoFlip(speakerPortrait));   break;
+            elapsed += Time.deltaTime;
+            float ease = EaseOutCubic(Mathf.Clamp01(elapsed / panelInDuration));
+            panelGroup.alpha           = ease;
+            panelRect.anchoredPosition = Vector2.Lerp(
+                panelOriginPos - new Vector2(0, panelSlideOffset),
+                panelOriginPos, ease);
+            yield return null;
         }
 
-        // Voice SFX
-        PlayVoiceClip();
+        panelGroup.alpha           = 1f;
+        panelRect.anchoredPosition = panelOriginPos;
+        isPanelAnimating           = false;
 
-        // Typewriter fade-in
-        dialogueText.text = line.text;
-        dialogueText.ForceMeshUpdate();
+        ShowLine();
+    }
 
+    private IEnumerator ClosePanel()
+    {
+        isPanelAnimating = true;
+        if (npcIndicator != null)    npcIndicator.gameObject.SetActive(false);
+        if (playerIndicator != null) playerIndicator.gameObject.SetActive(false);
+
+        float   elapsed  = 0f;
+        Vector2 startPos = panelRect.anchoredPosition;
+        Vector2 endPos   = startPos - new Vector2(0, panelSlideOffset);
+
+        while (elapsed < panelOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float ease = EaseInCubic(Mathf.Clamp01(elapsed / panelOutDuration));
+            panelGroup.alpha           = 1f - ease;
+            panelRect.anchoredPosition = Vector2.Lerp(startPos, endPos, ease);
+            yield return null;
+        }
+
+        dialoguePanel.SetActive(false);
+        panelRect.anchoredPosition = panelOriginPos;
+        isPanelAnimating           = false;
+
+        onDialogueComplete?.Invoke();
+        StartCoroutine(UnlockPlayer());
+    }
+
+    // ── line display ──────────────────────────────────────────────
+    private void ShowLine()
+    {
+        // ── Stop coroutine lama & bersihkan kedua text field dulu ─
+        if (typingCoroutine != null) { StopCoroutine(typingCoroutine); typingCoroutine = null; }
+        isTyping = false;
+
+        leftText.text                  = "";
+        rightText.text                 = "";
+        leftText.maxVisibleCharacters  = 0;
+        rightText.maxVisibleCharacters = 0;
+        leftText.ForceMeshUpdate();
+        rightText.ForceMeshUpdate();
+
+        var  line  = currentData.lines[lineIndex];
+        bool isNPC = line.speaker == Speaker.NPC;
+
+        leftRoot.SetActive(isNPC);
+        rightRoot.SetActive(!isNPC);
+
+        // Swap sprite kotak dialog sesuai speaker
+        if (dialogueBoxImage != null)
+        {
+            if (isNPC && currentNpcBoxSprite != null)
+                dialogueBoxImage.sprite = currentNpcBoxSprite;
+            else if (!isNPC && playerDialogueBoxSprite != null)
+                dialogueBoxImage.sprite = playerDialogueBoxSprite;
+        }
+
+        if (isNPC)
+        {
+            leftName.text       = string.IsNullOrEmpty(currentData.npcDisplayName) ? "NPC" : currentData.npcDisplayName;
+            leftPortrait.sprite = line.portrait != null ? line.portrait : currentNpcPortrait;
+            leftText.text       = line.text;
+            leftText.maxVisibleCharacters = 0;
+            leftText.ForceMeshUpdate();
+            StartTyping(leftText);
+            MoveIndicator(true);
+        }
+        else
+        {
+            rightName.text       = string.IsNullOrEmpty(currentData.playerDisplayName) ? "You" : currentData.playerDisplayName;
+            rightPortrait.sprite = line.portrait != null ? line.portrait : currentPlayerPortrait;
+            rightText.text       = line.text;
+            rightText.maxVisibleCharacters = 0;
+            rightText.ForceMeshUpdate();
+            StartTyping(rightText);
+            MoveIndicator(false);
+        }
+    }
+
+    // ── typing (Celeste style) ────────────────────────────────────
+    private void StartTyping(TextMeshProUGUI target)
+    {
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
-        typingCoroutine = StartCoroutine(FadeTypeText());
+        typingCoroutine = StartCoroutine(TypeCeleste(target));
     }
 
-    private void PlayVoiceClip()
+    private IEnumerator TypeCeleste(TextMeshProUGUI tmp)
     {
-        if (voiceAudioSource == null || currentData.voiceClip == null) return;
-        voiceAudioSource.Stop();
-        voiceAudioSource.clip = currentData.voiceClip;
-        voiceAudioSource.Play();
-    }
+        isTyping = true;
 
-    // ─────────────────────────────────────────────
-    //  TYPEWRITER
-    // ─────────────────────────────────────────────
-    private IEnumerator FadeTypeText()
-    {
-        var textInfo = dialogueText.textInfo;
-        int characterCount = textInfo.characterCount;
+        tmp.maxVisibleCharacters = 0;
+        tmp.ForceMeshUpdate();
+        int total = tmp.textInfo.characterCount;
 
-        for (int i = 0; i < characterCount; i++)
-            SetCharacterAlpha(i, 0);
-        dialogueText.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+        // originalVerts[i] = posisi layout asli 4 vertex karakter ke-i
+        var originalVerts = new Dictionary<int, Vector3[]>();
+        // popElapsed[i]    = waktu berjalan sejak karakter ke-i muncul
+        var popElapsed = new Dictionary<int, float>();
 
-        nextIndicator.SetActive(false);
+        int   revealed      = 0;
+        float timeSinceLast = typingSpeed; // langsung reveal karakter pertama
 
-        for (int i = 0; i < characterCount; i++)
+        while (revealed < total || popElapsed.Count > 0)
         {
-            SetCharacterAlpha(i, 255);
-            dialogueText.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-            yield return new WaitForSeconds(typingSpeed);
+            timeSinceLast += Time.deltaTime;
+
+            // ── Reveal karakter baru ───────────────────────────
+            bool newRevealed = false;
+            while (timeSinceLast >= typingSpeed && revealed < total)
+            {
+                timeSinceLast -= typingSpeed;
+                revealed++;
+                tmp.maxVisibleCharacters = revealed;
+                popElapsed[revealed - 1] = 0f;
+                newRevealed = true;
+            }
+
+            if (newRevealed || popElapsed.Count > 0)
+            {
+                // ForceMeshUpdate reset semua vert ke posisi layout →
+                // kita re-apply animasi pop dari originalVerts yang sudah tersimpan.
+                tmp.ForceMeshUpdate();
+                var textInfo = tmp.textInfo;
+
+                // Simpan originalVerts untuk karakter yang baru pertama kali muncul
+                foreach (int idx in new List<int>(popElapsed.Keys))
+                {
+                    if (originalVerts.ContainsKey(idx)) continue;
+                    if (idx >= textInfo.characterCount) continue;
+                    var ci = textInfo.characterInfo[idx];
+                    if (!ci.isVisible) continue;
+
+                    int vi  = ci.vertexIndex;
+                    int mi  = ci.materialReferenceIndex;
+                    var src = textInfo.meshInfo[mi].vertices;
+                    originalVerts[idx] = new Vector3[] { src[vi], src[vi+1], src[vi+2], src[vi+3] };
+                }
+
+                // Terapkan pop scale ke semua karakter yang sedang animasi
+                var toRemove = new List<int>();
+                foreach (int idx in new List<int>(popElapsed.Keys))
+                {
+                    popElapsed[idx] += Time.deltaTime;
+                    float t = Mathf.Clamp01(popElapsed[idx] / charPopDuration);
+
+                    if (!originalVerts.ContainsKey(idx)) { if (t >= 1f) toRemove.Add(idx); continue; }
+
+                    var ci = textInfo.characterInfo[idx];
+                    if (!ci.isVisible) { if (t >= 1f) toRemove.Add(idx); continue; }
+
+                    int      vi    = ci.vertexIndex;
+                    int      mi    = ci.materialReferenceIndex;
+                    Vector3[] verts = textInfo.meshInfo[mi].vertices;
+                    Vector3[] orig  = originalVerts[idx];
+
+                    float   scale  = Mathf.Lerp(charPopScale, 1f, EaseOutBack(t));
+                    Vector3 center = (orig[0] + orig[1] + orig[2] + orig[3]) * 0.25f;
+
+                    for (int v = 0; v < 4; v++)
+                        verts[vi + v] = center + (orig[v] - center) * scale;
+
+                    if (t >= 1f) toRemove.Add(idx);
+                }
+
+                foreach (int idx in toRemove) popElapsed.Remove(idx);
+                tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
+            }
+
+            yield return null;
         }
 
-        nextIndicator.SetActive(true);
+        isTyping = false;
+    }
+
+    // ── input ─────────────────────────────────────────────────────
+    private void Update()
+    {
+        if (!isActive || isPanelAnimating) return;
+
+        // NextIndicator bob
+        float bobY = Mathf.Sin(Time.time * indicatorBobSpeed) * indicatorBobHeight;
+        if (npcIndicator != null && npcIndicator.gameObject.activeSelf)
+            npcIndicator.anchoredPosition = npcIndicatorOrigin + new Vector2(0, bobY);
+        if (playerIndicator != null && playerIndicator.gameObject.activeSelf)
+            playerIndicator.anchoredPosition = playerIndicatorOrigin + new Vector2(0, bobY);
+
+        if (!Input.GetButtonDown("Submit")) return;
+
+        if (isTyping)
+            SkipTyping();
+        else
+            NextLine();
+    }
+
+    private void SkipTyping()
+    {
+        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
         typingCoroutine = null;
+        isTyping = false;
+
+        leftText.maxVisibleCharacters  = int.MaxValue;
+        rightText.maxVisibleCharacters = int.MaxValue;
+        leftText.ForceMeshUpdate();
+        rightText.ForceMeshUpdate();
     }
 
-    private void SetCharacterAlpha(int charIndex, byte alpha)
+    private void NextLine()
     {
-        if (charIndex >= dialogueText.textInfo.characterCount) return;
-        var charInfo = dialogueText.textInfo.characterInfo[charIndex];
-        if (!charInfo.isVisible) return;
-
-        int materialIndex = charInfo.materialReferenceIndex;
-        int vertexIndex   = charInfo.vertexIndex;
-        var colors = dialogueText.textInfo.meshInfo[materialIndex].colors32;
-
-        colors[vertexIndex + 0].a = alpha;
-        colors[vertexIndex + 1].a = alpha;
-        colors[vertexIndex + 2].a = alpha;
-        colors[vertexIndex + 3].a = alpha;
-    }
-
-    // ─────────────────────────────────────────────
-    //  ADVANCE / END
-    // ─────────────────────────────────────────────
-    public void AdvanceDialogue()
-    {
-        if (!isDialogueActive) return;
-
-        currentLineIndex++;
-        if (currentLineIndex < currentData.lines.Count)
-            ShowCurrentLine();
+        lineIndex++;
+        if (lineIndex < currentData.lines.Count)
+            ShowLine();
         else
             EndDialogue();
     }
 
     private void EndDialogue()
     {
-        isDialogueActive = false;
-
-        if (voiceAudioSource != null) voiceAudioSource.Stop();
-
-        dialoguePanel.SetActive(false);
-        onDialogueComplete?.Invoke();
-        onDialogueComplete = null;
-        StartCoroutine(DelayedUnlockPlayer());
+        isActive = false;
+        StartCoroutine(ClosePanel());
     }
 
-    // ─────────────────────────────────────────────
-    //  INPUT
-    // ─────────────────────────────────────────────
-    private void Update()
+    // ── helpers ───────────────────────────────────────────────────
+    private void MoveIndicator(bool isNPC)
     {
-        if (!isDialogueActive) return;
-        if (!Input.GetButtonDown("Submit")) return;
-
-        if (typingCoroutine != null)
-        {
-            // Skip → tampilkan semua huruf sekaligus
-            StopCoroutine(typingCoroutine);
-            typingCoroutine = null;
-
-            var textInfo = dialogueText.textInfo;
-            for (int i = 0; i < textInfo.characterCount; i++)
-                SetCharacterAlpha(i, 255);
-            dialogueText.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
-
-            nextIndicator.SetActive(true);
-        }
-        else
-        {
-            nextIndicator.SetActive(false);
-            AdvanceDialogue();
-        }
+        // Tampilkan hanya indicator yang sesuai speaker, sembunyikan yang lain
+        if (npcIndicator != null)    npcIndicator.gameObject.SetActive(isNPC);
+        if (playerIndicator != null) playerIndicator.gameObject.SetActive(!isNPC);
     }
 
-    // ─────────────────────────────────────────────
-    //  PLAYER LOCK / UNLOCK
-    // ─────────────────────────────────────────────
     private void LockPlayer()
     {
-        if (playerRigidbody != null)
-        {
-            playerRigidbody.linearVelocity = Vector2.zero;
-            playerRigidbody.constraints    = RigidbodyConstraints2D.FreezeAll;
-        }
-        OnDialogueStarted?.Invoke();
+        if (playerRb == null) return;
+        playerRb.linearVelocity = Vector2.zero;
+        playerRb.constraints    = RigidbodyConstraints2D.FreezeAll;
     }
 
-    private IEnumerator DelayedUnlockPlayer()
+    private IEnumerator UnlockPlayer()
     {
         yield return new WaitForSeconds(unlockDelay);
-        if (playerRigidbody != null)
-            playerRigidbody.constraints = originalConstraints;
-        OnDialogueEnded?.Invoke();
+        if (playerRb != null)
+            playerRb.constraints = originalConstraints;
     }
 
-    // ─────────────────────────────────────────────
-    //  PORTRAIT HELPERS
-    // ─────────────────────────────────────────────
-    private void ResetPortraitTransform(Image portrait)
+    // ── easing ────────────────────────────────────────────────────
+    private static float EaseOutBack(float t)
     {
-        if (portrait == null) return;
-        portrait.rectTransform.localScale       = Vector3.one;
-        portrait.rectTransform.rotation         = Quaternion.identity;
-        portrait.rectTransform.anchoredPosition = (portrait == leftPortrait) ? originalLeftPos : originalRightPos;
+        const float c1 = 1.70158f;
+        const float c3 = c1 + 1f;
+        return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
     }
-
-    private IEnumerator DoBounce(Image portrait)
-    {
-        if (portrait == null) yield break;
-        RectTransform rt = portrait.rectTransform;
-        Vector2 originalPos = rt.anchoredPosition;
-        float jumpHeight  = 30f;
-        float upDuration  = 0.12f;
-        float downDuration = 0.18f;
-
-        float t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime / upDuration;
-            float eased = 1 - Mathf.Pow(1 - Mathf.Clamp01(t), 3f);
-            rt.anchoredPosition = originalPos + Vector2.up * (jumpHeight * eased);
-            yield return null;
-        }
-
-        t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime / downDuration;
-            float eased = Mathf.Pow(Mathf.Clamp01(t), 2f);
-            rt.anchoredPosition = Vector2.Lerp(originalPos + Vector2.up * jumpHeight, originalPos, eased);
-            yield return null;
-        }
-
-        rt.anchoredPosition = originalPos;
-    }
-
-    private IEnumerator DoSpin(Image portrait)
-    {
-        float t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime / 0.35f;
-            portrait.rectTransform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, 360, Mathf.Clamp01(t)));
-            yield return null;
-        }
-        portrait.rectTransform.rotation = Quaternion.identity;
-    }
-
-    private IEnumerator DoFlip(Image portrait)
-    {
-        Vector3 original = portrait.rectTransform.localScale;
-        Vector3 flipped  = new Vector3(-original.x, original.y, original.z);
-
-        float t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime / 0.15f;
-            portrait.rectTransform.localScale = Vector3.Lerp(original, flipped, Mathf.Clamp01(t));
-            yield return null;
-        }
-
-        t = 0f;
-        while (t < 1f)
-        {
-            t += Time.deltaTime / 0.15f;
-            portrait.rectTransform.localScale = Vector3.Lerp(flipped, original, Mathf.Clamp01(t));
-            yield return null;
-        }
-    }
+    private static float EaseOutCubic(float t) => 1f - Mathf.Pow(1f - t, 3f);
+    private static float EaseInCubic(float t)  => t * t * t;
 }

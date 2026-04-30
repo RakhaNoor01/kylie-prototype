@@ -10304,14 +10304,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::JacobNPC
   animator: {fileID: 236663315}
   spriteRenderer: {fileID: 236663317}
-  dialoguePortrait: {fileID: 21300000, guid: 76b54b6e64aa47c42873416ccae0d2da, type: 3}
   dialogue: {fileID: 11400000, guid: 115363b475edef546bb62f6a8a13ff69, type: 2}
-  npcNameFallback: Jacob
+  npcPortrait: {fileID: 21300000, guid: 5b469bceb4a2ce343980366bfcab0a79, type: 3}
+  dialogueBoxSprite: {fileID: 21300000, guid: e8a4eb247c6f241448d92a5738303e46, type: 3}
   interactionIndicator: {fileID: 316960363}
   bobHeight: 0.1
   bobSpeed: 3
-  idleAnimName: Cob-Idle
-  talkAnimName: Cob-Talk
+  defaultFacingRight: 0
 --- !u!95 &236663315
 Animator:
   serializedVersion: 7
