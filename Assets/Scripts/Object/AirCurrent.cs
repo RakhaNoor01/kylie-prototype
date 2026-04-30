@@ -47,7 +47,7 @@ public class AirCurrent : MonoBehaviour
             // Seed the carry velocity so the controller's deceleration bleeds it off naturally
             Vector2 vel = pc.FrameVelocity;
             Vector2 carryContrib = CurrentDirection * internalGlide;
-            vel += carryContrib;    
+            vel += carryContrib;
             pc.SetFrameVelocity(vel);
         }
 
@@ -78,7 +78,7 @@ public class AirCurrent : MonoBehaviour
         {
             internalGlide = Mathf.Min(internalGlide + glideAccel * Time.fixedDeltaTime, maxGlide);
 
-            // Only push the DEFICIT — the gap between where they are and the target speed.
+            // Only push the Deficit: the gap between where they are and the target speed.
             // This prevents accumulating external velocity on top of already-fast frameVelocity.
             float deficit = internalGlide - velocityAlongCurrent;
             if (deficit > 0f)
@@ -88,7 +88,13 @@ public class AirCurrent : MonoBehaviour
             return;
         }
 
-        internalGlide = 0f;
+        if (internalGlide > 0f)
+        {
+            vel += dir * internalGlide;
+            pc.SetFrameVelocity(vel);
+            internalGlide = 0f;
+            return;
+        }
 
         if (horizontal)
         {

@@ -458,10 +458,15 @@ public class Boomerang : MonoBehaviour
         if (!isThrown) return;
 
         if (other.gameObject.CompareTag("Breakable Vines") || 
-            other.gameObject.layer == LayerMask.NameToLayer("Debug") ||
-            other.gameObject.CompareTag("One Way"))
+            other.gameObject.layer == LayerMask.NameToLayer("Debug"))
         {
             return;
+        }
+
+        if (other.gameObject.CompareTag("One Way"))
+        {
+            if (!IsHittingSolidSide(other))
+                return;
         }
 
         insideGeometry = true;
@@ -480,6 +485,15 @@ public class Boomerang : MonoBehaviour
             Catch();
             return;
         }
+    }
+
+    bool IsHittingSolidSide(Collider2D platform)
+    {
+        Vector2 platformUp = platform.transform.up;
+
+        Vector2 travelDir = rb.linearVelocity.normalized;
+
+        return Vector2.Dot(travelDir, platformUp) < 0f;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
