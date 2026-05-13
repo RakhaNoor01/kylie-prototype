@@ -1,4 +1,4 @@
-// RoomManager.cs
+﻿// RoomManager.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +29,7 @@ public class RoomManager : MonoBehaviour
         allRooms.AddRange(FindObjectsByType<Room>(FindObjectsSortMode.None));
     }
 
-    // Call this instead of the old Start() � safe for level selection too
+    // Call this instead of the old Start() — safe for level selection too
     public void InitializeStartRoom()
     {
         Room startRoom = firstRoom ?? (allRooms.Count > 0 ? allRooms[0] : null);
@@ -59,6 +59,8 @@ public class RoomManager : MonoBehaviour
         if (room == CurrentRoom) return;
         CurrentRoom = room;
         LoadRoom(room);
+
+
     }
 
     public void LoadRoom(Room room)
@@ -68,12 +70,18 @@ public class RoomManager : MonoBehaviour
         if (!string.IsNullOrEmpty(room.sceneName))
             shouldBeLoaded.Add(room.sceneName);
 
-        foreach (var adjacent in room.adjacentRooms)
-            if (adjacent != null && !string.IsNullOrEmpty(adjacent.sceneName))
-                shouldBeLoaded.Add(adjacent.sceneName);
+        foreach (var adj in room.adjacentRooms)
+        {
+            if (adj != null && !string.IsNullOrEmpty(adj.sceneName))
+                shouldBeLoaded.Add(adj.sceneName);
+        }
 
         StartCoroutine(SyncScenesCoroutine(shouldBeLoaded));
+
+   
     }
+
+
 
     public void UnloadAll()
     {
@@ -89,10 +97,9 @@ public class RoomManager : MonoBehaviour
         // Load scenes that should be active but aren't
         foreach (var sceneName in shouldBeLoaded)
         {
-            // Scene may already be loaded before RoomManager runs
             if (SceneManager.GetSceneByName(sceneName).isLoaded)
             {
-                loadedScenes.Add(sceneName); // track the already loaded room
+                loadedScenes.Add(sceneName);
                 continue;
             }
 
@@ -115,8 +122,22 @@ public class RoomManager : MonoBehaviour
             loadedScenes.Remove(sceneName);
         }
 
+        // ✅ Enforce background visibility AFTER load/unload
+        foreach (Room r in allRooms)
+            ToggleBackgrounds(r, false);
+
+        if (CurrentRoom != null)
+        {
+            ToggleBackgrounds(CurrentRoom, true);
+            foreach (Room adj in CurrentRoom.adjacentRooms)
+                ToggleBackgrounds(adj, true);
+        }
+
         isSyncing = false;
     }
+
+
+
 
     private IEnumerator UnloadAllCoroutine()
     {
@@ -163,4 +184,18 @@ public class RoomManager : MonoBehaviour
     {
         return allRooms.Find(r => r.sceneName == sceneName);
     }
+
+    private void ToggleBackgrounds(Room room, bool state)
+    {
+        if (room == null) return;
+
+        foreach (Transform child in room.transform)
+        {
+            if (child.name.StartsWith("Background") || child.name == "Foreground")
+            {
+                child.gameObject.SetActive(state);
+            }
+        }
+    }
+
 }

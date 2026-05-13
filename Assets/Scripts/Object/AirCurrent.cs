@@ -47,7 +47,7 @@ public class AirCurrent : MonoBehaviour
             // Seed the carry velocity so the controller's deceleration bleeds it off naturally
             Vector2 vel = pc.FrameVelocity;
             Vector2 carryContrib = CurrentDirection * internalGlide;
-            vel += carryContrib;    
+            vel += carryContrib;
             pc.SetFrameVelocity(vel);
         }
 
@@ -78,14 +78,23 @@ public class AirCurrent : MonoBehaviour
         {
             internalGlide = Mathf.Min(internalGlide + glideAccel * Time.fixedDeltaTime, maxGlide);
 
-            if (velocityAlongCurrent < internalGlide)
+            // Only push the Deficit: the gap between where they are and the target speed.
+            // This prevents accumulating external velocity on top of already-fast frameVelocity.
+            float deficit = internalGlide - velocityAlongCurrent;
+            if (deficit > 0f)
             {
-                pc.AddExternalVelocity(dir * internalGlide);
+                pc.AddExternalVelocity(dir * deficit);
             }
             return;
         }
 
-        internalGlide = 0f;
+        if (internalGlide > 0f)
+        {
+            vel += dir * internalGlide;
+            pc.SetFrameVelocity(vel);
+            internalGlide = 0f;
+            return;
+        }
 
         if (horizontal)
         {
@@ -94,13 +103,12 @@ public class AirCurrent : MonoBehaviour
             {
                 float push = slowfall;
 
-                // If grounded and walking against the current, cap the push so the
-                // player retains at least 1 unit of walk speed in their own direction.
-                if (pc.Grounded && velocityAlongCurrent < 0f)
+                // Player has a at least 1 walk speed to fight against the aircurrent
+                if (velocityAlongCurrent < 0f)
                 {
                     // Player's walk speed in their own direction (positive value)
                     float playerWalkSpeed = Mathf.Abs(velocityAlongCurrent);
-                    float maxAllowedPush = Mathf.Max(0f, pc.Stats.MaxSpeed - 1f);
+                    float maxAllowedPush = Mathf.Max(0f, pc.Stats.MaxSpeed - 1.5f);
                     push = Mathf.Min(push, maxAllowedPush);
                 }
 

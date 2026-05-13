@@ -1,27 +1,28 @@
 using UnityEngine;
 
-public class ParallaxLayer : MonoBehaviour
+public class Parallax : MonoBehaviour
 {
-    public float parallaxMultiplier = 0.2f;
-
+    public float parallaxFactor; // smaller = slower movement
     private Transform cam;
-    private Vector3 initialCamPosition;
-    private Vector3 initialPosition;
+    private Vector3 startPos;
+
+    // Flag to lock X movement (set by RoomManager depending on level type)
+    public bool lockX = false;
 
     void Start()
     {
         cam = Camera.main.transform;
-        initialCamPosition = cam.position;
-        initialPosition = transform.position;
+        startPos = transform.position;
     }
 
-    void LateUpdate()
+    void Update()
     {
-        float distanceX = cam.position.x - initialCamPosition.x;
+        float xOffset = lockX ? 0 : cam.position.x * parallaxFactor;
+        float yOffset = cam.position.y * parallaxFactor;
 
         transform.position = new Vector3(
-            initialPosition.x + distanceX * parallaxMultiplier,
-            initialPosition.y,
+            startPos.x + xOffset,
+            startPos.y + yOffset,
             transform.position.z
         );
     }

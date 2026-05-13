@@ -55,8 +55,13 @@ public class PlayerHealth : MonoBehaviour
             controller.enabled = false;
 
         // Camera shake
+        // Camera shake
         if (enableCameraShake && CameraShake.Instance != null)
+        {
+            Debug.Log("Camera Shaked Boi");
             CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
+        }
+
 
         // Knockback
         if (enableKnockback)
