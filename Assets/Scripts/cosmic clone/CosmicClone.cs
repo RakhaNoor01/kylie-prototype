@@ -2,6 +2,8 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class CosmicClone : MonoBehaviour
@@ -63,8 +65,13 @@ public class CosmicClone : MonoBehaviour
     }
 
     // waiting for delay
-    public void Activate(float delay, Vector2 startpos)
+    public void Activate(float delay, Vector2 startpos, Collider2D thing)
     {
+        if (playerVisual == null)
+        {
+            playerVisual = thing.GetComponentInChildren<PlayerAnimator>().gameObject;
+        }
+
         transform.position = startpos;
 
         _delay = delay;
