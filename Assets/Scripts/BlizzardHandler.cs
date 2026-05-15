@@ -1,6 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
-using Unity.VisualScripting;
 
 public class BlizzardHandler : MonoBehaviour
 {
@@ -10,13 +10,13 @@ public class BlizzardHandler : MonoBehaviour
     [Header("Visuals")]
     public GameObject blizzardStuff;
     public float blizzardFadeTime = 3;
-    public SpriteRenderer blizzardVig;
-    public SpriteRenderer blizzardFG;
+    public Image blizzardVig;
+    public Image blizzardFG;
+    public SpriteRenderer blizzardBG;
 
     public bool isBlizzard = false;
     public bool cozy = true;
     public float heatReal;
-    public float whatthefuckiswrongwithyou;
 
     private int heatSourceCount = 0;
 
@@ -46,13 +46,7 @@ public class BlizzardHandler : MonoBehaviour
 
         var bfg = blizzardFG.color;
         float tfg = t > 0.5f ? 1f : Mathf.InverseLerp(0f, 0.5f, t);
-        blizzardFG.color = Color.Lerp(new Color(bfg.r, bfg.g, bfg.b, 1), new Color(bfg.r, bfg.g, bfg.b, 0f), tfg);
-        whatthefuckiswrongwithyou = tfg;
-
-        if (heatReal <= 0)
-        {
-            GetComponent<PlayerHealth>().Die();
-        }
+        blizzardFG.color = new Color(bfg.r, bfg.g, bfg.b, Mathf.Lerp(1f, 0f, tfg));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -70,27 +64,34 @@ public class BlizzardHandler : MonoBehaviour
             if (isBlizzard) return;
             heatReal = heat;
             blizzardStuff.SetActive(true);
-            foreach (var sr in blizzardStuff.GetComponentsInChildren<SpriteRenderer>())
+
+            foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
             {
-                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0f);
-                if (sr == blizzardFG) continue;
-                sr.DOFade(1f, blizzardFadeTime)
+                img.color = new Color(img.color.r, img.color.g, img.color.b, 0f);
+                if (img == blizzardFG) continue;
+                img.DOFade(1f, blizzardFadeTime)
                     .OnComplete(() =>
                     {
                         isBlizzard = true;
                         cozy = heatSourceCount > 0;
                     });
             }
+
+            blizzardBG.color = new Color(blizzardBG.color.r, blizzardBG.color.g, blizzardBG.color.b, 0f);
+            blizzardBG.DOFade(1f, blizzardFadeTime);
         }
         if (gobj.extraTag == ExtraTags.ExtraTag.blizzardEnd)
         {
             if (!isBlizzard) return;
             isBlizzard = false;
-            foreach (var sr in blizzardStuff.GetComponentsInChildren<SpriteRenderer>())
+
+            foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
             {
-                sr.DOFade(0f, blizzardFadeTime)
-                  .OnComplete(() => blizzardStuff.SetActive(false));
+                img.DOFade(0f, blizzardFadeTime)
+                    .OnComplete(() => blizzardStuff.SetActive(false));
             }
+
+            blizzardBG.DOFade(0f, blizzardFadeTime);
         }
     }
 
