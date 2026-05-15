@@ -47,6 +47,11 @@ public class BlizzardHandler : MonoBehaviour
         var bfg = blizzardFG.color;
         float tfg = t > 0.5f ? 1f : Mathf.InverseLerp(0f, 0.5f, t);
         blizzardFG.color = new Color(bfg.r, bfg.g, bfg.b, Mathf.Lerp(1f, 0f, tfg));
+
+        if (heatReal <= 0)
+        {
+            GetComponent<PlayerHealth>()?.Die();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -67,9 +72,10 @@ public class BlizzardHandler : MonoBehaviour
 
             foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
             {
+                var ogAlpha = img.color.a;
                 img.color = new Color(img.color.r, img.color.g, img.color.b, 0f);
                 if (img == blizzardFG) continue;
-                img.DOFade(1f, blizzardFadeTime)
+                img.DOFade(ogAlpha, blizzardFadeTime)
                     .OnComplete(() =>
                     {
                         isBlizzard = true;
