@@ -51,7 +51,7 @@ public class BlizzardHandler : MonoBehaviour
         blizzardVig.color = Color.Lerp(Color.white, Color.black, t);
 
         var bfg = blizzardFG.color;
-        float tfg = t > 0.5f ? 1f : Mathf.InverseLerp(0f, 0.5f, t);
+        float tfg = t > 0.75f ? 1f : Mathf.InverseLerp(0f, 0.25f, t);
         blizzardFG.color = new Color(bfg.r, bfg.g, bfg.b, Mathf.Lerp(1f, 0f, tfg));
 
         if (heatReal <= 0)
