@@ -5966,7 +5966,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.25}
+  m_Offset: {x: 0, y: -0.26}
   m_Size: {x: 0.5, y: 0.8}
   m_Direction: 0
 --- !u!114 &450797596
@@ -6106,17 +6106,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1768deb884afeb14ea110d90deaf6c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlizzardHandler
-  heat: 15
-  heatLoss: 1
+  heat: 10
+  heatLoss: 0.5
   heatRegen: 5
   blizzardStuff: {fileID: 1999360724}
-  blizzardFadeTime: 7
+  blizzardFadeTime: 5
   blizzardVig: {fileID: 641130366}
   blizzardFG: {fileID: 1791255402}
   blizzardBG: {fileID: 1266685515}
-  isBlizzard: 0
-  cozy: 1
-  heatReal: 0
 --- !u!1 &488921700
 GameObject:
   m_ObjectHideFlags: 0
@@ -6748,7 +6745,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_ColorSpace: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   hasTped: 0
@@ -17686,7 +17683,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 546223866671050547, guid: e4346d6c17ba7574c9503dcc508e1da7, type: 3}
+  m_Sprite: {fileID: -6475584453584679601, guid: e4346d6c17ba7574c9503dcc508e1da7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -28275,7 +28272,7 @@ Transform:
   m_GameObject: {fileID: 1561298933}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.5, y: 15, z: -10}
+  m_LocalPosition: {x: -15, y: 15.5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

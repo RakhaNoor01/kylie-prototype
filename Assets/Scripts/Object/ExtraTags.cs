@@ -6,7 +6,7 @@ public class ExtraTags : MonoBehaviour
 
     public enum ExtraTag 
     {
-        none, heatSource, blizzardStart, blizzardEnd 
+        none, heatSource, blizzardStart, blizzardEnd, blizzardContinue, shrine
     };
 
     public ExtraTag extraTag = ExtraTag.none;

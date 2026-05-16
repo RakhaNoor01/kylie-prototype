@@ -32,7 +32,7 @@ namespace TarodevController
         private bool _dashAvailable = true;
         private PlayerKnockback _knockback;
 
-        private MovablePlatform _groundedPlatform;
+        private Rigidbody2D _groundedPlatformRb;
         private Rigidbody2D _clingPlatformRb;
 
         private float _pogoWindowEndTime;
@@ -44,6 +44,7 @@ namespace TarodevController
         public float _glideStamina;
 
         private Vector2 _externalVelocity;
+        private Vector2 _platformVelocity;
 
         private PlayerAudio _audio;
 
@@ -186,9 +187,11 @@ namespace TarodevController
                 _stats.GrounderDistance
             );
 
+            bool collTouchGround = _col.IsTouching(filter);
+
             RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
 
-            bool isGrounded = groundHit;
+            bool isGrounded = groundHit && collTouchGround;
 
             ContactFilter2D ceilFilter = new ContactFilter2D();
             ceilFilter.useTriggers = false;
@@ -245,23 +248,40 @@ namespace TarodevController
                 _frameLeftGrounded = _time;
 
                 // Momentum carry by adding the platform's velocity with the player's current framevelocity
-                if (_groundedPlatform != null)
+                if (_groundedPlatformRb != null)
                 {
-                    Vector2 platformVelocity = _groundedPlatform.Delta / Time.deltaTime;
-                    _frameVelocity += platformVelocity;
+                    var platLV = _groundedPlatformRb.linearVelocity;
+                    var clampedLV = new Vector2(platLV.x, Mathf.Min(platLV.y, 0));
+                    _frameVelocity += clampedLV;
                 }
 
                 GroundedChanged?.Invoke(false, 0);
             }
 
-            // Detect moving platform
+            // Detect moving platform and inherit its velocity
             if (isGrounded)
             {
-                _groundedPlatform = groundHit.collider.GetComponent<MovablePlatform>();
+                _groundedPlatformRb = groundHit.collider.attachedRigidbody;
+
+                if (_groundedPlatformRb != null)
+                {
+                    Vector2 platVel = _groundedPlatformRb.linearVelocity;
+                    _platformVelocity.x = platVel.x;
+
+                    if (platVel.y > 0 || (platVel.y < 0 && _frameVelocity.y <= 0))
+                        _platformVelocity.y = platVel.y;
+                    else
+                        _platformVelocity.y = 0f;
+                }
+                else
+                {
+                    _platformVelocity = Vector2.zero;
+                }
             }
             else
             {
-                _groundedPlatform = null;
+                _groundedPlatformRb = null;
+                _platformVelocity = Vector2.zero;
             }
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
@@ -749,20 +769,9 @@ namespace TarodevController
 
         private void ApplyMovement()
         {
-            Vector2 finalVelocity = _frameVelocity;
-
-            if (_groundedPlatform != null)
-            {
-                Vector2 platformVelocity = _groundedPlatform.Delta / Time.fixedDeltaTime;
-                finalVelocity += platformVelocity;
-            }
-
-            finalVelocity += _externalVelocity;
+            _rb.linearVelocity = _frameVelocity + _externalVelocity + _platformVelocity;
             _externalVelocity = Vector2.zero;
-
-            _rb.linearVelocity = finalVelocity;
         }
-
 
         public bool DashAvailable => _dashAvailable;
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 public class BlizzardHandler : MonoBehaviour
 {
@@ -14,23 +15,28 @@ public class BlizzardHandler : MonoBehaviour
     public Image blizzardFG;
     public SpriteRenderer blizzardBG;
 
-    public bool isBlizzard = false;
-    public bool cozy = true;
-    public float heatReal;
-
+    private bool isBlizzard = false;
+    private bool started = false;
+    private bool cozy = true;
+    private float heatReal;
     private int heatSourceCount = 0;
+    private static bool checkpointAfterBlizzard = false;
+    private PlayerHealth health;
 
     private void Start()
     {
         heatReal = heat;
         blizzardStuff.SetActive(false);
+        health = GetComponent<PlayerHealth>();
+        if (checkpointAfterBlizzard) InstantBlizzard();
     }
 
     private void FixedUpdate()
     {
+        if (!started) return;
         if (isBlizzard)
         {
-            if (cozy && heatReal < 10)
+            if (cozy && heatReal < heat)
             {
                 heatReal += heatRegen * Time.deltaTime;
             }
@@ -50,8 +56,21 @@ public class BlizzardHandler : MonoBehaviour
 
         if (heatReal <= 0)
         {
-            GetComponent<PlayerHealth>()?.Die();
+            health.Die();
         }
+    }
+
+    private void InstantBlizzard()
+    {
+        if (!checkpointAfterBlizzard) return;
+
+        started = true;
+        isBlizzard = true;
+        cozy = heatSourceCount > 0;
+        blizzardStuff.SetActive(true);
+
+        blizzardFG.color = new Color(blizzardFG.color.r, blizzardFG.color.g, blizzardFG.color.b, 0f);
+        blizzardBG.color = new Color(blizzardBG.color.r, blizzardBG.color.g, blizzardBG.color.b, 1f);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -64,11 +83,19 @@ public class BlizzardHandler : MonoBehaviour
             heatSourceCount++;
             cozy = true;
         }
+
+        if (gobj.extraTag == ExtraTags.ExtraTag.blizzardContinue)
+        {
+            checkpointAfterBlizzard = true;
+            if (!isBlizzard && !started) InstantBlizzard();
+        }
+
         if (gobj.extraTag == ExtraTags.ExtraTag.blizzardStart)
         {
-            if (isBlizzard) return;
+            if (isBlizzard || started) return;
             heatReal = heat;
             blizzardStuff.SetActive(true);
+            started = true;
 
             foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
             {
@@ -76,6 +103,7 @@ public class BlizzardHandler : MonoBehaviour
                 img.color = new Color(img.color.r, img.color.g, img.color.b, 0f);
                 if (img == blizzardFG) continue;
                 img.DOFade(ogAlpha, blizzardFadeTime)
+                    .SetEase(Ease.InQuint)
                     .OnComplete(() =>
                     {
                         isBlizzard = true;
@@ -85,11 +113,15 @@ public class BlizzardHandler : MonoBehaviour
 
             blizzardBG.color = new Color(blizzardBG.color.r, blizzardBG.color.g, blizzardBG.color.b, 0f);
             blizzardBG.DOFade(1f, blizzardFadeTime);
+
+            shrineSeq();
         }
+
         if (gobj.extraTag == ExtraTags.ExtraTag.blizzardEnd)
         {
             if (!isBlizzard) return;
             isBlizzard = false;
+            checkpointAfterBlizzard = false;
 
             foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
             {
@@ -99,6 +131,20 @@ public class BlizzardHandler : MonoBehaviour
 
             blizzardBG.DOFade(0f, blizzardFadeTime);
         }
+    }
+
+    private void shrineSeq()
+    {
+        var shrine = FindObjectsByType<ExtraTags>(FindObjectsSortMode.None)
+            .FirstOrDefault(t => t.extraTag == ExtraTags.ExtraTag.shrine);
+        if (shrine == null) return;
+
+        var anim = shrine.GetComponent<Animator>();
+        if (anim == null) return;
+
+        anim.CrossFadeInFixedTime("evil_on", 0.1f);
+
+        DOVirtual.DelayedCall(1f, () => anim.CrossFadeInFixedTime("evil_idle", 0.25f));
     }
 
     private void OnTriggerExit2D(Collider2D collision)
