@@ -18,7 +18,7 @@ public class BlizzardHandler : MonoBehaviour
     private bool isBlizzard = false;
     private bool started = false;
     private bool cozy = true;
-    private float heatReal;
+    public float heatReal;
     private int heatSourceCount = 0;
     private static bool checkpointAfterBlizzard = false;
     private PlayerHealth health;
