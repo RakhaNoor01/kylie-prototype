@@ -27,17 +27,31 @@ public class PlayerHealth : MonoBehaviour
 
     public bool tping;
 
+    public bool hasBomb = false;
+
+    public float iframeTimer = 0f;
+
     private void Update()
     {
+        if (iframeTimer > 0f) iframeTimer -= Time.deltaTime;
+
         if (transform.position.y < voidThreshold)
         {
             Die();
         }
     }
 
+    private bool IsInvincible => iframeTimer > 0f;
+
+    public void AddIframes(float seconds)
+    {
+        iframeTimer = Mathf.Max(iframeTimer, seconds);
+    }
+
     public void Die(Vector2? hitDirection = null)
     {
         if (_isDead || tping) return;
+        if (IsInvincible) return;
         if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsPlayerInvincible()) return;
 
         _isDead = true;
