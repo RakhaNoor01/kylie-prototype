@@ -21,7 +21,6 @@ public class PlayerAnimator : MonoBehaviour
     private bool _gliderEquipped = false;
     private bool _wasGliding = false;
     private bool _isUnequipping = false;
-    private Transform _gliderOriginalParent;
 
     private void Awake()
     {
@@ -211,6 +210,7 @@ public class PlayerAnimator : MonoBehaviour
 
         glider.transform.SetParent(gameObject.transform);
         glider.transform.localPosition = Vector2.zero;
+        glider.transform.localScale = Vector2.one;
         glider.SetActive(false);
 
         _isUnequipping = false;

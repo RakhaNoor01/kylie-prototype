@@ -122,7 +122,7 @@ public class RoomManager : MonoBehaviour
             loadedScenes.Remove(sceneName);
         }
 
-        // ✅ Enforce background visibility AFTER load/unload
+        // Enforce background visibility after load/unload
         foreach (Room r in allRooms)
             ToggleBackgrounds(r, false);
 
@@ -135,10 +135,6 @@ public class RoomManager : MonoBehaviour
 
         isSyncing = false;
     }
-
-
-
-
     private IEnumerator UnloadAllCoroutine()
     {
         foreach (var sceneName in new List<string>(loadedScenes))

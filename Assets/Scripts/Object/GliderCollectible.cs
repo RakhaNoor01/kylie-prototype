@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GliderCollectible : MonoBehaviour
 {
+    public bool heyBuddy = false;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var troller = collision.gameObject.GetComponent<PlayerController>();
@@ -10,7 +12,7 @@ public class GliderCollectible : MonoBehaviour
         if (troller != null && troller.Glider != true)
         {
             troller.Glider = true;
-            gameObject.SetActive(false);
+            gameObject.SetActive(heyBuddy);
         }
     }
 }
