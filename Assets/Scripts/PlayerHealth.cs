@@ -23,6 +23,7 @@ public class PlayerHealth : MonoBehaviour
     private bool _isDead = false;
 
     public event Action death;
+    public event Action respawn;
 
     public bool tping;
 
@@ -100,6 +101,7 @@ public class PlayerHealth : MonoBehaviour
     private void Respawn()
     {
         _isDead = false;
+        respawn.Invoke();
         CheckpointManager.Instance.PlayerDied();
     }
 }

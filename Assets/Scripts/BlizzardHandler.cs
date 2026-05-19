@@ -13,6 +13,7 @@ public class BlizzardHandler : MonoBehaviour
     public float blizzardFadeTime = 3;
     public Image blizzardVig;
     public Image blizzardFG;
+    public Image blizzardCover;
     public SpriteRenderer blizzardBG;
 
     private bool isBlizzard = false;
@@ -28,6 +29,8 @@ public class BlizzardHandler : MonoBehaviour
         heatReal = heat;
         blizzardStuff.SetActive(false);
         health = GetComponent<PlayerHealth>();
+
+        health.respawn += ResetBlizzard;
         if (checkpointAfterBlizzard) InstantBlizzard();
     }
 
@@ -57,8 +60,27 @@ public class BlizzardHandler : MonoBehaviour
         if (heatReal <= 0)
         {
             health.Die();
+            blizzardCover.DOFade(1, 1);
         }
     }
+
+    public void ResetBlizzard()
+    {
+        isBlizzard = false;
+        started = false;
+        cozy = true;
+        heatReal = heat;
+        heatSourceCount = 0;
+
+        foreach (var img in blizzardStuff.GetComponentsInChildren<Image>())
+            img.DOKill();
+        blizzardBG.DOKill();
+
+        blizzardStuff.SetActive(false);
+
+        if (checkpointAfterBlizzard) InstantBlizzard();
+    }
+
 
     private void InstantBlizzard()
     {
@@ -101,7 +123,7 @@ public class BlizzardHandler : MonoBehaviour
             {
                 var ogAlpha = img.color.a;
                 img.color = new Color(img.color.r, img.color.g, img.color.b, 0f);
-                if (img == blizzardFG) continue;
+                if (img == blizzardFG || img == blizzardCover) continue;
                 img.DOFade(ogAlpha, blizzardFadeTime)
                     .SetEase(Ease.InQuint)
                     .OnComplete(() =>
