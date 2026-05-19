@@ -16,8 +16,9 @@ public class Bomb : MonoBehaviour
     public GameObject splosion;
 
     public static GameObject theBobm;
-    public GameObject player;
-    public PlayerHealth hi;
+    private GameObject player;
+    private PlayerHealth hi;
+    private bool detonated = false;
 
     private void Start()
     {
@@ -61,7 +62,8 @@ public class Bomb : MonoBehaviour
 
     public void Detonate(Vector2 deathZoneDirection)
     {
-        if (player == null) return;
+        if (player == null || detonated == true) return;
+        detonated = true;
 
         hi.AddIframes(iframes);
 
@@ -85,6 +87,9 @@ public class Bomb : MonoBehaviour
         var sr = GetComponent<SpriteRenderer>();
         sr.enabled = false;
 
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
         splosion.SetActive(true);
         splosion.transform.parent = null;
         splosion.transform.position = player.transform.position;
@@ -97,8 +102,7 @@ public class Bomb : MonoBehaviour
 
         yield return new WaitForSeconds(effectDuration);
 
-        splosion.transform.parent = gameObject.transform;
-        splosion.transform.position = gameObject.transform.position;
-        gameObject.SetActive(false);
+        Destroy(splosion);
+        Destroy(gameObject);
     }
 }
