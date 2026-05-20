@@ -70,7 +70,6 @@ public class Bomb : MonoBehaviour
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
         {
-            // Launch upward + nudge away from the death zone wall
             float xNudge = deathZoneDirection.x * push;
             pc.SetFrameVelocity(new Vector2(xNudge, power));
             pc.CancelDash();
