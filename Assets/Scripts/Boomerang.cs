@@ -27,6 +27,7 @@ public class Boomerang : MonoBehaviour
 
     [Header("Visuals")]
     public GameObject visual;
+    public GameObject torchure;
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
     public ParticleSystem rangPhaseParticle;
@@ -43,8 +44,6 @@ public class Boomerang : MonoBehaviour
     private bool isThrown = false;
     private bool hasDeflected = false;
 
-    private SpriteRenderer rangSprite;
-
     private bool isCharging = false;
     private Vector2 cachedDirection;
 
@@ -55,10 +54,14 @@ public class Boomerang : MonoBehaviour
 
     private PlayerController imLowkTrolling;
     private PlayerHealth judgement;
+    private Slopburger slop;
     public bool hasTped;
     private bool isTping;
 
     private float ogROD;
+
+    private bool burnerang;
+    public bool isBurning;
 
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
@@ -73,7 +76,6 @@ public class Boomerang : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        rangSprite = visual.GetComponent<SpriteRenderer>();
 
         rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -84,7 +86,7 @@ public class Boomerang : MonoBehaviour
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
 
-        rangSprite.enabled = false;
+        visual.SetActive(false);
         rangTrail.enabled = false;
 
         ogTime = Time.timeScale;
@@ -96,6 +98,7 @@ public class Boomerang : MonoBehaviour
 
         imLowkTrolling = player.GetComponent<PlayerController>();
         judgement = player.GetComponent<PlayerHealth>();
+        slop = player.GetComponent<Slopburger>();
 
         judgement.death += ThyEndIsNow;
         judgement.tping = false;
@@ -125,19 +128,36 @@ public class Boomerang : MonoBehaviour
             return;
         }
 
+        if (slop != null)
+        {
+            if (slop.TheOrch == true) 
+            {
+                burnerang = true;
+            }
+            else
+            {
+                burnerang = false;
+            }
+        }
+
+        if (isBurning)
+        {
+            torchure.SetActive(true);
+        }
+        else
+        {
+            torchure.SetActive(false);
+        }
+
         if (isThrown) return;
 
-        // -----------------------------------------------
-        // Alternate throw mode: hold J, aim with WASD
-        // -----------------------------------------------
+        // Alternate throw mode
         HandleAltThrow();
 
         // Don't process mouse throw while alt mode is active
         if (isChargingAlt) return;
 
-        // -----------------------------------------------
-        // Original mouse throw mode
-        // -----------------------------------------------
+        // Mouse throw mode
 
         // Start aiming
         if (Input.GetMouseButtonDown(0))
@@ -215,7 +235,7 @@ public class Boomerang : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Kinematic;
             transform.position = player.transform.position;
             transform.parent = player.transform;
-            rangSprite.enabled = false;
+            visual.SetActive(false);
             rangTrail.enabled = false;
             col.enabled = false;
         }
@@ -236,7 +256,7 @@ public class Boomerang : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
         col.enabled = false;
-        rangSprite.enabled = false;
+        visual.SetActive(false);
         rangTrail.enabled = false;
 
         if (directionIndicator != null)
@@ -391,8 +411,9 @@ public class Boomerang : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = cachedDirection * throwPower;
 
-        rangSprite.enabled = true;
+        visual.SetActive(true);
         rangTrail.enabled = true;
+        if (burnerang) isBurning = true;
 
         distmulttimer = 0;
         noCatchTimer = noCatchPeriod;
@@ -457,8 +478,15 @@ public class Boomerang : MonoBehaviour
     {
         if (!isThrown) return;
 
-        if (other.gameObject.CompareTag("Breakable Vines") || 
-            other.gameObject.layer == LayerMask.NameToLayer("Debug"))
+        var huh = other.GetComponent<ExtraTags>();
+        if (huh != null && huh.extraTag == ExtraTags.ExtraTag.walterfall)
+        {
+            isBurning = false;
+        }
+
+        if (other.gameObject.CompareTag("Breakable Vines") ||
+            other.gameObject.layer == LayerMask.NameToLayer("Debug") || 
+            other.isTrigger)
         {
             return;
         }
@@ -553,8 +581,9 @@ public class Boomerang : MonoBehaviour
             }
         }
 
-        rangSprite.enabled = false;
+        visual.SetActive(false);
         rangTrail.enabled = false;
+        isBurning = false;
         col.enabled = false;
     }
 

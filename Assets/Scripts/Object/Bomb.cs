@@ -8,6 +8,7 @@ public class Bomb : MonoBehaviour
     public float power = 15;
     public float push = 1;
     public float iframes = 0.15f;
+    public float splosionRadius = 2f;
 
     [Header("Visual")]
     public float minDistance = 1.5f;
@@ -18,11 +19,13 @@ public class Bomb : MonoBehaviour
     public static GameObject theBobm;
     private GameObject player;
     private PlayerHealth hi;
-    private bool detonated = false;
+    public bool detonated = false;
+    private CircleCollider2D col;
 
     private void Start()
     {
         splosion.SetActive(false);
+        col = GetComponent<CircleCollider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -42,6 +45,7 @@ public class Bomb : MonoBehaviour
         gameObject.transform.parent = null;
         theBobm = gameObject;
 
+        col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
 
     }
@@ -75,6 +79,16 @@ public class Bomb : MonoBehaviour
             pc.CancelDash();
         }
 
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
+        foreach (var hit in hits)
+        {
+            var breakable = hit.GetComponent<Breakable>();
+            if (breakable != null)
+            {
+                breakable.HitFromBomb();
+            }
+        }
+
         theBobm = null;
         hi = null;
 
@@ -85,9 +99,6 @@ public class Bomb : MonoBehaviour
     {
         var sr = GetComponent<SpriteRenderer>();
         sr.enabled = false;
-
-        var col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
 
         splosion.SetActive(true);
         splosion.transform.parent = null;
@@ -103,5 +114,11 @@ public class Bomb : MonoBehaviour
 
         Destroy(splosion);
         Destroy(gameObject);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.orange;
+        Gizmos.DrawWireSphere(transform.position, splosionRadius);
     }
 }

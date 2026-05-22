@@ -31,7 +31,7 @@ public class ContraptionVisual : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (handler == null) return;
+        if (!handlin()) return;
         if (handler.LightCount <= 0 && !idling)
         {
             animator.CrossFadeInFixedTime("contraption_idle", 0.5f);
@@ -43,6 +43,7 @@ public class ContraptionVisual : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Player")) return;
         if (handler == null) handler = collision.gameObject.GetComponent<ContraptionHandler>();
+        if (!handlin()) return;
 
         TraptionOn();
         enterTraption?.Invoke();
@@ -51,6 +52,11 @@ public class ContraptionVisual : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
+        if (!handlin())
+        {
+            animator.CrossFadeInFixedTime("contraption_off", 0.25f);
+            return;
+        }
         TraptionOff();
         exitTraption?.Invoke();
     }
@@ -65,5 +71,11 @@ public class ContraptionVisual : MonoBehaviour
     {
         var t = handler.LightCount / handler.lightDecay;
         animator.CrossFadeInFixedTime("contraption_off", t);
+    }
+
+    private bool handlin()
+    {
+        if (handler == null || handler.enabled == false) return false;
+        return true;
     }
 }
