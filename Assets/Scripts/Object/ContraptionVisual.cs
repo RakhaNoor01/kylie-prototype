@@ -52,11 +52,8 @@ public class ContraptionVisual : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
-        if (!handlin())
-        {
-            animator.CrossFadeInFixedTime("contraption_off", 0.25f);
-            return;
-        }
+        if (!handlin()) return;
+
         TraptionOff();
         exitTraption?.Invoke();
     }

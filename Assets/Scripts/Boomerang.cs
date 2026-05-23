@@ -28,6 +28,7 @@ public class Boomerang : MonoBehaviour
     [Header("Visuals")]
     public GameObject visual;
     public GameObject torchure;
+    public ParticleSystem torc;
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
     public ParticleSystem rangPhaseParticle;
@@ -63,6 +64,9 @@ public class Boomerang : MonoBehaviour
     private bool burnerang;
     public bool isBurning;
 
+    private bool shouldTrail = false;
+    private bool shouldFire = false;
+
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
     private Vector2 altWASDDirection = Vector2.right; // default direction
@@ -77,37 +81,21 @@ public class Boomerang : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 
-        rb.gravityScale = 0f;
-        rb.bodyType = RigidbodyType2D.Kinematic;
+        imLowkTrolling = player.GetComponent<PlayerController>();
+        judgement = player.GetComponent<PlayerHealth>();
+        slop = player.GetComponent<Slopburger>();
+        _playerAudio = player.GetComponent<PlayerAudio>();
 
-        col.isTrigger = true;
-        col.enabled = false;
+        judgement.respawn += ResetBoomerang;
+        judgement.tping = false;
 
-        if (directionIndicator != null)
-            directionIndicator.SetActive(false);
-
-        visual.SetActive(false);
-        rangTrail.enabled = false;
+        var ok = rangPhaseParticle.emission;
+        ogROD = ok.rateOverDistance.Evaluate(0);
 
         ogTime = Time.timeScale;
         ogDelta = Time.fixedDeltaTime;
 
-        hasTped = false;
-
-        theplayerisdead = false;
-
-        imLowkTrolling = player.GetComponent<PlayerController>();
-        judgement = player.GetComponent<PlayerHealth>();
-        slop = player.GetComponent<Slopburger>();
-
-        judgement.death += ThyEndIsNow;
-        judgement.tping = false;
-
-        _playerAudio = player.GetComponent<PlayerAudio>();
-
-        var ok = rangPhaseParticle.emission;
-        ogROD = ok.rateOverDistance.Evaluate(0);
-        ok.rateOverDistance = 0;
+        ResetBoomerang();
     }
 
     void Update()
@@ -140,14 +128,7 @@ public class Boomerang : MonoBehaviour
             }
         }
 
-        if (isBurning)
-        {
-            torchure.SetActive(true);
-        }
-        else
-        {
-            torchure.SetActive(false);
-        }
+        HandleEffects();
 
         if (isThrown) return;
 
@@ -212,35 +193,6 @@ public class Boomerang : MonoBehaviour
         }
     }
 
-    private void ThyEndIsNow()
-    {
-        isCharging = false;
-        isChargingAlt = false;
-
-        if (directionIndicator != null)
-            directionIndicator.SetActive(false);
-
-        Time.timeScale = ogTime;
-        Time.fixedDeltaTime = ogDelta;
-
-        imLowkTrolling.doWeDeserveDestruction = false;
-        theplayerisdead = true;
-
-        // Clean up if thrown mid-flight
-        if (isThrown)
-        {
-            isThrown = false;
-            hasDeflected = false;
-            rb.linearVelocity = Vector2.zero;
-            rb.bodyType = RigidbodyType2D.Kinematic;
-            transform.position = player.transform.position;
-            transform.parent = player.transform;
-            visual.SetActive(false);
-            rangTrail.enabled = false;
-            col.enabled = false;
-        }
-    }
-
     public void ResetBoomerang()
     {
         theplayerisdead = false;
@@ -252,17 +204,26 @@ public class Boomerang : MonoBehaviour
         isTping = false;
         noCatchTimer = 0;
         distmulttimer = 0;
+        isBurning = false;
 
-        rb.linearVelocity = Vector2.zero;
+        rb.gravityScale = 0f;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
+
+        col.isTrigger = true;
         col.enabled = false;
+
         visual.SetActive(false);
-        rangTrail.enabled = false;
+        shouldTrail = false;
+        shouldFire = false;
+
+        torchure.SetActive(false);
+        torc.Stop();
+        rangTrail.emitting = false;
 
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
 
-        // Re-attach to player
         transform.position = player.transform.position;
         transform.parent = player.transform;
 
@@ -270,6 +231,41 @@ public class Boomerang : MonoBehaviour
         Time.fixedDeltaTime = ogDelta;
 
         imLowkTrolling.doWeDeserveDestruction = false;
+
+        var ok = rangPhaseParticle.emission;
+        ok.rateOverDistance = 0;
+    }
+
+    private void HandleEffects()
+    {
+        if (isBurning)
+        {
+            torchure.SetActive(true);
+            shouldFire = true;
+        }
+        else
+        {
+            torchure.SetActive(false);
+            shouldFire = false;
+        }
+
+        if (shouldFire)
+        {
+            if (!torc.isPlaying) torc.Play();
+        }
+        else
+        {
+            if (torc.isPlaying) torc.Stop();
+        }
+
+        if (shouldTrail)
+        {
+            rangTrail.emitting = true;
+        }
+        else
+        {
+            rangTrail.emitting = false;
+        }
     }
 
     void HandleAltThrow()
@@ -412,7 +408,7 @@ public class Boomerang : MonoBehaviour
         rb.linearVelocity = cachedDirection * throwPower;
 
         visual.SetActive(true);
-        rangTrail.enabled = true;
+        shouldTrail = true;
         if (burnerang) isBurning = true;
 
         distmulttimer = 0;
@@ -582,7 +578,7 @@ public class Boomerang : MonoBehaviour
         }
 
         visual.SetActive(false);
-        rangTrail.enabled = false;
+        shouldTrail = false;
         isBurning = false;
         col.enabled = false;
     }

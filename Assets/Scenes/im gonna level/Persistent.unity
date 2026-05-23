@@ -577,7 +577,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 750966577}
+  m_Father: {fileID: 602358254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!199 &170122376
 ParticleSystemRenderer:
@@ -11572,6 +11572,7 @@ Transform:
   - {fileID: 1730297107}
   - {fileID: 716025453}
   - {fileID: 750966577}
+  - {fileID: 170122375}
   m_Father: {fileID: 450797597}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &602358255
@@ -11634,6 +11635,7 @@ MonoBehaviour:
   tpSpeed: 0.01
   visual: {fileID: 716025452}
   torchure: {fileID: 750966576}
+  torc: {fileID: 170122377}
   directionIndicator: {fileID: 1389064634}
   tpeffect: {fileID: 711783897}
   rangPhaseParticle: {fileID: 716025457}
@@ -22037,7 +22039,7 @@ GameObject:
   - component: {fileID: 750966577}
   - component: {fileID: 750966578}
   m_Layer: 0
-  m_Name: burnin
+  m_Name: burnlit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22055,8 +22057,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 170122375}
+  m_Children: []
   m_Father: {fileID: 602358254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &750966578
