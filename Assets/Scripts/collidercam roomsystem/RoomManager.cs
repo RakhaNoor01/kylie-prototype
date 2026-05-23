@@ -36,6 +36,7 @@ public class RoomManager : MonoBehaviour
         if (startRoom == null) return;
 
         CurrentRoom = startRoom;
+        LightingManager.Instance.SetRoom(startRoom);
         StartCoroutine(InitCoroutine(startRoom));
     }
 
@@ -60,7 +61,7 @@ public class RoomManager : MonoBehaviour
         CurrentRoom = room;
         LoadRoom(room);
 
-
+        LightingManager.Instance.SetRoom(room);
     }
 
     public void LoadRoom(Room room)
