@@ -24,6 +24,7 @@ public class Boomerang : MonoBehaviour
 
     [Header("Teleport")]
     public float tpSpeed = 0.1f;
+    public Collider2D phaseCol;
 
     [Header("Visuals")]
     public GameObject visual;
@@ -493,7 +494,7 @@ public class Boomerang : MonoBehaviour
                 return;
         }
 
-        insideGeometry = true;
+        insideGeometry = IsPhaseCol();
 
         // Deflect off first non-player collision
         if (!hasDeflected && !other.gameObject.CompareTag("Player"))
@@ -530,6 +531,18 @@ public class Boomerang : MonoBehaviour
         }
 
         insideGeometry = false;
+    }
+
+    private Collider2D[] overlapResults = new Collider2D[8];
+
+    private bool IsPhaseCol()
+    {
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.useTriggers = false;
+
+        int count = phaseCol.Overlap(filter, overlapResults);
+
+        return count > 0;
     }
 
     void Deflect(Collider2D other)
