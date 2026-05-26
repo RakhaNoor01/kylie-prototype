@@ -9,6 +9,7 @@ public class Bomb : MonoBehaviour
     public float push = 1;
     public float iframes = 0.15f;
     public float splosionRadius = 2f;
+    public bool hasTimer = false;
     public float timer = 6;
 
     [Header("Visual")]
@@ -26,6 +27,7 @@ public class Bomb : MonoBehaviour
     public bool detonated = false;
     private bool ignited = false;
     private CircleCollider2D col;
+    private ParticleSystem farticle;
 
     private float realTimer = 0;
 
@@ -35,6 +37,7 @@ public class Bomb : MonoBehaviour
         col = GetComponent<CircleCollider2D>();
         fuse.SetActive(false);
         pulse.enabled = false;
+        farticle = fuse.GetComponent<ParticleSystem>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -56,32 +59,41 @@ public class Bomb : MonoBehaviour
 
         col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
-        ignited = true;
-        fuse.SetActive(true);
-        pulse.enabled = true;
-        pulse.CrossFadeInFixedTime("bomb_pulse", 0.1f);
+
+        if (hasTimer)
+        {
+            ignited = true;
+            fuse.SetActive(true);
+            farticle.Play();
+            pulse.enabled = true;
+            pulse.CrossFadeInFixedTime("bomb_pulse", 0.1f);
+        }
     }
 
     private void Update()
     {
-        if (ignited)
+        if (hasTimer && ignited)
         {
-            var tim = timer + finalPulseDuration;
+            handleBobmTimer();
+        }
+        handleBobmFollow();
+    }
 
-            if (realTimer >= tim)
-            {
-                Detonate(Vector2.zero);
-            }
+    private void handleBobmTimer()
+    {
+        var tim = timer + finalPulseDuration;
 
-            if (realTimer >= timer)
-            {
-                pulse.CrossFadeInFixedTime("bomb_finalpulse", 0.1f);
-            }
-
-            realTimer += Time.deltaTime;
+        if (realTimer >= tim)
+        {
+            Detonate();
         }
 
-        handleBobmFollow();
+        if (realTimer >= timer)
+        {
+            pulse.CrossFadeInFixedTime("bomb_finalpulse", 0.1f);
+        }
+
+        realTimer += Time.deltaTime;
     }
 
     private void handleBobmFollow()
@@ -98,7 +110,7 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    public void Detonate(Vector2 deathZoneDirection)
+    public void Detonate()
     {
         if (player == null || detonated == true) return;
         detonated = true;
@@ -109,8 +121,7 @@ public class Bomb : MonoBehaviour
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
         {
-            float xNudge = deathZoneDirection.x * push;
-            pc.SetFrameVelocity(new Vector2(xNudge, power));
+            pc.SetFrameVelocity(new Vector2(0, power));
             pc.CancelDash();
         }
 
@@ -127,6 +138,7 @@ public class Bomb : MonoBehaviour
         theBobm = null;
         hi = null;
         pulse.gameObject.SetActive(false);
+        fuse.SetActive(false);
 
         StartCoroutine(Whoa());
     }

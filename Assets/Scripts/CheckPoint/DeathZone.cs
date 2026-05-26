@@ -11,7 +11,7 @@ public class DeathZone : MonoBehaviour
 
         if (Bomb.theBobm != null)
         {
-            Bomb.theBobm.GetComponent<Bomb>().Detonate(normal);
+            Bomb.theBobm.GetComponent<Bomb>().Detonate();
             return;
         }
 
