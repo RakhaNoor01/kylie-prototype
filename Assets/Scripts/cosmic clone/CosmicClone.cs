@@ -23,7 +23,7 @@ public class CosmicClone : MonoBehaviour
     public List<SpriteRenderer> aftImgSprites;
     public string aftImgLayer = "Default";
     public float aftImgDuration = 0.3f;
-    public float aftImgInterval = 0.05f;
+    public float aftImgSpawnDistance = 0.1f;
 
     [Header("Particles")]
     public ParticleSystem psSpawn;
@@ -32,40 +32,40 @@ public class CosmicClone : MonoBehaviour
     public ParticleSystem psDespawn;
 
     // internal state 
-    private float _delay;
-    private bool _active;
-    private bool _waiting;
+    private float delay;
+    private bool active;
+    private bool waiting;
 
-    public bool Active => _active;
+    public bool Active => active;
 
     // position recording
-    private readonly List<(float time, Vector3 pos)> _posRecord = new();
+    private readonly List<(float time, Vector3 pos)> posRecord = new();
 
     // sprite recording
-    private readonly List<(float time, Sprite sprite, float scale)> _sprRecord = new();
-    private SpriteRenderer _playerSR;   // player's SpriteRenderer (source of truth)
-    private Sprite _lastSprite;
-    private float _lastScale;
+    private readonly List<(float time, Sprite sprite, float scale)> sprRecord = new();
+    private SpriteRenderer playerSR;   // player's SpriteRenderer (source of truth)
+    private Sprite lastSprite;
+    private float lastScale;
 
-    private Coroutine _recordCoroutine;
-    private Coroutine _aftImgCoroutine;
+    private Coroutine recordCoroutine;
+    private Coroutine aftImgCoroutine;
 
-    private Collider2D _col;
-    private PlayerHealth _plrHp;
+    private Collider2D col;
+    private PlayerHealth plrHp;
 
-    // public API 
+    private Vector3 lastAftImgPos;
 
     private void Start()
     {
-        _col = GetComponent<Collider2D>();
-        _plrHp = FindFirstObjectByType<PlayerHealth>();
+        col = GetComponent<Collider2D>();
+        plrHp = FindFirstObjectByType<PlayerHealth>();
         Deactivate();
 
-        _plrHp.death += Deactivate;
+        plrHp.death += Deactivate;
     }
 
     // waiting for delay
-    public void Activate(float delay, Vector2 startpos, Collider2D thing)
+    public void Activate(float startDelay, Vector2 startpos, Collider2D thing)
     {
         if (playerVisual == null)
         {
@@ -74,17 +74,17 @@ public class CosmicClone : MonoBehaviour
 
         transform.position = startpos;
 
-        _delay = delay;
-        _active = true;
-        _waiting = true;
+        delay = startDelay;
+        active = true;
+        waiting = true;
 
-        _posRecord.Clear();
-        _sprRecord.Clear();
+        posRecord.Clear();
+        sprRecord.Clear();
 
-        _playerSR = playerVisual.GetComponent<SpriteRenderer>();
-        _lastSprite = null;
+        playerSR = playerVisual.GetComponent<SpriteRenderer>();
+        lastSprite = null;
 
-        _recordCoroutine ??= StartCoroutine(RecordLoop());
+        recordCoroutine ??= StartCoroutine(RecordLoop());
 
         StartCoroutine(ChaseStart(delay));
 
@@ -100,48 +100,49 @@ public class CosmicClone : MonoBehaviour
         psStart.Play();
         psStart2.Play();
 
-        _col.enabled = true;
+        col.enabled = true;
 
-        _waiting = false;
+        waiting = false;
         spriteContainer.SetActive(true);
-        _aftImgCoroutine ??= StartCoroutine(AfterimageLoop());
+        aftImgCoroutine ??= StartCoroutine(AfterimageLoop());
     }
 
     // stopping
     public void Deactivate()
     {
-        _active = false;
+        if (waiting) return;
+        active = false;
 
-        if (_recordCoroutine != null) { StopCoroutine(_recordCoroutine); _recordCoroutine = null; }
-        if (_aftImgCoroutine != null) { StopCoroutine(_aftImgCoroutine); _aftImgCoroutine = null; }
+        if (recordCoroutine != null) { StopCoroutine(recordCoroutine); recordCoroutine = null; }
+        if (aftImgCoroutine != null) { StopCoroutine(aftImgCoroutine); aftImgCoroutine = null; }
 
         DOTween.Kill(transform);
 
         psDespawn.Play();
         spriteContainer.SetActive(false);
 
-        _col.enabled = false;
+        col.enabled = false;
     }
 
     // recording loop 
     private IEnumerator RecordLoop()
     {
-        while (_active || _waiting)
+        while (active || waiting)
         {
             float now = Time.time;
 
             // position 
-            _posRecord.Add((now, playerVisual.transform.position));
+            posRecord.Add((now, playerVisual.transform.position));
 
             // dispatch playback for the position recorded <delay> seconds ago
             DispatchPositionPlayback(now);
 
             //  sprite & scale change detection 
-            if (_playerSR != null && _playerSR.sprite != _lastSprite)
+            if (playerSR != null && playerSR.sprite != lastSprite)
             {
-                _lastSprite = _playerSR.sprite;
-                _lastScale = Mathf.Sign(playerVisual.transform.localScale.x);
-                _sprRecord.Add((now, _lastSprite, _lastScale));
+                lastSprite = playerSR.sprite;
+                lastScale = Mathf.Sign(playerVisual.transform.localScale.x);
+                sprRecord.Add((now, lastSprite, lastScale));
             }
 
             // dispatch sprite playback
@@ -158,25 +159,25 @@ public class CosmicClone : MonoBehaviour
 
     private void DispatchPositionPlayback(float now)
     {
-        float targetTime = now - _delay;
-        if (_posRecord.Count == 0) return;
+        float targetTime = now - delay;
+        if (posRecord.Count == 0) return;
 
         // find the two bracketing samples
-        int idx = FindLastIndexBefore(_posRecord, targetTime, r => r.time);
+        int idx = FindLastIndexBefore(posRecord, targetTime, r => r.time);
         if (idx < 0) return;
 
         Vector3 targetPos;
-        if (idx + 1 < _posRecord.Count)
+        if (idx + 1 < posRecord.Count)
         {
             // lerp between the two surrounding samples for smooth motion
-            var a = _posRecord[idx];
-            var b = _posRecord[idx + 1];
+            var a = posRecord[idx];
+            var b = posRecord[idx + 1];
             float t = Mathf.InverseLerp(a.time, b.time, targetTime);
             targetPos = Vector3.Lerp(a.pos, b.pos, t);
         }
         else
         {
-            targetPos = _posRecord[idx].pos;
+            targetPos = posRecord[idx].pos;
         }
 
         // tween to that position over one recordingRate tick
@@ -185,14 +186,14 @@ public class CosmicClone : MonoBehaviour
 
     private void DispatchSpritePlayback(float now)
     {
-        float targetTime = now - _delay;
-        if (_sprRecord.Count == 0) return;
+        float targetTime = now - delay;
+        if (sprRecord.Count == 0) return;
 
-        int idx = FindLastIndexBefore(_sprRecord, targetTime, r => r.time);
+        int idx = FindLastIndexBefore(sprRecord, targetTime, r => r.time);
         if (idx < 0) return;
 
-        Sprite s = _sprRecord[idx].sprite;
-        var scale = _sprRecord[idx].scale;
+        Sprite s = sprRecord[idx].sprite;
+        var scale = sprRecord[idx].scale;
 
         foreach (var sr in sprites)
         {
@@ -214,26 +215,46 @@ public class CosmicClone : MonoBehaviour
 
     private IEnumerator AfterimageLoop()
     {
-        while (_active && !_waiting)
+        lastAftImgPos = transform.position;
+
+        while (active && !waiting)
         {
-            SpawnAfterimage();
-            yield return new WaitForSeconds(aftImgInterval);
+            float moved = Vector3.Distance(transform.position, lastAftImgPos);
+            if (moved >= aftImgSpawnDistance)
+            {
+                // catch up: spawn one afterimage per full interval travelled
+                int count = Mathf.FloorToInt(moved / aftImgSpawnDistance);
+                for (int i = 0; i < count; i++)
+                    SpawnAfterimage();
+
+                lastAftImgPos = transform.position;
+            }
+
+            yield return null;
         }
     }
 
     private void SpawnAfterimage()
     {
+        float containerScaleX = spriteContainer.transform.localScale.x;
+
         foreach (var sr in aftImgSprites)
         {
             if (sr == null || sr.sprite == null) continue;
 
-            // create afterimage
             var aftimg = Instantiate(sr.gameObject, sr.transform.position, sr.transform.rotation);
-            var af_sr = aftimg.GetComponent<SpriteRenderer>();
-            af_sr.sortingLayerName = aftImgLayer;
 
-            // fade out then destroy
-            af_sr.DOFade(0f, aftImgDuration)
+            var aftScale = aftimg.transform.localScale;
+            aftimg.transform.localScale = new Vector3(
+                Mathf.Abs(aftScale.x) * Mathf.Sign(containerScaleX),
+                aftScale.y,
+                aftScale.z
+            );
+
+            var afsr = aftimg.GetComponent<SpriteRenderer>();
+            afsr.sortingLayerName = aftImgLayer;
+
+            afsr.DOFade(0f, aftImgDuration)
                  .OnComplete(() => Destroy(aftimg));
         }
     }
@@ -256,12 +277,12 @@ public class CosmicClone : MonoBehaviour
     /// Removes records that are old enough that they will never be needed.
     private void PruneRecords(float now)
     {
-        float cutoff = now - _delay - recordingRate * 2f;  // small safety margin
+        float cutoff = now - delay - recordingRate * 2f;  // small safety margin
 
-        while (_posRecord.Count > 1 && _posRecord[1].time < cutoff)
-            _posRecord.RemoveAt(0);
+        while (posRecord.Count > 1 && posRecord[1].time < cutoff)
+            posRecord.RemoveAt(0);
 
-        while (_sprRecord.Count > 1 && _sprRecord[1].time < cutoff)
-            _sprRecord.RemoveAt(0);
+        while (sprRecord.Count > 1 && sprRecord[1].time < cutoff)
+            sprRecord.RemoveAt(0);
     }
 }
