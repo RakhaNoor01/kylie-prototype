@@ -126,10 +126,43 @@ public class Bomb : MonoBehaviour
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
+        RaycastHit2D[] rayHits = new RaycastHit2D[10];
         foreach (var hit in hits)
         {
             var breakable = hit.GetComponent<Breakable>();
-            if (breakable != null)
+            if (breakable == null)
+                continue;
+
+            Vector2 origin = transform.position;
+            Vector2 target = hit.bounds.center;
+
+            Vector2 direction = (target - origin).normalized;
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.useTriggers = false;
+            filter.SetLayerMask(~LayerMask.GetMask("Player", "Goonerang"));
+
+            int hitCount = Physics2D.Raycast(
+                origin,
+                direction,
+                filter,
+                rayHits,
+                splosionRadius
+            );
+
+            bool hasLineOfSight = false;
+
+            for (int i = 0; i < hitCount; i++)
+            {
+                if (rayHits[i].collider == hit)
+                {
+                    hasLineOfSight = true;
+                    break;
+                }
+            }
+
+            if (hasLineOfSight)
             {
                 breakable.HitFromBomb();
             }

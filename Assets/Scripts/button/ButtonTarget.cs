@@ -4,6 +4,7 @@ public class ButtonTarget : MonoBehaviour
 {
     public Button button;
     protected bool state;
+    public bool inverted;
 
     private void Start()
     {
@@ -13,6 +14,6 @@ public class ButtonTarget : MonoBehaviour
 
     public virtual void SetState(bool setTo)
     {
-        state = setTo;
+        state = inverted ? !setTo : setTo;
     }
 }

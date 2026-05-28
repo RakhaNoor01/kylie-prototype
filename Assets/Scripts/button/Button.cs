@@ -18,6 +18,7 @@ public class Button : MonoBehaviour
     public float duration = 2f;
 
     public bool state;
+    public bool boomerangOnly = true;
     public List<ButtonTarget> buttonTargets = new List<ButtonTarget>();
 
     private bool _hasTriggered = false;
@@ -36,9 +37,11 @@ public class Button : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("collided with " + collision.gameObject.name + " layer " + LayerMask.LayerToName(collision.gameObject.layer) + " tag " + collision.gameObject.tag);
-
-        if (!collision.gameObject.CompareTag("Goonerang")) return;
+        if (!(collision.gameObject.CompareTag("Goonerang") || 
+            (collision.gameObject.CompareTag("Player") && !boomerangOnly)))
+        {
+            return;
+        }
 
         switch (type)
         {
@@ -52,14 +55,14 @@ public class Button : MonoBehaviour
     {
         if (_hasTriggered) return;
         _hasTriggered = true;
-        state = true;
+        state = !state;
         ApplyStateToTargets();
     }
 
     private void HandleTimed()
     {
         if (_timerRunning) return;
-        state = true;
+        state = !state;
         ApplyStateToTargets();
         StartCoroutine(TimedRevert());
     }
@@ -68,7 +71,7 @@ public class Button : MonoBehaviour
     {
         _timerRunning = true;
         yield return new WaitForSeconds(duration);
-        state = false;
+        state = !state;
         ApplyStateToTargets();
         _timerRunning = false;
     }
