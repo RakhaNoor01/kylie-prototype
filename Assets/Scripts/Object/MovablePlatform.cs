@@ -19,11 +19,8 @@ public class MovablePlatform : MonoBehaviour
     public float defaultSpeed = 2f;
 
     private Rigidbody2D _rb;
-    private Vector2 _lastPosition;
     private int _currentIndex = 0;
     private bool _goingForward = true;
-
-    public Vector2 Delta { get; private set; }
 
     private void Awake()
     {
@@ -41,7 +38,6 @@ public class MovablePlatform : MonoBehaviour
             return;
         }
 
-        _lastPosition = _rb.position;
         StartCoroutine(MoveToNextTarget());
     }
 
@@ -63,17 +59,12 @@ public class MovablePlatform : MonoBehaviour
                     speed * Time.fixedDeltaTime
                 );
 
-                Delta = newPos - _rb.position;
                 _rb.MovePosition(newPos);
-                _lastPosition = newPos;
 
                 yield return new WaitForFixedUpdate();
             }
 
-            // Snap and finalize delta
             _rb.MovePosition(targetData.target.position);
-            Delta = (Vector2)targetData.target.position - _lastPosition;
-            _lastPosition = targetData.target.position;
 
             yield return new WaitForFixedUpdate();
 

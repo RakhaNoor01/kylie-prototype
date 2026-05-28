@@ -36,6 +36,7 @@ public class RoomManager : MonoBehaviour
         if (startRoom == null) return;
 
         CurrentRoom = startRoom;
+        LightingManager.Instance.SetRoom(startRoom);
         StartCoroutine(InitCoroutine(startRoom));
     }
 
@@ -60,7 +61,7 @@ public class RoomManager : MonoBehaviour
         CurrentRoom = room;
         LoadRoom(room);
 
-
+        LightingManager.Instance.SetRoom(room);
     }
 
     public void LoadRoom(Room room)
@@ -122,7 +123,7 @@ public class RoomManager : MonoBehaviour
             loadedScenes.Remove(sceneName);
         }
 
-        // ✅ Enforce background visibility AFTER load/unload
+        // Enforce background visibility after load/unload
         foreach (Room r in allRooms)
             ToggleBackgrounds(r, false);
 
@@ -135,10 +136,6 @@ public class RoomManager : MonoBehaviour
 
         isSyncing = false;
     }
-
-
-
-
     private IEnumerator UnloadAllCoroutine()
     {
         foreach (var sceneName in new List<string>(loadedScenes))

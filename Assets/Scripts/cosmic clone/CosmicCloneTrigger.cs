@@ -15,7 +15,7 @@ public class CosmicCloneTrigger : MonoBehaviour
         if (clone == null) return;
 
         if (ccState && !clone.Active)
-            clone.Activate(delay, transform.position);
+            clone.Activate(delay, transform.position, other);
         else if (!ccState && clone.Active)
             clone.Deactivate();
     }
