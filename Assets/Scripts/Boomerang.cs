@@ -46,6 +46,8 @@ public class Boomerang : MonoBehaviour
     private bool isThrown = false;
     private bool hasDeflected = false;
 
+    public bool IsThrown => isThrown;
+
     private bool isCharging = false;
     private Vector2 cachedDirection;
 

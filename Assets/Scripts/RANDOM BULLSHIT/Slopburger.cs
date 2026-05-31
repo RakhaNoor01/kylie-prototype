@@ -3,14 +3,21 @@ using UnityEngine.Rendering.Universal;
 
 public class Slopburger : MonoBehaviour
 {
+    public Boomerang rang;
     public GameObject torc;
-    private bool hasTorj;
+    private static bool hasTorj;
 
     public bool TheOrch => hasTorj;
+    public static Slopburger instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public void Start()
     {
-        TsFunction(false);
+        TsFunction(hasTorj);
         var plealth = GetComponent<PlayerHealth>();
         plealth.death += Whatever;
     }
@@ -40,5 +47,13 @@ public class Slopburger : MonoBehaviour
     private void Update()
     {
         Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
+        if (rang.IsThrown)
+        {
+            Shader.SetGlobalVector("_rangPos", rang.gameObject.transform.position);
+        }
+        else
+        {
+            Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
+        }
     }
 }

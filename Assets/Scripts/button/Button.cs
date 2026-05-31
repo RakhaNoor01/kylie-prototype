@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public enum ButtonType
 {
@@ -13,6 +14,8 @@ public enum ButtonType
 public class Button : MonoBehaviour
 {
     public ButtonType type;
+    [Tooltip("Set empty to not have persistent data")]
+    public string buttonID;
 
     [Header("Timed Settings")]
     public float duration = 2f;
@@ -24,6 +27,8 @@ public class Button : MonoBehaviour
     private bool _hasTriggered = false;
     private bool _timerRunning = false;
 
+    private static Dictionary<string, bool> buttonState = new Dictionary<string, bool>();
+
     public void RegisterTarget(ButtonTarget target)
     {
         if (!buttonTargets.Contains(target))
@@ -32,6 +37,11 @@ public class Button : MonoBehaviour
 
     private void Start()
     {
+        if (buttonState.TryGetValue(buttonID, out bool value))
+        {
+            state = buttonState.ContainsKey(buttonID);
+        }
+
         ApplyStateToTargets();
     }
 
@@ -86,5 +96,10 @@ public class Button : MonoBehaviour
     {
         foreach (var target in buttonTargets)
             target.SetState(state);
+
+        if (!string.IsNullOrEmpty(buttonID))
+        {
+            buttonState[buttonID] = state;
+        }
     }
 }
