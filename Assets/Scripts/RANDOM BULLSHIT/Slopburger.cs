@@ -5,7 +5,7 @@ public class Slopburger : MonoBehaviour
 {
     public Boomerang rang;
     public GameObject torc;
-    private static bool hasTorj;
+    private bool hasTorj;
 
     public bool TheOrch => hasTorj;
     public static Slopburger instance;
@@ -46,7 +46,13 @@ public class Slopburger : MonoBehaviour
 
     private void Update()
     {
-        Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
+        if (hasTorj)
+        {
+            Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
+        } else
+        {
+            Shader.SetGlobalVector("playerPos", new Vector2(-99, -99));
+        }
         if (rang.IsThrown)
         {
             Shader.SetGlobalVector("_rangPos", rang.gameObject.transform.position);

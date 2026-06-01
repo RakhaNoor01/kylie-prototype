@@ -21,6 +21,7 @@ public class PlayerHealth : MonoBehaviour
     public float voidThreshold = -40f;
 
     private bool _isDead = false;
+    public bool IsDead => _isDead;
 
     public event Action death;
     public event Action respawn;

@@ -60,14 +60,13 @@ public class ContraptionVisual : MonoBehaviour
 
     private void TraptionOn()
     {
-        animator.CrossFadeInFixedTime("contraption_enter", 0.1f);
+        animator.CrossFadeInFixedTime("contraption_enter", 0.2f);
         idling = false;
     }
 
     private void TraptionOff()
     {
-        var t = handler.LightCount / handler.lightDecay;
-        animator.CrossFadeInFixedTime("contraption_off", t);
+        animator.CrossFadeInFixedTime("contraption_off", 0.25f);
     }
 
     private bool handlin()

@@ -51,8 +51,8 @@ public class Boomerang : MonoBehaviour
     private bool isCharging = false;
     private Vector2 cachedDirection;
 
-    private float ogTime;
-    private float ogDelta;
+    private static float ogTime;
+    private static float ogDelta;
 
     private float distmulttimer;
 
@@ -75,7 +75,6 @@ public class Boomerang : MonoBehaviour
     private Vector2 altWASDDirection = Vector2.right; // default direction
 
     private float noCatchTimer = 0;
-    private bool theplayerisdead = false;
 
     private bool insideGeometry = false;
 
@@ -89,7 +88,7 @@ public class Boomerang : MonoBehaviour
         slop = player.GetComponent<Slopburger>();
         _playerAudio = player.GetComponent<PlayerAudio>();
 
-        judgement.respawn += ResetBoomerang;
+        judgement.death += ResetBoomerang;
         judgement.tping = false;
 
         var ok = rangPhaseParticle.emission;
@@ -103,7 +102,7 @@ public class Boomerang : MonoBehaviour
 
     void Update()
     {
-        if (theplayerisdead) return;
+        if (judgement.IsDead) return;
 
         VisualStuff();
 
@@ -198,7 +197,6 @@ public class Boomerang : MonoBehaviour
 
     public void ResetBoomerang()
     {
-        theplayerisdead = false;
         isThrown = false;
         isCharging = false;
         isChargingAlt = false;

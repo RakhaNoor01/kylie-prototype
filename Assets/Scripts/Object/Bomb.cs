@@ -118,6 +118,8 @@ public class Bomb : MonoBehaviour
 
         hi.AddIframes(iframes);
 
+        transform.position = player.transform.position;
+
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
         {
@@ -126,7 +128,7 @@ public class Bomb : MonoBehaviour
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
-        RaycastHit2D[] rayHits = new RaycastHit2D[10];
+        RaycastHit2D[] rayHits = new RaycastHit2D[1];
         foreach (var hit in hits)
         {
             var breakable = hit.GetComponent<Breakable>();
@@ -143,7 +145,7 @@ public class Bomb : MonoBehaviour
             filter.useTriggers = false;
             filter.SetLayerMask(~LayerMask.GetMask("Player", "Goonerang"));
 
-            int hitCount = Physics2D.Raycast(
+            Physics2D.Raycast(
                 origin,
                 direction,
                 filter,
@@ -151,18 +153,7 @@ public class Bomb : MonoBehaviour
                 splosionRadius
             );
 
-            bool hasLineOfSight = false;
-
-            for (int i = 0; i < hitCount; i++)
-            {
-                if (rayHits[i].collider == hit)
-                {
-                    hasLineOfSight = true;
-                    break;
-                }
-            }
-
-            if (hasLineOfSight)
+            if (rayHits[0].collider == hit)
             {
                 breakable.HitFromBomb();
             }
