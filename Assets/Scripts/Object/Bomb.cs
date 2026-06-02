@@ -60,13 +60,17 @@ public class Bomb : MonoBehaviour
         col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
 
-        if (hasTimer)
+        if (hasTimer == true)
         {
             ignited = true;
             fuse.SetActive(true);
             farticle.Play();
             pulse.enabled = true;
-            pulse.CrossFadeInFixedTime("bomb_pulse", 0.1f);
+            pulse.Play("bomb_pulse");
+        }
+        else
+        {
+            pulse.Play("bomb_pickup");
         }
     }
 
@@ -90,7 +94,7 @@ public class Bomb : MonoBehaviour
 
         if (realTimer >= timer)
         {
-            pulse.CrossFadeInFixedTime("bomb_finalpulse", 0.1f);
+            pulse.Play("bomb_finalpulse");
         }
 
         realTimer += Time.deltaTime;
