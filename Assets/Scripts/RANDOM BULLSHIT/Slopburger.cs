@@ -46,20 +46,18 @@ public class Slopburger : MonoBehaviour
 
     private void Update()
     {
-        if (hasTorj)
-        {
-            Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
-        } else
+        if (!hasTorj)
         {
             Shader.SetGlobalVector("playerPos", new Vector2(-99, -99));
+            Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
+            return;
         }
+
+        Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
+
         if (rang.IsThrown)
         {
             Shader.SetGlobalVector("_rangPos", rang.gameObject.transform.position);
-        }
-        else
-        {
-            Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
         }
     }
 }

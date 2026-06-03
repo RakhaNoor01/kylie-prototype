@@ -27,8 +27,6 @@ public class Button : MonoBehaviour
     private bool _hasTriggered = false;
     private bool _timerRunning = false;
 
-    private static Dictionary<string, bool> buttonState = new Dictionary<string, bool>();
-
     public void RegisterTarget(ButtonTarget target)
     {
         if (!buttonTargets.Contains(target))
@@ -37,9 +35,9 @@ public class Button : MonoBehaviour
 
     private void Start()
     {
-        if (buttonState.TryGetValue(buttonID, out bool value))
+        if (TempData.HasKey(buttonID))
         {
-            state = buttonState.ContainsKey(buttonID);
+            state = (bool)TempData.GetValue(buttonID);
         }
 
         ApplyStateToTargets();
@@ -99,7 +97,7 @@ public class Button : MonoBehaviour
 
         if (!string.IsNullOrEmpty(buttonID))
         {
-            buttonState[buttonID] = state;
+            TempData.SetValue(buttonID, state);
         }
     }
 }
