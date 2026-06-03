@@ -11,6 +11,7 @@ public class Bomb : MonoBehaviour
     public float splosionRadius = 2f;
     public bool hasTimer = false;
     public float timer = 6;
+    public string bombID;
 
     [Header("Visual")]
     public float minDistance = 1.5f;
@@ -33,6 +34,11 @@ public class Bomb : MonoBehaviour
 
     private void Start()
     {
+        if (TempData.HasKey(bombID))
+        {
+            Destroy(gameObject);
+        }
+
         splosion.SetActive(false);
         col = GetComponent<CircleCollider2D>();
         fuse.SetActive(false);
@@ -60,12 +66,13 @@ public class Bomb : MonoBehaviour
         col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
 
-        if (hasTimer == true)
+        pulse.enabled = true;
+
+        if (hasTimer)
         {
             ignited = true;
             fuse.SetActive(true);
             farticle.Play();
-            pulse.enabled = true;
             pulse.Play("bomb_pulse");
         }
         else
@@ -119,6 +126,11 @@ public class Bomb : MonoBehaviour
         if (player == null || detonated == true) return;
         detonated = true;
         ignited = false;
+
+        if (!string.IsNullOrEmpty(bombID))
+        {
+            TempData.SetValue(bombID, "hello vro");
+        }
 
         hi.AddIframes(iframes);
 

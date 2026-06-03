@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Breakable : MonoBehaviour
@@ -5,6 +6,7 @@ public class Breakable : MonoBehaviour
     public int health = 1;
     public string boomerangTag = "Goonerang";
     public ParticleSystem article;
+    public string breakableID;
 
     [Header("Damage Source")]
     public bool boomerang = true;
@@ -16,6 +18,16 @@ public class Breakable : MonoBehaviour
     private void Start()
     {
         currentHealth = health;
+
+        if (TempData.GetValue(breakableID) != null)
+        {
+            currentHealth = (int)TempData.GetValue(breakableID);
+        }
+
+        if (currentHealth <= 0)
+        {
+            FUCK();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -40,6 +52,12 @@ public class Breakable : MonoBehaviour
     private void Hit()
     {
         currentHealth -= 1;
+
+        if (!string.IsNullOrEmpty(breakableID))
+        {
+            TempData.SetValue(breakableID, currentHealth);
+        }
+
         if (article != null)
         {
             article.Play();
