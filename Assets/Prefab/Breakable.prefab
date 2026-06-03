@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3118063017567515875}
   - component: {fileID: 3110469904168316512}
   - component: {fileID: 6706654968954484612}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Breakable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,6 +156,9 @@ MonoBehaviour:
   health: 1
   boomerangTag: Goonerang
   article: {fileID: 3110469904168316512}
+  boomerang: 1
+  burnerang: 0
+  bomb: 0
 --- !u!198 &3110469904168316512
 ParticleSystem:
   m_ObjectHideFlags: 0

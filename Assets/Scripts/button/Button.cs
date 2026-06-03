@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public enum ButtonType
 {
@@ -13,15 +14,20 @@ public enum ButtonType
 public class Button : MonoBehaviour
 {
     public ButtonType type;
+    [Tooltip("Set empty to not have persistent data")]
+    public string buttonID;
 
     [Header("Timed Settings")]
     public float duration = 2f;
 
     public bool state;
+    public bool boomerangOnly = true;
     public List<ButtonTarget> buttonTargets = new List<ButtonTarget>();
 
     private bool _hasTriggered = false;
     private bool _timerRunning = false;
+
+    private static Dictionary<string, bool> buttonState = new Dictionary<string, bool>();
 
     public void RegisterTarget(ButtonTarget target)
     {
@@ -31,14 +37,21 @@ public class Button : MonoBehaviour
 
     private void Start()
     {
+        if (buttonState.TryGetValue(buttonID, out bool value))
+        {
+            state = buttonState.ContainsKey(buttonID);
+        }
+
         ApplyStateToTargets();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("collided with " + collision.gameObject.name + " layer " + LayerMask.LayerToName(collision.gameObject.layer) + " tag " + collision.gameObject.tag);
-
-        if (!collision.gameObject.CompareTag("Goonerang")) return;
+        if (!(collision.gameObject.CompareTag("Goonerang") || 
+            (collision.gameObject.CompareTag("Player") && !boomerangOnly)))
+        {
+            return;
+        }
 
         switch (type)
         {
@@ -52,14 +65,14 @@ public class Button : MonoBehaviour
     {
         if (_hasTriggered) return;
         _hasTriggered = true;
-        state = true;
+        state = !state;
         ApplyStateToTargets();
     }
 
     private void HandleTimed()
     {
         if (_timerRunning) return;
-        state = true;
+        state = !state;
         ApplyStateToTargets();
         StartCoroutine(TimedRevert());
     }
@@ -68,7 +81,7 @@ public class Button : MonoBehaviour
     {
         _timerRunning = true;
         yield return new WaitForSeconds(duration);
-        state = false;
+        state = !state;
         ApplyStateToTargets();
         _timerRunning = false;
     }
@@ -83,5 +96,10 @@ public class Button : MonoBehaviour
     {
         foreach (var target in buttonTargets)
             target.SetState(state);
+
+        if (!string.IsNullOrEmpty(buttonID))
+        {
+            buttonState[buttonID] = state;
+        }
     }
 }

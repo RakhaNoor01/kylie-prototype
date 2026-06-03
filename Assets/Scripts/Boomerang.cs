@@ -29,14 +29,16 @@ public class Boomerang : MonoBehaviour
     [Header("Visuals")]
     public GameObject visual;
     public GameObject torchure;
-    public ParticleSystem torc;
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
     public ParticleSystem rangPhaseParticle;
 
     public TrailRenderer rangTrail;
+    public TrailRenderer burnTrail;
     public Gradient availableTpTrail;
     public Gradient normalTrail;
+    public Gradient tpBurnTrail;
+    public Gradient normalBurnTrail;
 
     private PlayerAudio _playerAudio;
 
@@ -46,11 +48,13 @@ public class Boomerang : MonoBehaviour
     private bool isThrown = false;
     private bool hasDeflected = false;
 
+    public bool IsThrown => isThrown;
+
     private bool isCharging = false;
     private Vector2 cachedDirection;
 
-    private float ogTime;
-    private float ogDelta;
+    private static float ogTime;
+    private static float ogDelta;
 
     private float distmulttimer;
 
@@ -66,14 +70,12 @@ public class Boomerang : MonoBehaviour
     public bool isBurning;
 
     private bool shouldTrail = false;
-    private bool shouldFire = false;
 
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
     private Vector2 altWASDDirection = Vector2.right; // default direction
 
     private float noCatchTimer = 0;
-    private bool theplayerisdead = false;
 
     private bool insideGeometry = false;
 
@@ -87,7 +89,7 @@ public class Boomerang : MonoBehaviour
         slop = player.GetComponent<Slopburger>();
         _playerAudio = player.GetComponent<PlayerAudio>();
 
-        judgement.respawn += ResetBoomerang;
+        judgement.death += ResetBoomerang;
         judgement.tping = false;
 
         var ok = rangPhaseParticle.emission;
@@ -101,9 +103,9 @@ public class Boomerang : MonoBehaviour
 
     void Update()
     {
-        if (theplayerisdead) return;
+        if (judgement.IsDead) return;
 
-        VisualStuff();
+        HandleEffects();
 
         if (noCatchTimer >= 0)
         {
@@ -128,8 +130,6 @@ public class Boomerang : MonoBehaviour
                 burnerang = false;
             }
         }
-
-        HandleEffects();
 
         if (isThrown) return;
 
@@ -196,7 +196,6 @@ public class Boomerang : MonoBehaviour
 
     public void ResetBoomerang()
     {
-        theplayerisdead = false;
         isThrown = false;
         isCharging = false;
         isChargingAlt = false;
@@ -216,11 +215,10 @@ public class Boomerang : MonoBehaviour
 
         visual.SetActive(false);
         shouldTrail = false;
-        shouldFire = false;
 
         torchure.SetActive(false);
-        torc.Stop();
         rangTrail.emitting = false;
+        burnTrail.emitting = false;
 
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
@@ -239,34 +237,42 @@ public class Boomerang : MonoBehaviour
 
     private void HandleEffects()
     {
+        rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
+        burnTrail.colorGradient = hasTped ? normalBurnTrail : tpBurnTrail;
+
         if (isBurning)
         {
             torchure.SetActive(true);
-            shouldFire = true;
         }
         else
         {
             torchure.SetActive(false);
-            shouldFire = false;
-        }
-
-        if (shouldFire)
-        {
-            if (!torc.isPlaying) torc.Play();
-        }
-        else
-        {
-            if (torc.isPlaying) torc.Stop();
         }
 
         if (shouldTrail)
         {
-            rangTrail.emitting = true;
+            if (isBurning)
+            {
+                burnTrail.emitting = true;
+                rangTrail.emitting = false;
+            } 
+            else
+            {
+                burnTrail.emitting = false;
+                rangTrail.emitting = true;
+            }
+            
         }
         else
         {
             rangTrail.emitting = false;
+            burnTrail.emitting = false;
         }
+
+        var emission = rangPhaseParticle.emission;
+        emission.rateOverDistance = insideGeometry ? ogROD : 0;
+        var main = rangPhaseParticle.main;
+        main.startRotation = visual.transform.rotation.z;
     }
 
     void HandleAltThrow()
@@ -594,15 +600,5 @@ public class Boomerang : MonoBehaviour
         shouldTrail = false;
         isBurning = false;
         col.enabled = false;
-    }
-
-    void VisualStuff()
-    {
-        rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
-
-        var emission = rangPhaseParticle.emission;
-        emission.rateOverDistance = insideGeometry ? ogROD : 0;
-        var main = rangPhaseParticle.main;
-        main.startRotation = visual.transform.rotation.z;
     }
 }

@@ -60,13 +60,17 @@ public class Bomb : MonoBehaviour
         col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
 
-        if (hasTimer)
+        if (hasTimer == true)
         {
             ignited = true;
             fuse.SetActive(true);
             farticle.Play();
             pulse.enabled = true;
-            pulse.CrossFadeInFixedTime("bomb_pulse", 0.1f);
+            pulse.Play("bomb_pulse");
+        }
+        else
+        {
+            pulse.Play("bomb_pickup");
         }
     }
 
@@ -90,7 +94,7 @@ public class Bomb : MonoBehaviour
 
         if (realTimer >= timer)
         {
-            pulse.CrossFadeInFixedTime("bomb_finalpulse", 0.1f);
+            pulse.Play("bomb_finalpulse");
         }
 
         realTimer += Time.deltaTime;
@@ -118,6 +122,8 @@ public class Bomb : MonoBehaviour
 
         hi.AddIframes(iframes);
 
+        transform.position = player.transform.position;
+
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
         {
@@ -126,10 +132,32 @@ public class Bomb : MonoBehaviour
         }
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
+        RaycastHit2D[] rayHits = new RaycastHit2D[1];
         foreach (var hit in hits)
         {
             var breakable = hit.GetComponent<Breakable>();
-            if (breakable != null)
+            if (breakable == null)
+                continue;
+
+            Vector2 origin = transform.position;
+            Vector2 target = hit.bounds.center;
+
+            Vector2 direction = (target - origin).normalized;
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.useTriggers = false;
+            filter.SetLayerMask(~LayerMask.GetMask("Player", "Goonerang"));
+
+            Physics2D.Raycast(
+                origin,
+                direction,
+                filter,
+                rayHits,
+                splosionRadius
+            );
+
+            if (rayHits[0].collider == hit)
             {
                 breakable.HitFromBomb();
             }

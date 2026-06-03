@@ -16,6 +16,13 @@ public class ContraptionHandler : MonoBehaviour
     public float LightCount => realLightCount;
     public bool InRadius => inRadius;
 
+    public static ContraptionHandler Instance;
+    
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         realLightCount = 0;
