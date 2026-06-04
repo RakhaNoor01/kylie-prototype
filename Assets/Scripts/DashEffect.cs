@@ -3,6 +3,14 @@ using UnityEngine;
 public class DashEffect : MonoBehaviour
 {
     [SerializeField] private ParticleSystem[] _particles;
+    private TrailRenderer trail;
+    public float trailDurr = 0.2f;
+
+    private void Start()
+    {
+        trail = GetComponent<TrailRenderer>();
+        trail.emitting = false;
+    }
 
     public void OnDash(Vector2 direction)
     {
@@ -22,5 +30,13 @@ public class DashEffect : MonoBehaviour
 
             particle.Play();
         }
+
+        trail.emitting = true;
+        Invoke(nameof(TheKiller), trailDurr);
+    }
+
+    private void TheKiller()
+    {
+        trail.emitting = false;
     }
 }
