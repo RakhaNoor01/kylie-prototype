@@ -48,7 +48,7 @@ public class Slopburger : MonoBehaviour
     {
         if (!hasTorj)
         {
-            Shader.SetGlobalVector("playerPos", new Vector2(-99, -99));
+            Shader.SetGlobalVector("_playerPos", new Vector2(-99, -99));
             Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
             return;
         }

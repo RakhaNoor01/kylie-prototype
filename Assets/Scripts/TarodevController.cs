@@ -505,6 +505,17 @@ namespace TarodevController
         private float colY;
         private void HandleDash()
         {
+            // Always check if an active dash has expired, regardless of other states
+            if (_time >= _dashEndTime)
+            {
+                if (_isDashing)
+                {
+                    _frameVelocity *= _stats.DashMomentumRetention;
+                    _col.size = new Vector2(_col.size.x, colY);
+                }
+                _isDashing = false;
+            }
+
             // Block new dashes while boomerang is charging or on a spline
             if (doWeDeserveDestruction || _spliner.IsPlaying)
             {
@@ -526,15 +537,16 @@ namespace TarodevController
 
         private void ExecuteDash()
         {
-            // Disable any variable jump gravity tweaks
+            // disable any variable jump grav tweaks
             _endedJumpEarly = true;
             _bufferedJumpUsable = false;
             _jumpToConsume = false;
             _timeJumpWasPressed = float.MinValue;
-            _coyoteUsable = false;
 
-            // Determine dash direction
+            // Determine dash   direction based on input
             Vector2 inputDirection = _frameInput.Move;
+
+            // If no input, dash in facing direction (based on last horizontal movement)
             if (inputDirection == Vector2.zero)
             {
                 inputDirection = new Vector2(
@@ -543,38 +555,22 @@ namespace TarodevController
                 );
             }
 
+            _coyoteUsable = false;
+
+            _col.size = new Vector2 (_col.size.x, _col.size.x);
+
             _dashDirection = inputDirection.normalized;
+            _frameVelocity = _dashDirection * _stats.DashSpeed;
             _isDashing = true;
+            _dashEndTime = _time + _stats.DashDuration;
             _dashAvailable = false;
-
-            // Squash collider
-            _col.size = new Vector2(_col.size.x, _col.size.x);
-
-            // Kill any in-progress dash tween
-            _dashTween?.Kill();
-
-            // Calculate the world-space destination
-            Vector2 dashDestination = _rb.position + _dashDirection * _stats.DashSpeed * _stats.DashDuration;
-
-            // DOTween drives the rigidbody directly; use SetUpdate(false) to run in FixedUpdate time
-            _dashTween = _rb.DOMove(dashDestination, _stats.DashDuration)
-                .SetEase(Ease.Linear)
-                .SetUpdate(UpdateType.Fixed)
-                .OnComplete(() =>
-                {
-                    // Restore collider height
-                    _col.size = new Vector2(_col.size.x, colY);
-
-                    // Carry a fraction of dash momentum back into the normal movement system
-                    _frameVelocity = _dashDirection * _stats.DashSpeed * _stats.DashMomentumRetention;
-
-                    _isDashing = false;
-                });
 
             _audio?.PlayDash();
 
             if (_dashEffect != null)
+            {
                 _dashEffect.OnDash(_dashDirection);
+            }
         }
 
         public bool IsDashing => _isDashing;
@@ -704,7 +700,7 @@ namespace TarodevController
 
         private void HandleGravity()
         {
-            if (_isClinging)
+            if (_isClinging && !_isDashing)
             {
                 Vector2 platformVel = (_clingPlatformRb != null)
                     ? new Vector2(_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
@@ -773,8 +769,6 @@ namespace TarodevController
 
         private void ApplyMovement()
         {
-            if (_isDashing) return;
-
             _rb.linearVelocity = _frameVelocity + _externalVelocity + _platformVelocity;
             _externalVelocity = Vector2.zero;
         }
@@ -795,8 +789,6 @@ namespace TarodevController
         /// </summary>
         public void CancelDash()
         {
-            _dashTween?.Kill();
-            _col.size = new Vector2(_col.size.x, colY);
             _isDashing = false;
             _dashEndTime = 0f;
         }
