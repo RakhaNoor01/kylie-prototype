@@ -24,7 +24,7 @@ public class Boomerang : MonoBehaviour
 
     [Header("Teleport")]
     public float tpSpeed = 0.1f;
-    public Collider2D phaseCol;
+    public float deflectGraceTime = 0.15f;
 
     [Header("Visuals")]
     public GameObject visual;
@@ -47,6 +47,7 @@ public class Boomerang : MonoBehaviour
 
     private bool isThrown = false;
     private bool hasDeflected = false;
+    private bool deflectGrace = false;
 
     public bool IsThrown => isThrown;
 
@@ -440,7 +441,7 @@ public class Boomerang : MonoBehaviour
 
     void ICameToGoon()
     {
-        if (hasTped || insideGeometry) return;
+        if (hasTped || (insideGeometry && !deflectGrace)) return;
 
         hasTped = true;
         isTping = true;
@@ -500,7 +501,7 @@ public class Boomerang : MonoBehaviour
                 return;
         }
 
-        insideGeometry = IsPhaseCol();
+        insideGeometry = true;
 
         // Deflect off first non-player collision
         if (!hasDeflected && !other.gameObject.CompareTag("Player"))
@@ -541,24 +542,22 @@ public class Boomerang : MonoBehaviour
 
     private Collider2D[] overlapResults = new Collider2D[8];
 
-    private bool IsPhaseCol()
-    {
-        ContactFilter2D filter = new ContactFilter2D();
-        filter.useTriggers = false;
-
-        int count = phaseCol.Overlap(filter, overlapResults);
-
-        return count > 0;
-    }
-
     void Deflect(Collider2D other)
     {
+        deflectGrace = true;
+        Invoke(nameof(UnGrace), deflectGraceTime);
+
         Vector2 toPlayer = (player.transform.position - transform.position).normalized;
         distmulttimer = distMultDelayTime;
 
         // Keep current speed but redirect toward player
         float currentSpeed = rb.linearVelocity.magnitude;
         rb.linearVelocity = toPlayer * currentSpeed;
+    }
+
+    void UnGrace()
+    {
+        deflectGrace = false;
     }
 
     void Catch()

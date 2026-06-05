@@ -700,7 +700,7 @@ namespace TarodevController
 
         private void HandleGravity()
         {
-            if (_isClinging)
+            if (_isClinging && !_isDashing)
             {
                 Vector2 platformVel = (_clingPlatformRb != null)
                     ? new Vector2(_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)

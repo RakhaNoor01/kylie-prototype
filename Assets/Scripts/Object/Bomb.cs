@@ -127,11 +127,6 @@ public class Bomb : MonoBehaviour
         detonated = true;
         ignited = false;
 
-        if (!string.IsNullOrEmpty(bombID))
-        {
-            TempData.SetValue(bombID, "hello vro");
-        }
-
         hi.AddIframes(iframes);
 
         transform.position = player.transform.position;
@@ -172,6 +167,11 @@ public class Bomb : MonoBehaviour
             if (rayHits[0].collider == hit)
             {
                 breakable.HitFromBomb();
+
+                if (!string.IsNullOrEmpty(bombID))
+                {
+                    TempData.SetValue(bombID, "hello vro");
+                }
             }
         }
 
