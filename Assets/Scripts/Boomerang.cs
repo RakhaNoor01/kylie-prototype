@@ -271,7 +271,7 @@ public class Boomerang : MonoBehaviour
         }
 
         var emission = rangPhaseParticle.emission;
-        emission.rateOverDistance = insideGeometry ? ogROD : 0;
+        emission.rateOverDistance = insideGeometry && !deflectGrace ? ogROD : 0;
         var main = rangPhaseParticle.main;
         main.startRotation = visual.transform.rotation.z;
     }
@@ -390,7 +390,9 @@ public class Boomerang : MonoBehaviour
         float distanceFactor = Mathf.Clamp01(1f / (distance + 0.1f));
         float scaledSpeed = 1f;
 
-        if (distmulttimer >= distMultDelayTime)
+        bool dismultting = distmulttimer >= distMultDelayTime;
+
+        if (dismultting)
         {
             scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
         }
@@ -564,19 +566,6 @@ public class Boomerang : MonoBehaviour
     {
         insideGeometry = false;
 
-        // Check pogo condition BEFORE resetting velocity
-        bool caughtFromBelow = false;
-
-        Vector2 boomerangVelocity = rb.linearVelocity;
-        float playerY = player.transform.position.y;
-        float boomerangY = transform.position.y;
-
-        // Was moving upward AND player was above?
-        if (boomerangVelocity.y > 0f && playerY > boomerangY)
-        {
-            caughtFromBelow = true;
-        }
-
         isThrown = false;
 
         rb.linearVelocity = Vector2.zero;
@@ -584,16 +573,6 @@ public class Boomerang : MonoBehaviour
 
         transform.position = player.transform.position;
         transform.parent = player.transform;
-
-        // Trigger pogo
-        if (caughtFromBelow)
-        {
-            PlayerController controller = player.GetComponent<PlayerController>();
-            if (controller != null)
-            {
-                controller.ActivatePogoWindow();
-            }
-        }
 
         visual.SetActive(false);
         shouldTrail = false;

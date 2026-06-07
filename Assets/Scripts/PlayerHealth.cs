@@ -17,7 +17,7 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Knockback")]
     public bool enableKnockback = true;
-
+    public bool dieFromVoid = true;
     public float voidThreshold = -40f;
 
     private bool _isDead = false;
@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (iframeTimer > 0f) iframeTimer -= Time.deltaTime;
 
-        if (transform.position.y < voidThreshold)
+        if (transform.position.y < voidThreshold && dieFromVoid)
         {
             Die();
         }

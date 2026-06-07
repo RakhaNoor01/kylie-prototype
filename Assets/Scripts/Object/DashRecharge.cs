@@ -37,9 +37,9 @@ public class DashRecharge : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        var player = other.GetComponent<PlayerController>();
+        var player = collision.GetComponent<PlayerController>();
         if (player == null) return;
 
         var hasDash = player.DashAvailable;

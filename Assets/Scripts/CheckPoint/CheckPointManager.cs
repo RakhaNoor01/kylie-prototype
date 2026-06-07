@@ -23,6 +23,8 @@ public class CheckpointManager : MonoBehaviour
     private bool pendingRespawn = false;
     private string checkpointScene = "";
 
+    private bool firstCpSet = false;
+
     public bool IsRespawning => isRespawning;
 
     private void Awake()
@@ -71,8 +73,8 @@ public class CheckpointManager : MonoBehaviour
         FindPlayer();
 
         // Teleport the player immediately on first checkpoint set
-        if (player != null && firsCpoint)
-            player.transform.position = currentCheckpoint;
+        if (player != null && firsCpoint && !firstCpSet)
+            player.transform.position = currentCheckpoint; firstCpSet = true;
     }
 
     public void PlayerDied()
