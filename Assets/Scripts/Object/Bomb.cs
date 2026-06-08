@@ -11,8 +11,8 @@ public class Bomb : MonoBehaviour
     public float splosionRadius = 2f;
     public bool hasTimer = false;
     public float timer = 6;
+    public int damage = 1;
     public string bombID;
-    public string splodeAnimName = "splode";
 
     [Header("Visual")]
     public float minDistance = 1.5f;
@@ -22,6 +22,7 @@ public class Bomb : MonoBehaviour
     public GameObject splosion;
     public GameObject fuse;
     public Animator pulse;
+    public string splodeAnimName = "splode";
 
     public static GameObject theBobm;
     private GameObject player;
@@ -167,7 +168,7 @@ public class Bomb : MonoBehaviour
 
             if (rayHits[0].collider == hit)
             {
-                breakable.HitFromBomb();
+                breakable.HitFromBomb(damage);
 
                 if (!string.IsNullOrEmpty(bombID))
                 {

@@ -14,6 +14,7 @@ public class Breakable : MonoBehaviour
     public bool bomb = false;
 
     private int currentHealth;
+    public bool IsDestroyed => currentHealth <= 0;
 
     private void Start()
     {
@@ -39,19 +40,19 @@ public class Breakable : MonoBehaviour
 
         if ((theRang != null && theRang.isBurning && burnerang) || (isBoomerang && boomerang))
         {
-            Hit();
+            Hit(1);
         }
     }
 
-    public void HitFromBomb()
+    public void HitFromBomb(int damage)
     {
         if (!bomb) return;
-        Hit();
+        Hit(damage);
     }
 
-    private void Hit()
+    private void Hit(int damage)
     {
-        currentHealth -= 1;
+        currentHealth -= damage;
 
         if (!string.IsNullOrEmpty(breakableID))
         {

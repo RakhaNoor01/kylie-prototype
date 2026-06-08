@@ -75,7 +75,7 @@ public class PlayerHealth : MonoBehaviour
         if (enableCameraShake && CameraShake.Instance != null)
         {
             Debug.Log("Camera Shaked Boi");
-            CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
+            CameraShake.Instance.Shake(shakeDuration, shakeMagnitude, 0);
         }
 
 
