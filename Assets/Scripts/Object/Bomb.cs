@@ -11,6 +11,7 @@ public class Bomb : MonoBehaviour
     public float splosionRadius = 2f;
     public bool hasTimer = false;
     public float timer = 6;
+    public int damage = 1;
     public string bombID;
 
     [Header("Visual")]
@@ -21,13 +22,14 @@ public class Bomb : MonoBehaviour
     public GameObject splosion;
     public GameObject fuse;
     public Animator pulse;
+    public string splodeAnimName = "splode";
 
     public static GameObject theBobm;
     private GameObject player;
     private PlayerHealth hi;
     public bool detonated = false;
     private bool ignited = false;
-    private CircleCollider2D col;
+    private Collider2D col;
     private ParticleSystem farticle;
 
     private float realTimer = 0;
@@ -40,7 +42,7 @@ public class Bomb : MonoBehaviour
         }
 
         splosion.SetActive(false);
-        col = GetComponent<CircleCollider2D>();
+        col = GetComponent<Collider2D>();
         fuse.SetActive(false);
         pulse.enabled = false;
         farticle = fuse.GetComponent<ParticleSystem>();
@@ -166,7 +168,7 @@ public class Bomb : MonoBehaviour
 
             if (rayHits[0].collider == hit)
             {
-                breakable.HitFromBomb();
+                breakable.HitFromBomb(damage);
 
                 if (!string.IsNullOrEmpty(bombID))
                 {
@@ -195,7 +197,7 @@ public class Bomb : MonoBehaviour
         var anim = splosion.GetComponent<Animator>();
         if (anim != null)
         {
-            anim.Play("splode");
+            anim.Play(splodeAnimName);
         }
 
         yield return new WaitForSeconds(effectDuration);

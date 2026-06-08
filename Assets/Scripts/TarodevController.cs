@@ -35,8 +35,6 @@ namespace TarodevController
         private Rigidbody2D _groundedPlatformRb;
         private Rigidbody2D _clingPlatformRb;
 
-        private float _pogoWindowEndTime;
-        private bool _pogoAvailable;
         private PlayerAnimator _anim;
         //idk where else to put this variable tbh
         [SerializeField] private float _pogoWindowDuration = 0.25f;
@@ -603,11 +601,6 @@ namespace TarodevController
                 return;
             }
 
-            if (_pogoAvailable && _time > _pogoWindowEndTime)
-            {
-                _pogoAvailable = false;
-            }
-
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _frameVelocity.y > 0)
                 _endedJumpEarly = true;
 
@@ -617,11 +610,6 @@ namespace TarodevController
             if (_grounded || CanUseCoyote)
             {
                 ExecuteJump();
-            }
-            else if (_pogoAvailable && _time <= _pogoWindowEndTime)
-            {
-                ExecuteJump();
-                _pogoAvailable = false;
             }
 
             _jumpToConsume = false;
@@ -851,19 +839,6 @@ namespace TarodevController
         {
             _frameVelocity = bro;
 
-        }
-
-        public void ActivatePogoWindow()
-        {
-            _pogoAvailable = true;
-            _pogoWindowEndTime = _time + _pogoWindowDuration;
-
-            // If jump was buffered BEFORE pogo became active
-            if (HasBufferedJump)
-            {
-                ExecuteJump();
-                _pogoAvailable = false;
-            }
         }
 
 #if UNITY_EDITOR

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DeathZone : MonoBehaviour
 {
+    public bool detonationOnly = false;
 
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -14,6 +15,8 @@ public class DeathZone : MonoBehaviour
             Bomb.theBobm.GetComponent<Bomb>().Detonate();
             return;
         }
+
+        if (detonationOnly) return;
 
         TryKillPlayer(other.gameObject, normal);
     }
