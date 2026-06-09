@@ -5997,7 +5997,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TarodevController.PlayerController
   _stats: {fileID: 11400000, guid: e69198ddfb77fe544951684e905a1805, type: 2}
   _frameVelocity: {x: 0, y: 0}
-  _pogoWindowDuration: 0.5
   _glideStamina: 0
   wallClingKey: 324
   blockExVel: 0
@@ -28740,6 +28739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraShake
   defaultDuration: 0.2
   defaultMagnitude: 0.1
+  defaultMagFalloff: 0
 --- !u!1 &1612259580
 GameObject:
   m_ObjectHideFlags: 0

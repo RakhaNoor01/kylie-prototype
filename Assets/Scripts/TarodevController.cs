@@ -36,8 +36,6 @@ namespace TarodevController
         private Rigidbody2D _clingPlatformRb;
 
         private PlayerAnimator _anim;
-        //idk where else to put this variable tbh
-        [SerializeField] private float _pogoWindowDuration = 0.25f;
 
         public float _glideStamina;
 
@@ -509,8 +507,8 @@ namespace TarodevController
                 if (_isDashing)
                 {
                     _frameVelocity *= _stats.DashMomentumRetention;
-                    _col.size = new Vector2(_col.size.x, colY);
                 }
+                _col.size = new Vector2(_col.size.x, colY);
                 _isDashing = false;
             }
 

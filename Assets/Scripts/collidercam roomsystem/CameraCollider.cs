@@ -13,10 +13,10 @@ public class CameraCollider : MonoBehaviour
     [Header("Transition")]
     public float lerpSpeed = 5f;
     public bool resetOnExit = true;
+    public int priority = 0;
     [Header("Lock Axes")]
     public bool lockX = true;
     public bool lockY = false;
-    [Header("Clamp To Collider")]
     // Keeps camera edges within the bounds of this collider
     public bool clampToCollider = false;
 
@@ -76,38 +76,43 @@ public class CameraCollider : MonoBehaviour
 
         cachedBounds = col.bounds;
 
-        // Register this zone as one the player is currently inside
         if (!overlappingZones.Contains(this))
             overlappingZones.Add(this);
 
-        // This zone takes ownership of the camera
-        activeZone = this;
-        ApplyZone();
+        // Only take control if there is no active zone
+        // or this zone has a higher priority than the active one
+        if (activeZone == null || priority > activeZone.priority)
+        {
+            activeZone = this;
+            ApplyZone();
+        }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player") || camCtrl == null) return;
 
-        // Unregister this zone
         overlappingZones.Remove(this);
 
-        // If we weren't in control, nothing else to do
         if (activeZone != this) return;
 
-        if (overlappingZones.Count > 0)
+        CameraCollider highestPriority = null;
+
+        foreach (var zone in overlappingZones)
         {
-            // Player is still inside another zone — hand control to the most recently entered one.
-            // This handles the case where the player entered zoneB without fully leaving zoneA:
-            // exiting zoneB should restore zoneA's settings, not the global defaults.
-            CameraCollider fallback = overlappingZones[overlappingZones.Count - 1];
-            activeZone = fallback;
-            fallback.ApplyZone();
+            if (highestPriority == null || zone.priority > highestPriority.priority)
+                highestPriority = zone;
+        }
+
+        if (highestPriority != null)
+        {
+            activeZone = highestPriority;
+            highestPriority.ApplyZone();
         }
         else
         {
-            // Player has left all zones — restore the original camera defaults
             if (!resetOnExit) return;
+
             activeZone = null;
             RestoreDefaults();
         }

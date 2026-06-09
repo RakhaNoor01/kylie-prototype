@@ -13,6 +13,7 @@ public class CameraShake : MonoBehaviour
 
     private Transform cameraTransform;
     private Vector3 originalPosition;
+    private CameraController controller;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class CameraShake : MonoBehaviour
         {
             Instance = this;
             cameraTransform = Camera.main.transform;
+            controller = Camera.main.GetComponent<CameraController>();
         }
         else
         {
@@ -60,13 +62,13 @@ public class CameraShake : MonoBehaviour
             float x = Random.Range(-1f, 1f) * imGonnaMag;
             float y = Random.Range(-1f, 1f) * imGonnaMag;
 
-            cameraTransform.localPosition = originalPosition + new Vector3(x, y, 0);
+            controller.ShakeOffset = new Vector3(x, y, 0);
 
             imGonnaMag -= magDecay * Time.deltaTime;
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        cameraTransform.localPosition = originalPosition;
+        controller.ShakeOffset = Vector3.zero;
     }
 }
