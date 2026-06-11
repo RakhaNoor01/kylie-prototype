@@ -11,12 +11,16 @@ public class Collapse2Handler : MonoBehaviour
     public float ySpawn = 12;
     [Range(0f, 1f)]
     public float playerTargetChance = 0.25f;
+    public int playerAntiTarget = 4;
+    public ExtraTags starta;
     public ExtraTags stoppa;
+    public bool useCamPos = true;
 
     private Transform camera;
     private bool started = false;
     private bool isCollapse = false;
     private Transform player;
+    private int dude = 0;
 
     private void Start()
     {
@@ -26,9 +30,18 @@ public class Collapse2Handler : MonoBehaviour
         player = Slopburger.instance.gameObject.transform;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Update()
     {
-        if (collision.gameObject.CompareTag("Player") && !started)
+        Starta();
+        Stoppa();
+    }
+
+    private void Starta()
+    {
+        var col = starta.colInfo;
+        if (col == null) return;
+
+        if (col.gameObject.CompareTag("Player") && ! started)
         {
             started = true;
             isCollapse = true;
@@ -36,7 +49,7 @@ public class Collapse2Handler : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void Stoppa()
     {
         var col = stoppa.colInfo;
         if (col == null) return;
@@ -55,13 +68,16 @@ public class Collapse2Handler : MonoBehaviour
         {
             float xPos;
 
-            if (player != null && Random.value < playerTargetChance)
+            if (player != null && Random.value < playerTargetChance && dude >= playerAntiTarget)
             {
                 xPos = player.position.x;
+                dude = 0;
             }
             else
             {
-                xPos = camera.position.x + Random.Range(minRange, maxRange);
+                xPos = (useCamPos ? camera.position.x : player.position.x) 
+                    + Random.Range(minRange, maxRange);
+                dude += 1;
             }
 
             var startpos = new Vector3(

@@ -41,8 +41,12 @@ public class CameraCollider : MonoBehaviour
     private bool defaultLockY;
     private float defaultZoom;
 
+    public GameObject player;
+
     private void Start()
     {
+        player = Slopburger.instance.gameObject;
+
         mainCam = Camera.main;
         if (mainCam == null)
         {
@@ -72,7 +76,7 @@ public class CameraCollider : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player") || camCtrl == null) return;
+        if (other.gameObject != player || camCtrl == null) return;
 
         cachedBounds = col.bounds;
 
@@ -90,7 +94,7 @@ public class CameraCollider : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("Player") || camCtrl == null) return;
+        if (other.gameObject != player || camCtrl == null) return;
 
         overlappingZones.Remove(this);
 

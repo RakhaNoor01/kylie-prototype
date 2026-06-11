@@ -48,14 +48,13 @@ public class CheckpointManager : MonoBehaviour
 
     private void Start()
     {
-        // Find the player on initial load — it lives in the Persistent scene with us
         FindPlayer();
     }
 
     private void FindPlayer()
     {
         if (player == null)
-            player = GameObject.FindGameObjectWithTag("Player");
+            player = Slopburger.instance.gameObject;
     }
 
     private void OnDestroy()

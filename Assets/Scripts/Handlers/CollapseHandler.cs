@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Specialized;
+using TarodevController;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class CollapseHandler : MonoBehaviour
 {
@@ -27,9 +29,9 @@ public class CollapseHandler : MonoBehaviour
     public ExtraTags collapseForward;
     public GameObject lastPillar;
 
-    private bool started = false;
+    public bool started = false;
     public bool isCollapse = false;
-    private bool fastForward = false;
+    public bool fastForward = false;
     private static bool ended = false;
 
     private Button gumbo;
@@ -45,15 +47,13 @@ public class CollapseHandler : MonoBehaviour
 
     private void Start()
     {
-        if (!ended)
-        {
-           gumbo = GetComponent<Button>();
-           spawnOffset = pillarSpawn.position - startPos.position;
-        }
-        else
+        if (ended)
         {
             lastPillar.SetActive(true);
         }
+
+        gumbo = GetComponent<Button>();
+        spawnOffset = pillarSpawn.position - startPos.position;
 
         collapsePillar.SetActive(false);
         indicator.gameObject.SetActive(false);
@@ -61,14 +61,30 @@ public class CollapseHandler : MonoBehaviour
 
     private void Update()
     {
-        if (doomPillar.IsDestroyed && !started)
+        bool normalStart = doomPillar.IsDestroyed;
+
+        bool ffStart =
+            TempData.HasKey("fastforward") &&
+            PlayerController.Instance.FirstInput;
+
+        if ((normalStart || ffStart) && !started)
         {
             started = true;
             isCollapse = true;
-            Collapse();
+
+            if (TempData.HasKey("fastforward"))
+            {
+                CameraShake.Instance.Shake(0.5f, 0.4f, -1);
+                Invoke(nameof(Collapse), spawnInterval);
+            }
+            else
+            {
+                Collapse();
+            }
         }
 
         if (!started) return;
+
         CollapseEndPlayer();
         CollapseFastForward();
     }
@@ -106,19 +122,28 @@ public class CollapseHandler : MonoBehaviour
             startPos.position = pos;
 
             totalXOffset = 0f;
+
+            TempData.SetValue("fastforward", true);
         }
     }
 
     private void Collapse()
     {
+        if (!TempData.HasKey("fastforward"))
+        {
+            CameraShake.Instance.Shake(duration, mag, -1);
+        }
         gumbo.TriggerButton();
-        CameraShake.Instance.Shake(duration, mag, -1);
         StartCoroutine(SpawnCollapsePillars());
     }
 
     private IEnumerator SpawnCollapsePillars()
     {
-        yield return new WaitForSeconds(startDelay);
+        float endTime = Time.time + startDelay;
+
+        yield return new WaitUntil(() =>
+            fastForward || Time.time >= endTime
+        );
 
         totalXOffset = 0;
 

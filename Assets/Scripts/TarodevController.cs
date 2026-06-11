@@ -6,18 +6,12 @@ using UnityEngine.Splines;
 
 namespace TarodevController
 {
-    /// <summary>
-    /// Hey!
-    /// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
-    /// I have a premium version on Patreon, which has every feature you'd expect from a polished controller. Link: https://www.patreon.com/tarodev
-    /// You can play and compete for best times here: https://tarodev.itch.io/extended-ultimate-2d-controller
-    /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
-    /// </summary>
-
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
+
+        public static PlayerController Instance;
 
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
@@ -60,9 +54,11 @@ namespace TarodevController
 
         private SplineAnimate _spliner;
 
+        private string tag;
+
         private void Awake()
         {
-  
+            Instance = this;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
             _knockback = GetComponent<PlayerKnockback>();
@@ -72,6 +68,7 @@ namespace TarodevController
             _glideStamina = _stats.GlideDuration;
             _audio = GetComponent<PlayerAudio>();
             colY = _col.size.y;
+            tag = gameObject.tag;
         }
 
         private void Update()
@@ -80,12 +77,24 @@ namespace TarodevController
             GatherInput();
         }
 
+        private bool firstInput;
+        public bool FirstInput => firstInput;
         private void GatherInput()
         {
             if (_spliner.IsPlaying)
             {
                 _frameInput = new FrameInput();
                 return;
+            }
+
+            bool anyInput =
+                Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f ||
+                Input.GetKey(KeyCode.Mouse0);
+
+            if (!firstInput && anyInput)
+            {
+                gameObject.tag = tag;
+                firstInput = true;
             }
 
             _frameInput = new FrameInput

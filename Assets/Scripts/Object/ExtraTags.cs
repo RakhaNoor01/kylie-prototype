@@ -1,4 +1,6 @@
+using TarodevController;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 public class ExtraTags : MonoBehaviour
 {
@@ -14,11 +16,11 @@ public class ExtraTags : MonoBehaviour
     public bool getColInfo = false;
     public Collider2D colInfo;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
+        if (!PlayerController.Instance.FirstInput) return;
         if (getColInfo) colInfo = collision;
     }
-
 
     private void OnTriggerExit2D(Collider2D collision)
     {

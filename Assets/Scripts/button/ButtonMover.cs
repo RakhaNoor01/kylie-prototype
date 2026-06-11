@@ -4,7 +4,7 @@ using UnityEngine;
 public class ButtonMover : ButtonTarget
 {
     public Transform target;
-    public float moveDur;
+    public float moveDur = 1;
     public Ease onEasing = Ease.Linear;
     public Ease offEasing = Ease.Linear;
 

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
@@ -24,7 +25,6 @@ public class Checkpoint : MonoBehaviour
 
     private void Start()
     {
-
         var cpPos = setLocation == null ? transform.position : setLocation.position;
 
         if (isStartingPoint && CheckpointManager.Instance != null && !CheckpointManager.Instance.HasCheckpoint)
