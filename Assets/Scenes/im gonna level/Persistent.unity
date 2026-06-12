@@ -5904,13 +5904,13 @@ GameObject:
   m_Component:
   - component: {fileID: 450797597}
   - component: {fileID: 450797596}
+  - component: {fileID: 450797602}
   - component: {fileID: 450797595}
   - component: {fileID: 450797594}
   - component: {fileID: 450797598}
   - component: {fileID: 450797599}
   - component: {fileID: 450797600}
   - component: {fileID: 450797601}
-  - component: {fileID: 450797602}
   - component: {fileID: 450797603}
   m_Layer: 3
   m_Name: Player
@@ -6806,7 +6806,8 @@ MonoBehaviour:
   throwKey: 106
   noCatchPeriod: 0.15
   returnLerpStrength: 2
-  maxSpeed: 20
+  maxThrownSpeed: 25
+  maxReturnSpeed: 22
   distanceMult: 15
   distMultDelayTime: 0.5
   slowDown: 0.1

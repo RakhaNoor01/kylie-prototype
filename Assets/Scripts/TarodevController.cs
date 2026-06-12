@@ -192,11 +192,9 @@ namespace TarodevController
                 _stats.GrounderDistance
             );
 
-            bool collTouchGround = _col.IsTouching(filter);
-
             RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
 
-            bool isGrounded = groundHit && collTouchGround;
+            bool isGrounded = groundHit;
 
             ContactFilter2D ceilFilter = new ContactFilter2D();
             ceilFilter.useTriggers = false;

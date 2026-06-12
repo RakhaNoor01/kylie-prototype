@@ -32,10 +32,10 @@ namespace TarodevController
         [Tooltip("Deceleration in air only after stopping input mid-air")]
         public float AirDeceleration = 30;
 
-        [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
+        [Tooltip("A constant downward force applied while grounded. Helps on slopes")]
         public float GroundingForce = -1.5f;
 
-        [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 0.5f)]
+        [Tooltip("The detection distance for grounding and roof detection")]
         public float GrounderDistance = 0.05f;
 
         [Header("JUMP")]

@@ -29,9 +29,9 @@ public class CollapseHandler : MonoBehaviour
     public ExtraTags collapseForward;
     public GameObject lastPillar;
 
-    public bool started = false;
+    private bool started = false;
     public bool isCollapse = false;
-    public bool fastForward = false;
+    private bool fastForward = false;
     private static bool ended = false;
 
     private Button gumbo;

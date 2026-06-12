@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using TarodevController;
+using Unity.VisualScripting;
 
 public enum ButtonType
 {
@@ -13,15 +15,24 @@ public enum ButtonType
 public class Button : MonoBehaviour
 {
     public ButtonType type;
+    public float duration = 2f;
+    public bool state;
+
+    [Header("Persistence")]
     [Tooltip("Set empty to not have persistent data")]
     public string buttonID;
+    /* if true, button will not save persistent data automatically, 
+    instead only doing so if the player collides with manualSaveState */
+    public bool autoSaveState = true;
+    public ExtraTags manualSaveState;
 
-    [Header("Timed Settings")]
-    public float duration = 2f;
-
-    public bool state;
+    [Header("Activation")]
+    public bool onlyIfPlayerMoved;
     public bool boomerActivated = true;
     public bool playerActivated = false;
+    [Tooltip("If not null, button will activated when colliding with this ExtraTag object")]
+    public ExtraTags objectActivated;
+
     public List<ButtonTarget> buttonTargets = new List<ButtonTarget>();
 
     private bool _hasTriggered = false;
@@ -51,10 +62,46 @@ public class Button : MonoBehaviour
         ApplyStateToTargets();
     }
 
+    private void Update()
+    {
+        if (autoSaveState || manualSaveState == null) return;
+
+        var col = manualSaveState.colInfo;
+        if (col == null) return;
+
+        if (col.gameObject.CompareTag("Player"))
+        {
+            SaveState();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((collision.gameObject.CompareTag("Goonerang") && boomerActivated) || 
+        Debug.Log(collision.gameObject.name);
+        if (onlyIfPlayerMoved) return;
+
+        Buttoner(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!PlayerController.Instance.FirstInput && onlyIfPlayerMoved) return;
+
+        Buttoner(collision);
+    }
+
+    private void Buttoner(Collider2D collision)
+    {
+        if ((collision.gameObject.CompareTag("Goonerang") && boomerActivated) ||
             (collision.gameObject.CompareTag("Player") && playerActivated))
+        {
+            TriggerButton();
+        }
+
+        if (objectActivated == null) return;
+        var gat = collision.gameObject.GetComponent<ExtraTags>();
+        Debug.Log(gat.gameObject.name);
+        if (gat == objectActivated)
         {
             TriggerButton();
         }
@@ -76,8 +123,6 @@ public class Button : MonoBehaviour
         _hasTriggered = true;
         state = !state;
         ApplyStateToTargets();
-
-        TempData.SetValue($"{buttonID}_trig", _hasTriggered);
     }
 
     private void HandleTimed()
@@ -108,9 +153,20 @@ public class Button : MonoBehaviour
         foreach (var target in buttonTargets)
             target.SetState(state);
 
+        if (autoSaveState)
+            SaveState();
+    }
+
+    private void SaveState()
+    {
         if (!string.IsNullOrEmpty(buttonID))
         {
             TempData.SetValue(buttonID, state);
+        }
+
+        if (type == ButtonType.OneTime)
+        {
+            TempData.SetValue($"{buttonID}_trig", _hasTriggered);
         }
     }
 }

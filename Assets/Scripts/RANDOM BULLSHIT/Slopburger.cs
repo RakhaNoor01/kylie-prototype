@@ -3,6 +3,8 @@ using UnityEngine.Rendering.Universal;
 
 public class Slopburger : MonoBehaviour
 {
+    // this class is used for stuff thats kinda significant but not significant enough to warrant their own scripts
+
     public Boomerang rang;
     public GameObject torc;
     private bool hasTorj;
@@ -59,5 +61,11 @@ public class Slopburger : MonoBehaviour
         {
             Shader.SetGlobalVector("_rangPos", rang.gameObject.transform.position);
         }
+    }
+
+    [ContextMenu("Temp Data")]
+    public void hi()
+    {
+        TempData.GetTempData();
     }
 }
