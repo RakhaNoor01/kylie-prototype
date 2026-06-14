@@ -145,15 +145,13 @@ namespace TarodevController
             HandleWallSlide();
 
             HandleDash();
+            HandleStepUp();
             HandleJump();
             HandleDirection();
             HandleGravity();
 
             ApplyMovement();
         }
-
-        
-
 
         #region Collisions
 
@@ -760,6 +758,53 @@ namespace TarodevController
 
         #endregion
 
+        private Tween _stepTween;
+        private bool _steppingUp;
+
+        private void HandleStepUp()
+        {
+            if (Mathf.Abs(_frameVelocity.x) < 0.1f)
+                return;
+
+            Vector2 dir = new Vector2(_facingDirection, 0);
+
+            Vector2 baseOrigin = (Vector2)_col.bounds.center + Vector2.down * _stats.stepUpBase;
+
+            Vector2 upperOrigin = baseOrigin + Vector2.up * _stats.stepUpHeight;
+
+            int mask = _stats.wallLayer;
+
+            bool baseHit = Physics2D.Raycast(
+                baseOrigin,
+                dir,
+                _stats.stepUpDistance,
+                mask
+            );
+
+            bool upperHit = Physics2D.Raycast(
+                upperOrigin,
+                dir,
+                _stats.stepUpDistance,
+                mask
+            );
+
+#if UNITY_EDITOR
+            Debug.DrawRay(baseOrigin, dir * _stats.stepUpDistance, baseHit ? Color.red : Color.green);
+            Debug.DrawRay(upperOrigin, dir * _stats.stepUpDistance, upperHit ? Color.red : Color.green);
+#endif
+
+            if (baseHit && !upperHit && !_steppingUp)
+            {
+                _steppingUp = true;
+
+                _stepTween?.Kill();
+                _stepTween = transform
+                    .DOMoveY(transform.position.y + _stats.stepUpHeight, _stats.stepUpSpeed)
+                    .SetEase(Ease.OutQuad)
+                    .OnComplete(() => _steppingUp = false);
+            }
+        }
+
         private void ApplyMovement()
         {
             _rb.linearVelocity = _frameVelocity + _externalVelocity + _platformVelocity;
@@ -805,7 +850,7 @@ namespace TarodevController
 
         /// <summary>
         /// Adds a persistent external velocity (e.g. air currents) that is
-        /// applied on top of the controller each frame and decays naturally.
+        /// applied on top of the controller each frame.
         /// Call every FixedUpdate from the external system while active.
         /// </summary>
         public void AddExternalVelocity(Vector2 velocity)

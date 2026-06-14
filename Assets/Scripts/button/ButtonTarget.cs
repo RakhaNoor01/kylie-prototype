@@ -6,14 +6,14 @@ public class ButtonTarget : MonoBehaviour
     protected bool state;
     public bool inverted;
 
-    private void Start()
+    public virtual void Awake()
     {
         if (button != null)
             button.RegisterTarget(this);
     }
 
-    public virtual void SetState(bool setTo)
+    public virtual void SetState(bool state)
     {
-        state = inverted ? !setTo : setTo;
+        this.state = inverted ? !state : state;
     }
 }

@@ -16,11 +16,15 @@ public class ButtonMover : ButtonTarget
 
     private Vector3 ogPos;
     private Quaternion ogRot;
+    private float distance;
+    private bool init = false;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         ogPos = transform.position;
         ogRot = transform.rotation;
+        distance = Vector3.Distance(transform.position, target.transform.position);
     }
 
     public override void SetState(bool setTo)
@@ -32,11 +36,17 @@ public class ButtonMover : ButtonTarget
         Vector3 destinationPos = state ? target.position : ogPos;
         Quaternion destinationRot = state ? target.rotation : ogRot;
 
+        if (!init)
+        {
+            init = true;
+            transform.SetPositionAndRotation(destinationPos, destinationRot);
+            return;
+        }
+        
         float duration = moveDur;
 
         if (useSpeed)
         {
-            float distance = Vector3.Distance(transform.position, target.transform.position);
             duration = moveSpeed > 0f ? distance / moveSpeed : 0f;
         }
 

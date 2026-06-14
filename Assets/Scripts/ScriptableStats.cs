@@ -102,5 +102,19 @@ namespace TarodevController
 
         [Tooltip("idk what this one does tbh")]
         public float wallCoyoteTime = 0.2f;
+
+        [Header("STEP UP")]
+
+        [Tooltip("Base/foot of player to check for valid step-up")]
+        public float stepUpBase = 0.25f;
+
+        [Tooltip("Height to check for valid step-up")]
+        public float stepUpHeight = 0.5f;
+
+        [Tooltip("How far the step-up check goes")]
+        public float stepUpDistance = 0.27f;
+
+        [Tooltip("Yeurp")]
+        public float stepUpSpeed = 1;
     }
 }
