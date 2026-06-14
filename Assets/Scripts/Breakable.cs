@@ -5,6 +5,7 @@ public class Breakable : MonoBehaviour
     public int health = 1;
     public string boomerangTag = "Goonerang";
     public ParticleSystem article;
+    public GameObject fart;
 
     private int currentHealth;
 
@@ -38,5 +39,6 @@ public class Breakable : MonoBehaviour
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        fart.SetActive(false);
     }
 }
