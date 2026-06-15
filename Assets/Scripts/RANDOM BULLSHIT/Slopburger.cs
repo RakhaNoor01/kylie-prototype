@@ -9,6 +9,8 @@ public class Slopburger : MonoBehaviour
     public GameObject torc;
     private bool hasTorj;
 
+    public ParticleSystem ruinsCollapse;
+
     public bool TheOrch => hasTorj;
     public static Slopburger instance;
 
@@ -19,10 +21,13 @@ public class Slopburger : MonoBehaviour
 
     public void Start()
     {
+        ruinsCollapse.Stop();
         TsFunction(hasTorj);
         var plealth = GetComponent<PlayerHealth>();
         plealth.death += Whatever;
     }
+
+    private bool felled;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -32,6 +37,33 @@ public class Slopburger : MonoBehaviour
         if (gobj.extraTag == ExtraTags.ExtraTag.walterfall && hasTorj)
         {
             TsFunction(false);
+        }
+
+        var nbumber = 15;
+        var m = ruinsCollapse.main;
+
+        if (gobj.evilTag == "RullapseStart")
+        {
+            ruinsCollapse.Play();
+            if (felled)
+            {
+                m.startSpeed = new ParticleSystem.MinMaxCurve(
+                    m.startSpeed.constantMin - nbumber,
+                    m.startSpeed.constantMax - nbumber);
+            }
+        }
+
+        if (gobj.evilTag == "RullapseFall")
+        {
+            m.startSpeed = new ParticleSystem.MinMaxCurve(
+                m.startSpeed.constantMin + nbumber, 
+                m.startSpeed.constantMax + nbumber);
+            felled = true;
+        }
+
+        if (gobj.evilTag == "RullapseEnd")
+        {
+            ruinsCollapse.Stop();
         }
     }
 

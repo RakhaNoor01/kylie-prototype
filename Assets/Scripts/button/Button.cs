@@ -100,7 +100,6 @@ public class Button : MonoBehaviour
 
         if (objectActivated == null) return;
         var gat = collision.gameObject.GetComponent<ExtraTags>();
-        Debug.Log(gat.gameObject.name);
         if (gat == objectActivated)
         {
             TriggerButton();

@@ -14,6 +14,9 @@ public class ButtonMover : ButtonTarget
     public Ease onEasing = Ease.Linear;
     public Ease offEasing = Ease.Linear;
 
+    public bool useCustomEase = false;
+    public AnimationCurve customEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     private Vector3 ogPos;
     private Quaternion ogRot;
     private float distance;
@@ -42,7 +45,7 @@ public class ButtonMover : ButtonTarget
             transform.SetPositionAndRotation(destinationPos, destinationRot);
             return;
         }
-        
+
         float duration = moveDur;
 
         if (useSpeed)
@@ -50,9 +53,19 @@ public class ButtonMover : ButtonTarget
             duration = moveSpeed > 0f ? distance / moveSpeed : 0f;
         }
 
-        Ease easing = state ? onEasing : offEasing;
+        Tween moveTween = transform.DOMove(destinationPos, duration);
+        Tween rotateTween = transform.DORotate(destinationRot.eulerAngles, duration);
 
-        transform.DOMove(destinationPos, duration).SetEase(easing);
-        transform.DORotate(destinationRot.eulerAngles, duration).SetEase(easing);
+        if (useCustomEase)
+        {
+            moveTween.SetEase(customEase);
+            rotateTween.SetEase(customEase);
+        }
+        else
+        {
+            Ease easing = state ? onEasing : offEasing;
+            moveTween.SetEase(easing);
+            rotateTween.SetEase(easing);
+        }
     }
 }

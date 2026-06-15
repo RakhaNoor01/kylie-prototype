@@ -15,6 +15,7 @@ public class ExtraTags : MonoBehaviour
     public ExtraTag extraTag = ExtraTag.none;
     public bool getColInfo = false;
     public Collider2D colInfo;
+    public string evilTag;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
