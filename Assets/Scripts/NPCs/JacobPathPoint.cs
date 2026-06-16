@@ -1,92 +1,81 @@
 using UnityEngine;
 
-// ═════════════════════════════════════════════════════════════════════════════
-//  ENUM  — dibagi di sini agar dipakai bersama JacobNPC
-// ═════════════════════════════════════════════════════════════════════════════
-
-public enum MovementAction
-{
-    /// <summary>Jacob berlari menuju posisi waypoint ini.</summary>
-    Run,
-
-    /// <summary>Jacob melompat saat tiba di waypoint ini, lalu lanjut ke berikutnya.</summary>
-    Jump,
-
-    /// <summary>Jacob berhenti sejenak di waypoint ini selama <see cref="JacobPathPoint.waitTime"/> detik.</summary>
-    Wait,
-
-    /// <summary>Jacob berhenti total. HARUS menjadi waypoint terakhir.</summary>
-    IdleEnd
-}
-
-// ═════════════════════════════════════════════════════════════════════════════
-//  JACOB PATH POINT
-// ═════════════════════════════════════════════════════════════════════════════
+public enum JacobAction { Run, Jump, Wait, IdleEnd }
 
 /// <summary>
-/// Satu titik dalam path Jacob. Attach ke GameObject kosong, lalu drag ke
-/// array <c>pathPoints</c> di JacobNPC sesuai urutan.
+/// Satu titik path Jacob. Attach ke GameObject kosong, drag ke pathPoints di JacobNPC.
 ///
-/// Gizmo warna:
-///   🟢 Hijau  = Run   🔵 Biru   = Jump
-///   🟡 Kuning = Wait  🔴 Merah  = IdleEnd
+/// Jump setup:
+///   • Waypoint ini = titik TOLAK
+///   • landingPoint  = Transform titik PENDARATAN (drag GO lain)
+///   • arcHeight     = tinggi puncak lompatan
 /// </summary>
 public class JacobPathPoint : MonoBehaviour
 {
-    [Tooltip("Aksi yang dilakukan Jacob saat TIBA di waypoint ini.")]
-    public MovementAction action = MovementAction.Run;
+    [Tooltip("Aksi saat Jacob TIBA di waypoint ini.")]
+    public JacobAction action = JacobAction.Run;
 
-    [Tooltip("Gaya lompat (ForceMode2D.Impulse). Aktif bila action = Jump.")]
+    [Header("Jump")]
+    [Tooltip("Titik pendaratan. Wajib diisi bila action = Jump.")]
+    public Transform landingPoint;
+    [Tooltip("Tinggi puncak arc lompatan (meter).")]
     public float arcHeight = 3f;
 
-    [Tooltip("Durasi diam (detik). Aktif bila action = Wait.")]
+    [Header("Wait")]
+    [Tooltip("Durasi diam (detik). Dipakai bila action = Wait.")]
     public float waitTime = 1f;
 
-    [Tooltip("Arah hadap sprite saat bergerak MENUJU waypoint ini.")]
-    public bool faceRight = true;
-
     // ── Gizmos ────────────────────────────────────────────────────────────────
-
-    private const float GizmoRadius = 0.22f;
+    private const float R = 0.22f;
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = GizmoColor();
-        Gizmos.DrawSphere(transform.position, GizmoRadius);
+        Gizmos.color = GetColor();
+        Gizmos.DrawSphere(transform.position, R);
+
+        if (action == JacobAction.Jump && landingPoint != null)
+        {
+            // Titik landing
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(landingPoint.position, R * 0.75f);
+
+            // Preview arc parabola (sama dengan DogController/JumpWaypoint)
+            Gizmos.color = Color.green;
+            Vector3 s = transform.position, e = landingPoint.position;
+            Vector3 prev = s;
+            for (int i = 1; i <= 24; i++)
+            {
+                float t = i / 24f;
+                float x = Mathf.Lerp(s.x, e.x, t);
+                float y = Mathf.Lerp(s.y, e.y, t) + arcHeight * 4f * t * (1f - t);
+                Vector3 curr = new Vector3(x, y, 0f);
+                Gizmos.DrawLine(prev, curr);
+                prev = curr;
+            }
+        }
 
 #if UNITY_EDITOR
-        // Label teks di atas titik
-        var style = new GUIStyle { fontStyle = FontStyle.Bold, fontSize = 11 };
-        style.normal.textColor = GizmoColor();
-
+        var style = new GUIStyle { fontStyle = FontStyle.Bold, fontSize = 10 };
+        style.normal.textColor = GetColor();
         string lbl = action switch
         {
-            MovementAction.Run     => "RUN →",
-            MovementAction.Jump    => $"JUMP arc={arcHeight}m",
-            MovementAction.Wait    => $"WAIT {waitTime}s",
-            MovementAction.IdleEnd => "■ END",
-            _                      => action.ToString()
+            JacobAction.Run     => "RUN",
+            JacobAction.Jump    => $"JUMP arc={arcHeight}",
+            JacobAction.Wait    => $"WAIT {waitTime}s",
+            JacobAction.IdleEnd => "END",
+            _                   => action.ToString()
         };
-
-        UnityEditor.Handles.Label(
-            transform.position + Vector3.up * (GizmoRadius + 0.12f),
-            $"[{gameObject.name}]\n{lbl}", style);
+        UnityEditor.Handles.Label(transform.position + Vector3.up * (R + 0.1f),
+            $"[{gameObject.name}] {lbl}", style);
 #endif
     }
 
-    private void OnDrawGizmosSelected()
+    private Color GetColor() => action switch
     {
-        // Garis pendek menunjukkan arah hadap
-        Gizmos.color = Color.white;
-        Gizmos.DrawRay(transform.position, (faceRight ? Vector3.right : Vector3.left) * 0.5f);
-    }
-
-    private Color GizmoColor() => action switch
-    {
-        MovementAction.Run     => new Color(0.20f, 0.80f, 0.20f, 0.85f),
-        MovementAction.Jump    => new Color(0.20f, 0.60f, 1.00f, 0.85f),
-        MovementAction.Wait    => new Color(1.00f, 0.85f, 0.10f, 0.85f),
-        MovementAction.IdleEnd => new Color(1.00f, 0.25f, 0.25f, 0.85f),
-        _                      => Color.white
+        JacobAction.Run     => new Color(0.2f, 0.8f, 0.2f),
+        JacobAction.Jump    => new Color(0.2f, 0.6f, 1.0f),
+        JacobAction.Wait    => new Color(1.0f, 0.85f, 0.1f),
+        JacobAction.IdleEnd => new Color(1.0f, 0.25f, 0.25f),
+        _                   => Color.white
     };
 }
