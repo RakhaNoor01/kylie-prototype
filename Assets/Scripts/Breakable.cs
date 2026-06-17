@@ -7,6 +7,11 @@ public class Breakable : MonoBehaviour
     public ParticleSystem article;
     public GameObject fart;
 
+    [Header("Damage Source")]
+    public bool boomerang = true;
+    public bool burnerang = false;
+    public bool bomb = false;
+
     private int currentHealth;
 
     private void Start()
@@ -16,10 +21,21 @@ public class Breakable : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(boomerangTag))
+        var bobm = collision.gameObject.GetComponent<Bomb>();
+
+        var isBoomerang = collision.gameObject.CompareTag(boomerangTag);
+        var theRang = collision.gameObject.GetComponent<Boomerang>();
+
+        if ((theRang != null && theRang.isBurning && burnerang) || (isBoomerang && boomerang))
         {
             Hit();
         }
+    }
+
+    public void HitFromBomb()
+    {
+        if (!bomb) return;
+        Hit();
     }
 
     private void Hit()
