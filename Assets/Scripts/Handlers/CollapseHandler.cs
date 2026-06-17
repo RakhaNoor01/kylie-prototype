@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Specialized;
 using TarodevController;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class CollapseHandler : MonoBehaviour
 {
@@ -67,7 +65,7 @@ public class CollapseHandler : MonoBehaviour
             TempData.HasKey("fastforward") &&
             PlayerController.Instance.FirstInput;
 
-        if ((normalStart || ffStart) && !started)
+        if ((normalStart || ffStart) && !started && !ended)
         {
             started = true;
             isCollapse = true;

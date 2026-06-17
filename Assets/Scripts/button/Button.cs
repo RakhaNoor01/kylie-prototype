@@ -77,7 +77,6 @@ public class Button : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         if (onlyIfPlayerMoved) return;
 
         Buttoner(collision);
@@ -163,7 +162,7 @@ public class Button : MonoBehaviour
             TempData.SetValue(buttonID, state);
         }
 
-        if (type == ButtonType.OneTime)
+        if (type == ButtonType.OneTime && !string.IsNullOrEmpty(buttonID))
         {
             TempData.SetValue($"{buttonID}_trig", _hasTriggered);
         }
