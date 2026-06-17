@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -10,12 +11,26 @@ using UnityEngine.UI;
 /// [LevelCard_Forest]          ← pasang LevelCard.cs di sini
 ///   ├── Image                 ← portrait/art card (bisa langsung di root)
 ///   └── DimOverlay            ← Image, color hitam, alpha 0, raycastTarget OFF
+///
+/// FIELD "On Click ()" DI INSPECTOR:
+/// Ini disediakan supaya bisa drag target manual persis seperti Button.OnClick(),
+/// TAPI untuk project ini KOSONGKAN saja / jangan diisi.
+/// Alasan: transisi circle wipe HARUS selesai dulu sebelum SoloLeveling.LoadLevel()
+/// dipanggil (LoadScene di dalamnya synchronous dan langsung destroy scene ini).
+/// Urutan itu sudah ditangani oleh MainMenuManager.Co_LoadScene().
+/// Kalau field ini diisi dengan SoloLeveling.LoadLevel langsung, scene akan
+/// pindah SEKETIKA saat diklik, memotong animasi transisi di tengah jalan.
 /// </summary>
 public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
     [Header("References")]
     [Tooltip("Image overlay hitam untuk efek menggelap saat tidak dipilih")]
     public Image dimOverlay;
+
+    [Header("On Click (opsional — biarkan kosong, lihat komentar di atas class)")]
+    [Tooltip("KOSONGKAN untuk project ini. Transisi sudah ditangani MainMenuManager. " +
+             "Hanya isi kalau sengaja mau bypass circle wipe.")]
+    public UnityEvent onClick;
 
     // ── Internal ──────────────────────────────────────────────────────────────
 
@@ -56,6 +71,9 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
     public void OnPointerClick(PointerEventData eventData)
     {
         _manager.OnCardClick(_index);
+
+        // Panggil event yang di-wiring manual di Inspector (kalau ada)
+        onClick?.Invoke();
     }
 
     // ── Visual ────────────────────────────────────────────────────────────────

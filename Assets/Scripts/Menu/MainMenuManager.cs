@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -19,8 +18,14 @@ public class MainMenuManager : MonoBehaviour
     [Tooltip("Urutan: Play, Controls, Exit")]
     public RectTransform[] menuButtons;
 
-    [Header("Scene Names")]
+    [Header("Scene Loading (SoloLeveling)")]
+    [Tooltip("Drag GameObject yang punya komponen SoloLeveling.cs ke sini")]
+    public SoloLeveling soloLeveling;
+
+    [Tooltip("Nama scene level Forest (harus sama dengan nama di Build Settings)")]
     public string forestSceneName   = "Level_Forest";
+
+    [Tooltip("Nama scene level Mountain (harus sama dengan nama di Build Settings)")]
     public string mountainSceneName = "Level_Mountain";
 
     [Header("Timing")]
@@ -232,20 +237,35 @@ public class MainMenuManager : MonoBehaviour
     public void LoadForest()   => StartCoroutine(Co_LoadScene(forestSceneName));
     public void LoadMountain() => StartCoroutine(Co_LoadScene(mountainSceneName));
 
+    /// <summary>
+    /// PENTING: SoloLeveling.LoadLevel() memanggil SceneManager.LoadScene() yang SYNCHRONOUS.
+    /// Begitu dipanggil, scene Main Menu ini (termasuk coroutine ini sendiri) langsung
+    /// di-destroy. Karena itu, urutannya WAJIB:
+    ///   1. Jalankan & SELESAIKAN dulu animasi circle wipe (visual transisi)
+    ///   2. BARU panggil SoloLeveling.LoadLevel() di baris paling akhir
+    /// Tidak ada kode yang boleh berjalan setelah LoadLevel() dipanggil.
+    /// </summary>
     private IEnumerator Co_LoadScene(string sceneName)
     {
         CurrentState = MenuState.Transitioning;
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false;
-
+        // 1) Jalankan transisi visual sampai TUNTAS dulu
         if (circleWipe != null)
             yield return StartCoroutine(circleWipe.WipeIn());
         else
             yield return StartCoroutine(_anim.FadeGroup(panelFade, 0f, 1f, 0.5f));
 
-        asyncLoad.allowSceneActivation = true;
-        while (!asyncLoad.isDone) yield return null;
+        // 2) Transisi sudah selesai (layar sudah tertutup penuh) — baru pindah scene
+        if (soloLeveling != null)
+        {
+            soloLeveling.LoadLevel(sceneName);
+        }
+        else
+        {
+            Debug.LogError("[MainMenuManager] soloLeveling belum di-assign di Inspector!");
+        }
+
+        // Tidak ada kode setelah ini yang akan jalan — scene sudah berganti.
     }
 
     public void OnClickExit()
