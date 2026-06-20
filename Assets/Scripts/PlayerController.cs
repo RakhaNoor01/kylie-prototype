@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -28,6 +27,7 @@ namespace TarodevController
 
         private Rigidbody2D _groundedPlatformRb;
         private Rigidbody2D _clingPlatformRb;
+        public bool onMovingThing => _groundedPlatformRb != null || _clingPlatformRb != null;
 
         private PlayerAnimator _anim;
 
@@ -156,7 +156,7 @@ namespace TarodevController
         #region Collisions
 
         private float _frameLeftGrounded = float.MinValue;
-        private bool _grounded;
+        public bool _grounded;
         public bool Grounded => _grounded;
 
         private void OnCollisionStay2D(Collision2D collision)
@@ -168,6 +168,7 @@ namespace TarodevController
             }
         }
 
+        private bool colTouchGround;
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
@@ -189,6 +190,8 @@ namespace TarodevController
                 results,
                 _stats.GrounderDistance
             );
+
+            colTouchGround = _col.IsTouching(filter);
 
             RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
 
@@ -252,7 +255,7 @@ namespace TarodevController
                 if (_groundedPlatformRb != null)
                 {
                     var platLV = _groundedPlatformRb.linearVelocity;
-                    var clampedLV = new Vector2(platLV.x, Mathf.Min(platLV.y, 0));
+                    var clampedLV = new Vector2(platLV.x, Mathf.Max(platLV.y, 0));
                     _frameVelocity += clampedLV;
                 }
 
@@ -772,21 +775,30 @@ namespace TarodevController
 
             Vector2 upperOrigin = baseOrigin + Vector2.up * _stats.stepUpHeight;
 
-            int mask = _stats.wallLayer;
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.SetLayerMask(~_stats.wallLayer);
+            filter.useTriggers = false;
 
-            bool baseHit = Physics2D.Raycast(
+            RaycastHit2D[] results = new RaycastHit2D[1];
+
+            int baseCount = Physics2D.Raycast(
                 baseOrigin,
                 dir,
-                _stats.stepUpDistance,
-                mask
+                filter,
+                results,
+                _stats.stepUpDistance
             );
+            bool baseHit = baseCount > 0;
 
-            bool upperHit = Physics2D.Raycast(
+            int upperCount = Physics2D.Raycast(
                 upperOrigin,
                 dir,
-                _stats.stepUpDistance,
-                mask
+                filter,
+                results,
+                _stats.stepUpDistance
             );
+            bool upperHit = upperCount > 0;
 
 #if UNITY_EDITOR
             Debug.DrawRay(baseOrigin, dir * _stats.stepUpDistance, baseHit ? Color.red : Color.green);

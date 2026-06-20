@@ -1,13 +1,20 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
+// defines how the platform should move towards the next target
 [System.Serializable]
 public class MovablePlatformTarget
 {
     public Transform target;
     public float waitTime = 0f;
-    public float speed = 0f; // 0 = use default
+    public float speed = 0f; // 0 = default speed
+    public bool useDuration = false;
+    public float duration = 1f;
+    public bool instant = false;
+    public Ease ease = Ease.Linear;
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -18,15 +25,18 @@ public class MovablePlatform : MonoBehaviour
     public bool pingPong = false;
     public float defaultSpeed = 2f;
 
-    private Rigidbody2D _rb;
-    private int _currentIndex = 0;
-    private bool _goingForward = true;
+    private Rigidbody2D rb;
+    private int currentIndex = 0;
+    private bool goingForward = true;
+    private bool tweenin = false;
+    private Vector2 previousPos;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _rb.bodyType = RigidbodyType2D.Kinematic;
-        _rb.freezeRotation = true;
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.freezeRotation = true;
+        previousPos = transform.position;
     }
 
     private void Start()
@@ -41,53 +51,83 @@ public class MovablePlatform : MonoBehaviour
         StartCoroutine(MoveToNextTarget());
     }
 
+    private void FixedUpdate()
+    {
+        if (!tweenin) return;
+
+        Vector2 current = rb.position;
+        rb.linearVelocity = (current - previousPos) / Time.fixedDeltaTime;
+        previousPos = current;
+    }
+
     private IEnumerator MoveToNextTarget()
     {
+        rb.position = targets[0].target.position;
+        currentIndex = 0;
+
         while (true)
         {
-            MovablePlatformTarget targetData = targets[_currentIndex];
-            float speed = targetData.speed > 0 ? targetData.speed : defaultSpeed;
+            tweenin = true;
+            int nextIndex;
 
-            if (targetData.waitTime > 0f)
-                yield return new WaitForSeconds(targetData.waitTime);
-
-            while (Vector2.Distance(_rb.position, targetData.target.position) > 0.01f)
-            {
-                Vector2 newPos = Vector2.MoveTowards(
-                    _rb.position,
-                    targetData.target.position,
-                    speed * Time.fixedDeltaTime
-                );
-
-                _rb.MovePosition(newPos);
-
-                yield return new WaitForFixedUpdate();
-            }
-
-            _rb.MovePosition(targetData.target.position);
-
-            yield return new WaitForFixedUpdate();
-
-            // Advance index
             if (pingPong)
             {
-                if (_goingForward)
+                nextIndex = goingForward ? currentIndex + 1 : currentIndex - 1;
+
+                if (nextIndex >= targets.Count)
                 {
-                    _currentIndex++;
-                    if (_currentIndex >= targets.Count - 1)
-                        _goingForward = false;
+                    goingForward = false;
+                    nextIndex = targets.Count - 2;
                 }
-                else
+                else if (nextIndex < 0)
                 {
-                    _currentIndex--;
-                    if (_currentIndex <= 0)
-                        _goingForward = true;
+                    goingForward = true;
+                    nextIndex = 1;
                 }
             }
             else
             {
-                _currentIndex = (_currentIndex + 1) % targets.Count;
+                nextIndex = (currentIndex + 1) % targets.Count;
             }
+
+            MovablePlatformTarget movement = targets[currentIndex];
+            Vector3 destination = targets[nextIndex].target.position;
+
+            if (movement.waitTime > 0)
+                yield return new WaitForSeconds(movement.waitTime);
+
+            if (movement.instant)
+            {
+                rb.position = destination;
+            }
+            else
+            {
+                Tween tween;
+
+                if (movement.useDuration)
+                {
+                    tween = rb.DOMove(destination, movement.duration);
+                }
+                else
+                {
+                    float speed = movement.speed > 0 ? movement.speed : defaultSpeed;
+                    float distance = Vector2.Distance(rb.position, destination);
+                    float duration = distance / speed;
+
+                    tween = rb.DOMove(destination, duration);
+                }
+
+                tween.SetEase(movement.ease).SetUpdate(UpdateType.Fixed);
+
+                tween.OnComplete(() =>
+                {
+                    tweenin = false;
+                });
+
+                yield return tween.WaitForCompletion();
+            }
+
+            currentIndex = nextIndex;
         }
     }
 }

@@ -50,6 +50,7 @@ public class PlayerAnimator : MonoBehaviour
         if (_isDead) return; // dead = skip animations
 
         HandleAnimations(); // this reads velocity and sets animator
+        HandleFlip();
         HandleGliderAnims();
     }
     public void SetGlide(bool isGliding)
@@ -90,7 +91,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void HandleAnimations()
     {
-        Vector2 velocity = _controller.Velocity;
+        Vector2 velocity = _controller.FrameVelocity;
         bool grounded = _controller.Grounded;
         bool isDashing = _controller.IsDashing;
         bool isClinging = _controller.IsClinging;
@@ -104,6 +105,7 @@ public class PlayerAnimator : MonoBehaviour
         _anim.SetBool("DashAvailable", _controller.DashAvailable);
         _anim.SetBool("IsClinging", isClinging);
         _anim.SetBool("IsGliding", isGliding);
+        _anim.SetBool("OnMovingPlatform", _controller.onMovingThing);
 
         // Set dash direction for 8-way animations
         if (isDashing)
@@ -115,8 +117,6 @@ public class PlayerAnimator : MonoBehaviour
         {
             _anim.SetFloat("DashDirection", -1);
         }
-
-        HandleFlip(velocity.x);
     }
 
     private float GetDashDirectionParameter(Vector2 velocity)
@@ -132,20 +132,23 @@ public class PlayerAnimator : MonoBehaviour
         return direction;
     }
 
-    private void HandleFlip(float xVelocity)
+    private void HandleFlip()
     {
         if (_controller.IsClinging || _controller.IsWallSliding)
         {
             if (_controller.TouchingLeftWall)
-                _visuals.localScale = new Vector3(-1, 1, 1); // face left
+                _visuals.localScale = new Vector3(-1, 1, 1);
             else if (_controller.TouchingRightWall)
-                _visuals.localScale = new Vector3(1, 1, 1);  // face right
+                _visuals.localScale = new Vector3(1, 1, 1);
+
             return;
         }
 
-        if (Mathf.Abs(xVelocity) > 0.01f)
+        float input = _controller.FrameInput.x;
+
+        if (Mathf.Abs(input) > 0.01f)
         {
-            _visuals.localScale = new Vector3(Mathf.Sign(xVelocity), 1, 1);
+            _visuals.localScale = new Vector3(Mathf.Sign(input), 1, 1);
         }
     }
 
