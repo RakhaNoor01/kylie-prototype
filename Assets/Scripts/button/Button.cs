@@ -79,26 +79,33 @@ public class Button : MonoBehaviour
     {
         if (onlyIfPlayerMoved) return;
 
-        Buttoner(collision);
+        Buttoner(collision.gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (onlyIfPlayerMoved) return;
+
+        Buttoner(collision.gameObject);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!PlayerController.Instance.FirstInput && onlyIfPlayerMoved) return;
 
-        Buttoner(collision);
+        Buttoner(collision.gameObject);
     }
 
-    private void Buttoner(Collider2D collision)
+    private void Buttoner(GameObject collision)
     {
-        if ((collision.gameObject.CompareTag("Goonerang") && boomerActivated) ||
-            (collision.gameObject.CompareTag("Player") && playerActivated))
+        if ((collision.CompareTag("Goonerang") && boomerActivated) ||
+            (collision.CompareTag("Player") && playerActivated))
         {
             TriggerButton();
         }
 
         if (objectActivated == null) return;
-        var gat = collision.gameObject.GetComponent<ExtraTags>();
+        var gat = collision.GetComponent<ExtraTags>();
         if (gat == objectActivated)
         {
             TriggerButton();

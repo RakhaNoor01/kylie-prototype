@@ -11,7 +11,8 @@ public class MovablePlatform : MonoBehaviour
     [Header("Platform Settings")]
     public bool pingPong = false;
     public float defaultSpeed = 2f;
-    public float inheritLVgrace = 0.5f;
+    public float inheritLVGrace = 0.5f;
+    public float inheritLVMult = 0.75f;
 
     public List<MovingPlatformTarget> targets = new List<MovingPlatformTarget>();
 
@@ -59,7 +60,7 @@ public class MovablePlatform : MonoBehaviour
             var gumbo = new Vector2(
                 Mathf.Max(player.FrameVelocity.x, highestLV.x), 
                 Mathf.Max(player.FrameVelocity.y, highestLV.y));
-            player.SetFrameVelocity(gumbo);
+            player.SetFrameVelocity(gumbo * inheritLVMult);
         }
 
         playerOnPlatform = false;
@@ -75,8 +76,6 @@ public class MovablePlatform : MonoBehaviour
             enabled = false;
             return;
         }
-
-        rb.position = targets[0].target.position;
 
         currentIndex = 0;
 
@@ -103,7 +102,7 @@ public class MovablePlatform : MonoBehaviour
 
     private IEnumerator ResetHighestLVAfterDelay()
     {
-        yield return new WaitForSeconds(inheritLVgrace);
+        yield return new WaitForSeconds(inheritLVGrace);
         highestLV = Vector2.zero;
         resetVelocityCoroutine = null;
     }
@@ -111,6 +110,7 @@ public class MovablePlatform : MonoBehaviour
     private IEnumerator MoveToNextTarget()
     {
         rb.position = targets[0].target.position;
+        transform.rotation = targets[0].target.rotation;
         currentIndex = 0;
 
         while (true)
@@ -142,11 +142,15 @@ public class MovablePlatform : MonoBehaviour
 
             Vector2 startPos = rb.position;
             Vector2 endPos = destination.position;
+
+            Quaternion startRot = transform.rotation;
+            Quaternion endRot = destination.rotation;
+
             float distance = Vector2.Distance(startPos, endPos);
 
             float speed = movement.speed > 0 ? movement.speed : defaultSpeed;
 
-            float duration = distance / speed;
+            float duration = movement.useDuration ? movement.duration : distance / speed;
 
             float elapsed = 0f;
 
@@ -169,14 +173,16 @@ public class MovablePlatform : MonoBehaviour
                     float curveT = movement.easing.Evaluate(normalizedTime);
 
                     Vector2 newPos = Vector2.Lerp(startPos, endPos, curveT);
+                    Quaternion newRot = Quaternion.Lerp(startRot, endRot, curveT);
 
                     Vector2 delta = newPos - rb.position;
 
                     var newLV = delta / Time.fixedDeltaTime;
                     rb.linearVelocity = newLV;
                     rb.MovePosition(newPos);
+                    rb.MoveRotation(newRot);
 
-                    var hi = Mathf.Abs(Vector2.SqrMagnitude(newLV)); 
+                    var hi = Mathf.Abs(Vector2.SqrMagnitude(newLV));
                     var hello = Mathf.Abs(Vector2.SqrMagnitude(highestLV));
 
                     if (hi > hello)
