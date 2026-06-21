@@ -1,35 +1,31 @@
-using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TarodevController;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
-
-// defines how the platform should move towards the next target
-[System.Serializable]
-public class MovablePlatformTarget
-{
-    public Transform target;
-    public float waitTime = 0f;
-    public float speed = 0f; // 0 = default speed
-    public bool useDuration = false;
-    public float duration = 1f;
-    public bool instant = false;
-    public Ease ease = Ease.Linear;
-}
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class MovablePlatform : MonoBehaviour
 {
     [Header("Platform Settings")]
-    public List<MovablePlatformTarget> targets = new List<MovablePlatformTarget>();
     public bool pingPong = false;
     public float defaultSpeed = 2f;
+    public float inheritLVgrace = 0.5f;
+
+    public List<MovingPlatformTarget> targets = new List<MovingPlatformTarget>();
 
     private Rigidbody2D rb;
     private int currentIndex = 0;
     private bool goingForward = true;
     private bool tweenin = false;
     private Vector2 previousPos;
+    private Vector2 highestLV = Vector2.zero;
+
+    private bool playerOnPlatform = false;
+    private bool playerJumped = false;
+    private PlayerController player = null;
+    private Coroutine resetVelocityCoroutine;
 
     private void Awake()
     {
@@ -37,6 +33,38 @@ public class MovablePlatform : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.freezeRotation = true;
         previousPos = transform.position;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        player = collision.gameObject.GetComponent<PlayerController>();
+        playerOnPlatform = true;
+        playerJumped = false;
+
+        if (resetVelocityCoroutine != null)
+        {
+            StopCoroutine(resetVelocityCoroutine);
+            resetVelocityCoroutine = null;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        if (playerJumped && player != null)
+        {
+            var gumbo = new Vector2(
+                Mathf.Max(player.FrameVelocity.x, highestLV.x), 
+                Mathf.Max(player.FrameVelocity.y, highestLV.y));
+            player.SetFrameVelocity(gumbo);
+        }
+
+        playerOnPlatform = false;
+        playerJumped = false;
+        player = null;
     }
 
     private void Start()
@@ -47,6 +75,10 @@ public class MovablePlatform : MonoBehaviour
             enabled = false;
             return;
         }
+
+        rb.position = targets[0].target.position;
+
+        currentIndex = 0;
 
         StartCoroutine(MoveToNextTarget());
     }
@@ -60,6 +92,22 @@ public class MovablePlatform : MonoBehaviour
         previousPos = current;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (playerOnPlatform)
+                playerJumped = true;
+        }
+    }
+
+    private IEnumerator ResetHighestLVAfterDelay()
+    {
+        yield return new WaitForSeconds(inheritLVgrace);
+        highestLV = Vector2.zero;
+        resetVelocityCoroutine = null;
+    }
+
     private IEnumerator MoveToNextTarget()
     {
         rb.position = targets[0].target.position;
@@ -67,7 +115,6 @@ public class MovablePlatform : MonoBehaviour
 
         while (true)
         {
-            tweenin = true;
             int nextIndex;
 
             if (pingPong)
@@ -90,41 +137,62 @@ public class MovablePlatform : MonoBehaviour
                 nextIndex = (currentIndex + 1) % targets.Count;
             }
 
-            MovablePlatformTarget movement = targets[currentIndex];
-            Vector3 destination = targets[nextIndex].target.position;
+            MovingPlatformTarget movement = targets[currentIndex];
+            Transform destination = targets[nextIndex].target;
 
-            if (movement.waitTime > 0)
+            Vector2 startPos = rb.position;
+            Vector2 endPos = destination.position;
+            float distance = Vector2.Distance(startPos, endPos);
+
+            float speed = movement.speed > 0 ? movement.speed : defaultSpeed;
+
+            float duration = distance / speed;
+
+            float elapsed = 0f;
+
+            if (movement.waitTime > 0f)
                 yield return new WaitForSeconds(movement.waitTime);
 
             if (movement.instant)
             {
-                rb.position = destination;
+                rb.linearVelocity = Vector2.zero;
+                rb.position = destination.position;
             }
             else
             {
-                Tween tween;
-
-                if (movement.useDuration)
+                while (elapsed < duration)
                 {
-                    tween = rb.DOMove(destination, movement.duration);
+                    elapsed += Time.fixedDeltaTime;
+
+                    float normalizedTime = Mathf.Clamp01(elapsed / duration);
+
+                    float curveT = movement.easing.Evaluate(normalizedTime);
+
+                    Vector2 newPos = Vector2.Lerp(startPos, endPos, curveT);
+
+                    Vector2 delta = newPos - rb.position;
+
+                    var newLV = delta / Time.fixedDeltaTime;
+                    rb.linearVelocity = newLV;
+                    rb.MovePosition(newPos);
+
+                    var hi = Mathf.Abs(Vector2.SqrMagnitude(newLV)); 
+                    var hello = Mathf.Abs(Vector2.SqrMagnitude(highestLV));
+
+                    if (hi > hello)
+                    {
+                        highestLV = newLV;
+                    }
+
+                    yield return new WaitForFixedUpdate();
                 }
-                else
-                {
-                    float speed = movement.speed > 0 ? movement.speed : defaultSpeed;
-                    float distance = Vector2.Distance(rb.position, destination);
-                    float duration = distance / speed;
 
-                    tween = rb.DOMove(destination, duration);
-                }
+                rb.linearVelocity = Vector2.zero;
+                rb.MovePosition(endPos);
 
-                tween.SetEase(movement.ease).SetUpdate(UpdateType.Fixed);
-
-                tween.OnComplete(() =>
-                {
-                    tweenin = false;
-                });
-
-                yield return tween.WaitForCompletion();
+                if (resetVelocityCoroutine != null)
+                    StopCoroutine(resetVelocityCoroutine);
+                resetVelocityCoroutine = StartCoroutine(ResetHighestLVAfterDelay());
             }
 
             currentIndex = nextIndex;

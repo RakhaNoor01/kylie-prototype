@@ -54,8 +54,6 @@ namespace TarodevController
 
         private SplineAnimate _spliner;
 
-        private string tag;
-
         private void Awake()
         {
             Instance = this;
@@ -250,15 +248,6 @@ namespace TarodevController
             {
                 _grounded = false;
                 _frameLeftGrounded = _time;
-
-                // Momentum carry by adding the platform's velocity with the player's current framevelocity
-                if (_groundedPlatformRb != null)
-                {
-                    var platLV = _groundedPlatformRb.linearVelocity;
-                    var clampedLV = new Vector2(platLV.x, Mathf.Max(platLV.y, 0));
-                    _frameVelocity += clampedLV;
-                }
-
                 GroundedChanged?.Invoke(false, 0);
             }
 
@@ -699,8 +688,7 @@ namespace TarodevController
                 Vector2 platformVel = (_clingPlatformRb != null)
                     ? new Vector2(_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
                     : Vector2.zero;
-                _frameVelocity = platformVel;
-                _rb.linearVelocity = _frameVelocity;
+                _platformVelocity = platformVel;
                 return;
             }
 

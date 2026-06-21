@@ -56,7 +56,6 @@ public class Boomerang : MonoBehaviour
     private Vector2 cachedDirection;
 
     private static float ogTime;
-    private static float ogDelta;
 
     private float distmulttimer;
 
@@ -98,7 +97,6 @@ public class Boomerang : MonoBehaviour
         ogROD = ok.rateOverDistance.Evaluate(0);
 
         ogTime = Time.timeScale;
-        ogDelta = Time.fixedDeltaTime;
 
         ResetBoomerang();
     }
@@ -170,7 +168,6 @@ public class Boomerang : MonoBehaviour
 
             // Slow time down
             Time.timeScale = slowDown;
-            Time.fixedDeltaTime = ogDelta * slowDown;
 
             imLowkTrolling.doWeDeserveDestruction = true;
         }
@@ -188,7 +185,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -229,7 +225,6 @@ public class Boomerang : MonoBehaviour
         transform.parent = player.transform;
 
         Time.timeScale = ogTime;
-        Time.fixedDeltaTime = ogDelta;
 
         imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -293,7 +288,6 @@ public class Boomerang : MonoBehaviour
 
             // Slow time down
             Time.timeScale = slowDown;
-            Time.fixedDeltaTime = ogDelta * slowDown;
 
             imLowkTrolling.doWeDeserveDestruction = true;
         }
@@ -336,7 +330,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -352,7 +345,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
         }
