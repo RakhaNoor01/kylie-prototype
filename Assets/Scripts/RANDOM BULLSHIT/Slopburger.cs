@@ -18,6 +18,7 @@ public class Slopburger : MonoBehaviour
     public void Start()
     {
         TsFunction(hasTorj);
+
         var plealth = GetComponent<PlayerHealth>();
         plealth.death += Whatever;
     }
@@ -50,14 +51,41 @@ public class Slopburger : MonoBehaviour
         {
             Shader.SetGlobalVector("_playerPos", new Vector2(-99, -99));
             Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
-            return;
+        }
+        else
+        {
+            Shader.SetGlobalVector("_playerPos", transform.position);
+
+            if (rang.IsThrown)
+            {
+                Shader.SetGlobalVector("_rangPos", rang.transform.position);
+            }
+            else
+            {
+                Shader.SetGlobalVector("_rangPos", new Vector2(-99, -99));
+            }
         }
 
-        Shader.SetGlobalVector("_playerPos", gameObject.transform.position);
+        // Contraption reveal
+        if (ContraptionHandler.Instance != null)
+{
+    Shader.SetGlobalVector(
+        "_contraptionPos",
+        ContraptionHandler.Instance.transform.position
+    );
 
-        if (rang.IsThrown)
+    Shader.SetGlobalFloat(
+        "_contraptionStrength",
+        ContraptionHandler.Instance.LightCount /
+        ContraptionHandler.Instance.maxLightCount
+    );
+}
+        else
         {
-            Shader.SetGlobalVector("_rangPos", rang.gameObject.transform.position);
+            Shader.SetGlobalVector(
+                "_contraptionPos",
+                new Vector2(-99, -99)
+            );
         }
     }
 }
