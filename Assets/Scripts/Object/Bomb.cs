@@ -11,6 +11,8 @@ public class Bomb : MonoBehaviour
     public float splosionRadius = 2f;
     public bool hasTimer = false;
     public float timer = 6;
+    public int damage = 1;
+    public float respawnDelay = 3;
     public string bombID;
 
     [Header("Visual")]
@@ -21,28 +23,31 @@ public class Bomb : MonoBehaviour
     public GameObject splosion;
     public GameObject fuse;
     public Animator pulse;
+    public string splodeAnimName = "splode";
 
     public static GameObject theBobm;
     private GameObject player;
     private PlayerHealth hi;
     public bool detonated = false;
     private bool ignited = false;
-    private CircleCollider2D col;
+    private Collider2D col;
     private ParticleSystem farticle;
+    private Vector2 spawnPos;
 
     private float realTimer = 0;
 
     private void Start()
     {
+        spawnPos = transform.position;
+
         if (TempData.HasKey(bombID))
         {
             Destroy(gameObject);
         }
 
         splosion.SetActive(false);
-        col = GetComponent<CircleCollider2D>();
+        col = GetComponent<Collider2D>();
         fuse.SetActive(false);
-        pulse.enabled = false;
         farticle = fuse.GetComponent<ParticleSystem>();
     }
 
@@ -65,8 +70,6 @@ public class Bomb : MonoBehaviour
 
         col.enabled = false;
         hi = player.gameObject.GetComponent<PlayerHealth>();
-
-        pulse.enabled = true;
 
         if (hasTimer)
         {
@@ -138,6 +141,7 @@ public class Bomb : MonoBehaviour
             pc.CancelDash();
         }
 
+        bool hitBreakable = false;
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
         RaycastHit2D[] rayHits = new RaycastHit2D[1];
         foreach (var hit in hits)
@@ -166,7 +170,8 @@ public class Bomb : MonoBehaviour
 
             if (rayHits[0].collider == hit)
             {
-                breakable.HitFromBomb();
+                hitBreakable = true;
+                breakable.HitFromBomb(damage);
 
                 if (!string.IsNullOrEmpty(bombID))
                 {
@@ -180,10 +185,10 @@ public class Bomb : MonoBehaviour
         pulse.gameObject.SetActive(false);
         fuse.SetActive(false);
 
-        StartCoroutine(Whoa());
+        StartCoroutine(Whoa(hitBreakable));
     }
 
-    private IEnumerator Whoa()
+    private IEnumerator Whoa(bool hitBreakable)
     {
         var sr = GetComponent<SpriteRenderer>();
         sr.enabled = false;
@@ -195,13 +200,33 @@ public class Bomb : MonoBehaviour
         var anim = splosion.GetComponent<Animator>();
         if (anim != null)
         {
-            anim.Play("splode");
+            anim.Play(splodeAnimName);
         }
 
         yield return new WaitForSeconds(effectDuration);
 
-        Destroy(splosion);
-        Destroy(gameObject);
+        if (hitBreakable)
+        {
+            Destroy(gameObject);
+            Destroy(splosion);
+            yield break;
+        }
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        // reset bomb
+        transform.position = spawnPos;
+        sr.enabled = true;
+
+        detonated = false;
+        realTimer = 0f;
+        player = null;
+        hi = null;
+
+        col.enabled = true;
+        splosion.SetActive(false);
+        pulse.gameObject.SetActive(true);
+        pulse.Play("bomb_respawn");
     }
 
     private void OnDrawGizmosSelected()

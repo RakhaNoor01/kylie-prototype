@@ -1,11 +1,12 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class ButtonMover : ButtonTarget
 {
     public Transform target;
-    public float moveDur;
+    public float moveDur = 1;
+    public Ease onEasing = Ease.Linear;
+    public Ease offEasing = Ease.Linear;
 
     private Vector3 ogPos;
     private Quaternion ogRot;
@@ -24,13 +25,13 @@ public class ButtonMover : ButtonTarget
 
         if (state)
         {
-            transform.DOMove(target.position, moveDur);
-            transform.DORotate(target.rotation.eulerAngles, moveDur);
+            transform.DOMove(target.position, moveDur).SetEase(onEasing);
+            transform.DORotate(target.rotation.eulerAngles, moveDur).SetEase(onEasing);
         } 
         else if (!state)
         {
-            transform.DOMove(ogPos, moveDur);
-            transform.DORotate(ogRot.eulerAngles, moveDur);
+            transform.DOMove(ogPos, moveDur).SetEase(offEasing);
+            transform.DORotate(ogRot.eulerAngles, moveDur).SetEase(offEasing);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
@@ -7,11 +8,6 @@ public class Checkpoint : MonoBehaviour
 
     [Tooltip("if this field is not null, the checkpoint will respawn at the setLocation instead of this gameObject's transform")]
     public Transform setLocation;
-
-    [Header("Visual Feedback")]
-    public Sprite inactiveSprite; // Gray flag
-    public Sprite activeSprite;   // Colored flag
-    public AudioClip activateSound;
 
     private SpriteRenderer spriteRenderer;
     private Collider2D checkpointCollider;
@@ -29,16 +25,7 @@ public class Checkpoint : MonoBehaviour
 
     private void Start()
     {
-        if (spriteRenderer != null && inactiveSprite != null)
-            spriteRenderer.sprite = inactiveSprite;
-
         var cpPos = setLocation == null ? transform.position : setLocation.position;
-
-        if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsCurrentCheckpoint(cpPos))
-        {
-            RestoreActiveVisual(); // scene reloaded — restore visual only, don't touch manager
-            return;
-        }
 
         if (isStartingPoint && CheckpointManager.Instance != null && !CheckpointManager.Instance.HasCheckpoint)
         {
@@ -57,17 +44,6 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    private void RestoreActiveVisual()
-    {
-        isActivated = true;
-        currentlyActiveCheckpoint = this;
-
-        if (spriteRenderer != null && activeSprite != null)
-            spriteRenderer.sprite = activeSprite;
-
-        if (checkpointCollider != null)
-            checkpointCollider.enabled = false;
-    }
     private void ActivateCheckpoint()
     {
         isActivated = true;
@@ -82,12 +58,6 @@ public class Checkpoint : MonoBehaviour
             CheckpointManager.Instance.SetCheckpoint(cpPos, sceneName, isStartingPoint);
         }
 
-        if (spriteRenderer != null && activeSprite != null)
-            spriteRenderer.sprite = activeSprite;
-
-        if (activateSound != null)
-            AudioSource.PlayClipAtPoint(activateSound, transform.position);
-
         if (checkpointCollider != null)
             checkpointCollider.enabled = false;
 
@@ -98,14 +68,10 @@ public class Checkpoint : MonoBehaviour
     {
         isActivated = false;
 
-        if (spriteRenderer != null && inactiveSprite != null)
-            spriteRenderer.sprite = inactiveSprite;
-
         if (checkpointCollider != null)
             checkpointCollider.enabled = true;
     }
 
-    // Optional: Visualize in editor
     private void OnDrawGizmos()
     {
         Gizmos.color = isActivated ? Color.green : Color.gray;

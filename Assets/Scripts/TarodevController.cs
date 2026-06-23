@@ -6,18 +6,12 @@ using UnityEngine.Splines;
 
 namespace TarodevController
 {
-    /// <summary>
-    /// Hey!
-    /// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
-    /// I have a premium version on Patreon, which has every feature you'd expect from a polished controller. Link: https://www.patreon.com/tarodev
-    /// You can play and compete for best times here: https://tarodev.itch.io/extended-ultimate-2d-controller
-    /// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/tarodev
-    /// </summary>
-
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
+
+        public static PlayerController Instance;
 
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
@@ -35,11 +29,7 @@ namespace TarodevController
         private Rigidbody2D _groundedPlatformRb;
         private Rigidbody2D _clingPlatformRb;
 
-        private float _pogoWindowEndTime;
-        private bool _pogoAvailable;
         private PlayerAnimator _anim;
-        //idk where else to put this variable tbh
-        [SerializeField] private float _pogoWindowDuration = 0.25f;
 
         public float _glideStamina;
 
@@ -64,9 +54,11 @@ namespace TarodevController
 
         private SplineAnimate _spliner;
 
+        private string tag;
+
         private void Awake()
         {
-  
+            Instance = this;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
             _knockback = GetComponent<PlayerKnockback>();
@@ -76,6 +68,7 @@ namespace TarodevController
             _glideStamina = _stats.GlideDuration;
             _audio = GetComponent<PlayerAudio>();
             colY = _col.size.y;
+            tag = gameObject.tag;
         }
 
         private void Update()
@@ -84,12 +77,24 @@ namespace TarodevController
             GatherInput();
         }
 
+        private bool firstInput;
+        public bool FirstInput => firstInput;
         private void GatherInput()
         {
             if (_spliner.IsPlaying)
             {
                 _frameInput = new FrameInput();
                 return;
+            }
+
+            bool anyInput =
+                Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.1f ||
+                Input.GetKey(KeyCode.Mouse0);
+
+            if (!firstInput && anyInput)
+            {
+                gameObject.tag = tag;
+                firstInput = true;
             }
 
             _frameInput = new FrameInput
@@ -511,8 +516,8 @@ namespace TarodevController
                 if (_isDashing)
                 {
                     _frameVelocity *= _stats.DashMomentumRetention;
-                    _col.size = new Vector2(_col.size.x, colY);
                 }
+                _col.size = new Vector2(_col.size.x, colY);
                 _isDashing = false;
             }
 
@@ -603,11 +608,6 @@ namespace TarodevController
                 return;
             }
 
-            if (_pogoAvailable && _time > _pogoWindowEndTime)
-            {
-                _pogoAvailable = false;
-            }
-
             if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _frameVelocity.y > 0)
                 _endedJumpEarly = true;
 
@@ -617,11 +617,6 @@ namespace TarodevController
             if (_grounded || CanUseCoyote)
             {
                 ExecuteJump();
-            }
-            else if (_pogoAvailable && _time <= _pogoWindowEndTime)
-            {
-                ExecuteJump();
-                _pogoAvailable = false;
             }
 
             _jumpToConsume = false;
@@ -851,19 +846,6 @@ namespace TarodevController
         {
             _frameVelocity = bro;
 
-        }
-
-        public void ActivatePogoWindow()
-        {
-            _pogoAvailable = true;
-            _pogoWindowEndTime = _time + _pogoWindowDuration;
-
-            // If jump was buffered BEFORE pogo became active
-            if (HasBufferedJump)
-            {
-                ExecuteJump();
-                _pogoAvailable = false;
-            }
         }
 
 #if UNITY_EDITOR

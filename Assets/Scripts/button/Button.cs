@@ -10,7 +10,6 @@ public enum ButtonType
     Toggle
 }
 
-[RequireComponent(typeof(Collider2D))]
 public class Button : MonoBehaviour
 {
     public ButtonType type;
@@ -21,7 +20,8 @@ public class Button : MonoBehaviour
     public float duration = 2f;
 
     public bool state;
-    public bool boomerangOnly = true;
+    public bool boomerActivated = true;
+    public bool playerActivated = false;
     public List<ButtonTarget> buttonTargets = new List<ButtonTarget>();
 
     private bool _hasTriggered = false;
@@ -40,22 +40,33 @@ public class Button : MonoBehaviour
             state = (bool)TempData.GetValue(buttonID);
         }
 
+        var buddy = (bool?)TempData.GetValue($"{buttonID}_trig") ?? false;
+
+        if (buddy)
+        {
+            if (!string.IsNullOrEmpty(buttonID))
+                _hasTriggered = buddy;
+        }
+
         ApplyStateToTargets();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!(collision.gameObject.CompareTag("Goonerang") || 
-            (collision.gameObject.CompareTag("Player") && !boomerangOnly)))
+        if ((collision.gameObject.CompareTag("Goonerang") && boomerActivated) || 
+            (collision.gameObject.CompareTag("Player") && playerActivated))
         {
-            return;
+            TriggerButton();
         }
+    }
 
+    public void TriggerButton()
+    {
         switch (type)
         {
-            case ButtonType.OneTime:  HandleOneTime(); break;
-            case ButtonType.Timed:    HandleTimed();   break;
-            case ButtonType.Toggle:   HandleToggle();  break;
+            case ButtonType.OneTime: HandleOneTime(); break;
+            case ButtonType.Timed: HandleTimed(); break;
+            case ButtonType.Toggle: HandleToggle(); break;
         }
     }
 
@@ -65,6 +76,8 @@ public class Button : MonoBehaviour
         _hasTriggered = true;
         state = !state;
         ApplyStateToTargets();
+
+        TempData.SetValue($"{buttonID}_trig", _hasTriggered);
     }
 
     private void HandleTimed()
