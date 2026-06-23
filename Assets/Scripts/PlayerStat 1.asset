@@ -20,10 +20,10 @@ MonoBehaviour:
   HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 7
   Acceleration: 150
-  GroundDeceleration: 60
+  GroundDeceleration: 150
   AirDeceleration: 45
   GroundingForce: 0
-  GrounderDistance: 0.05
+  GrounderDistance: 0.1
   JumpPower: 12
   MaxFallSpeed: 12
   FallAcceleration: 40
@@ -46,3 +46,7 @@ MonoBehaviour:
     m_Bits: 64
   wallSlideSpeed: 2
   wallCoyoteTime: 0.15
+  stepUpBase: 0.4
+  stepUpHeight: 0.45
+  stepUpDistance: 0.3
+  stepUpSpeed: 0.01

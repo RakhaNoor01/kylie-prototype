@@ -28,4 +28,12 @@ public static class TempData
     {
         yummers[key] = value;
     }
+
+    public static void GetTempData()
+    {
+        foreach (var pair in yummers)
+        {
+            Debug.Log($"{pair.Key}: {pair.Value}");
+        }
+    }
 }

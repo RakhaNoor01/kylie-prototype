@@ -14,6 +14,7 @@ public class Bomb : MonoBehaviour
     public int damage = 1;
     public float respawnDelay = 3;
     public string bombID;
+    public bool nuke = false;
 
     [Header("Visual")]
     public float minDistance = 1.5f;
@@ -49,6 +50,12 @@ public class Bomb : MonoBehaviour
         col = GetComponent<Collider2D>();
         fuse.SetActive(false);
         farticle = fuse.GetComponent<ParticleSystem>();
+
+        if (nuke && TempData.HasKey("nuke_collect"))
+        {
+            var ok = Slopburger.instance.gameObject.transform.position;
+            gameObject.transform.position = ok;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -82,6 +89,11 @@ public class Bomb : MonoBehaviour
         {
             pulse.Play("bomb_pickup");
         }
+
+        if (nuke)
+        {
+            TempData.SetValue("nuke_collect", true);
+        }
     }
 
     private void Update()
@@ -99,7 +111,7 @@ public class Bomb : MonoBehaviour
 
         if (realTimer >= tim)
         {
-            Detonate();
+            Detonate(false);
         }
 
         if (realTimer >= timer)
@@ -124,9 +136,11 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    public void Detonate()
+    public bool Detonate(bool detonateThing)
     {
-        if (player == null || detonated == true) return;
+        if (nuke && !detonateThing) return false;
+
+        if (player == null || detonated == true) return false;
         detonated = true;
         ignited = false;
 
@@ -186,6 +200,8 @@ public class Bomb : MonoBehaviour
         fuse.SetActive(false);
 
         StartCoroutine(Whoa(hitBreakable));
+
+        return true;
     }
 
     private IEnumerator Whoa(bool hitBreakable)

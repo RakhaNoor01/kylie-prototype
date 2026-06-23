@@ -49,6 +49,12 @@ public class PlayerHealth : MonoBehaviour
         iframeTimer = Mathf.Max(iframeTimer, seconds);
     }
 
+    [ContextMenu("Force Player Death")]
+    public void ForceDeath()
+    {
+        Die();
+    }
+
     public void Die(Vector2? hitDirection = null)
     {
         if (_isDead || tping) return;

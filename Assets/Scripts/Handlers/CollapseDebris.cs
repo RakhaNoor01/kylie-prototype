@@ -14,6 +14,7 @@ public class CollapseDebris : MonoBehaviour
     public string indicatorAnimName;
     public ParticleSystem imBrok;
     public ParticleSystem lavar;
+    public GameObject extras;
 
     private bool instantiated = false;
     private float yOffset;
@@ -90,6 +91,12 @@ public class CollapseDebris : MonoBehaviour
     {
         if (h) yield break;
         h = true;
+
+        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        rb.bodyType = RigidbodyType2D.Static;
+        ough.enabled = false;
+        extras.SetActive(false);
+
         if (!laval)
         {
             imBrok.gameObject.transform.SetParent(null);

@@ -8,7 +8,8 @@ public class Collapse2Handler : MonoBehaviour
     public float interval;
     public float minRange = -12;
     public float maxRange = 12;
-    public float ySpawn = 12;
+    public float ySpawn = 12; 
+    public float distanceTolerance = 2f;
     [Range(0f, 1f)]
     public float playerTargetChance = 0.25f;
     public int playerAntiTarget = 4;
@@ -21,6 +22,7 @@ public class Collapse2Handler : MonoBehaviour
     private bool isCollapse = false;
     private Transform player;
     private int dude = 0;
+    private float? previousDebrisX = null;
 
     private void Start()
     {
@@ -67,18 +69,28 @@ public class Collapse2Handler : MonoBehaviour
         while (isCollapse)
         {
             float xPos;
+            var hi = 0;
 
-            if (player != null && Random.value < playerTargetChance && dude >= playerAntiTarget)
+            do
             {
-                xPos = player.position.x;
-                dude = 0;
+                if (player != null && Random.value < playerTargetChance && dude >= playerAntiTarget)
+                {
+                    xPos = player.position.x;
+                    dude = 0;
+                }
+                else
+                {
+                    xPos = (useCamPos ? camera.position.x : player.position.x)
+                        + Random.Range(minRange, maxRange);
+                }
+                hi++;
             }
-            else
-            {
-                xPos = (useCamPos ? camera.position.x : player.position.x) 
-                    + Random.Range(minRange, maxRange);
-                dude += 1;
-            }
+            while (previousDebrisX.HasValue &&
+                   Mathf.Abs(xPos - previousDebrisX.Value) < distanceTolerance
+                   && hi < 10);
+
+            dude += 1;
+            previousDebrisX = xPos;
 
             var startpos = new Vector3(
                 xPos,

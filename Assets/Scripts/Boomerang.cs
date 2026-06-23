@@ -15,7 +15,8 @@ public class Boomerang : MonoBehaviour
 
     [Header("Return")]
     public float returnLerpStrength = 1f;
-    public float maxSpeed = 25f;
+    public float maxThrownSpeed = 25f;
+    public float maxReturnSpeed = 22f;
     public float distanceMult = 10f;
     public float distMultDelayTime = 1f;
 
@@ -394,7 +395,7 @@ public class Boomerang : MonoBehaviour
 
         if (dismultting)
         {
-            scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
+            scaledSpeed = maxThrownSpeed * (1f + distanceFactor * distanceMult);
         }
 
         // Steer velocity toward player direction
@@ -404,8 +405,10 @@ public class Boomerang : MonoBehaviour
             returnLerpStrength * Time.fixedDeltaTime
         );
 
+        var clampTo = dismultting ? maxReturnSpeed : maxThrownSpeed;
+
         // Clamp
-        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxSpeed);
+        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, clampTo);
     }
 
     void Throw()
@@ -415,7 +418,8 @@ public class Boomerang : MonoBehaviour
 
         transform.parent = null;
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.linearVelocity = cachedDirection * throwPower;
+
+        TheLopcity();
 
         visual.SetActive(true);
         shouldTrail = true;
@@ -429,6 +433,31 @@ public class Boomerang : MonoBehaviour
         _playerAudio?.PlayThrow();
 
         StartCoroutine(IgnorePlayerBriefly());
+    }
+
+    private void TheLopcity()
+    {
+        var plrb = player.GetComponent<Rigidbody2D>();
+
+        // Base throw velocity
+        Vector2 throwVelocity = cachedDirection * throwPower;
+
+        // Player movement
+        Vector2 playerVelocity = plrb.linearVelocity;
+
+        // Check alignment between velocities
+        float alignment = Vector2.Dot(
+            throwVelocity.normalized,
+            playerVelocity.normalized
+        );
+
+        // Remap to 0,1 to be used for Lerp
+        alignment = Mathf.Clamp01((alignment + 1f) * 0.5f);
+
+        // Larper
+        Vector2 addedVelocity = Vector2.Lerp(Vector2.zero, playerVelocity, alignment);
+
+        rb.linearVelocity = throwVelocity + addedVelocity;
     }
 
     private IEnumerator IgnorePlayerBriefly()
