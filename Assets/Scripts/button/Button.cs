@@ -1,9 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using TarodevController;
-using Unity.VisualScripting;
 
 public enum ButtonType
 {
@@ -27,7 +25,8 @@ public class Button : MonoBehaviour
     public ExtraTags manualSaveState;
 
     [Header("Activation")]
-    public bool onlyIfPlayerMoved;
+    public bool onlyIfPlayerMoved = false;
+    public bool blockableByTargets = true;
     public bool boomerActivated = true;
     public bool playerActivated = false;
     [Tooltip("If not null, button will activated when colliding with this ExtraTag object")]
@@ -35,8 +34,8 @@ public class Button : MonoBehaviour
 
     public List<ButtonTarget> buttonTargets = new List<ButtonTarget>();
 
-    private bool _hasTriggered = false;
-    private bool _timerRunning = false;
+    private bool hasTriggered = false;
+    public bool timerRunning = false;
 
     public void RegisterTarget(ButtonTarget target)
     {
@@ -56,7 +55,7 @@ public class Button : MonoBehaviour
         if (buddy)
         {
             if (!string.IsNullOrEmpty(buttonID))
-                _hasTriggered = buddy;
+                hasTriggered = buddy;
         }
 
         ApplyStateToTargets();
@@ -82,6 +81,14 @@ public class Button : MonoBehaviour
         Buttoner(collision.gameObject);
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!PlayerController.Instance.FirstInput && onlyIfPlayerMoved) return;
+        if (type == ButtonType.Toggle) return;
+
+        Buttoner(collision.gameObject);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (onlyIfPlayerMoved) return;
@@ -89,9 +96,10 @@ public class Button : MonoBehaviour
         Buttoner(collision.gameObject);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (!PlayerController.Instance.FirstInput && onlyIfPlayerMoved) return;
+        if (type == ButtonType.Toggle) return;
 
         Buttoner(collision.gameObject);
     }
@@ -124,15 +132,15 @@ public class Button : MonoBehaviour
 
     private void HandleOneTime()
     {
-        if (_hasTriggered) return;
-        _hasTriggered = true;
+        if (hasTriggered) return;
+        hasTriggered = true;
         state = !state;
         ApplyStateToTargets();
     }
 
     private void HandleTimed()
     {
-        if (_timerRunning) return;
+        if (timerRunning || IsBlocked()) return;
         state = !state;
         ApplyStateToTargets();
         StartCoroutine(TimedRevert());
@@ -140,15 +148,16 @@ public class Button : MonoBehaviour
 
     private IEnumerator TimedRevert()
     {
-        _timerRunning = true;
+        timerRunning = true;
         yield return new WaitForSeconds(duration);
         state = !state;
         ApplyStateToTargets();
-        _timerRunning = false;
+        timerRunning = false;
     }
 
     private void HandleToggle()
     {
+        if (IsBlocked()) return;
         state = !state;
         ApplyStateToTargets();
     }
@@ -162,6 +171,23 @@ public class Button : MonoBehaviour
             SaveState();
     }
 
+    private bool IsBlocked()
+    {
+        if (!blockableByTargets) return false;
+
+        var blocked = false;
+        foreach (var target in buttonTargets)
+        {
+            if (target.blocked)
+            {
+                blocked = true;
+                Debug.Log($"button {gameObject.name} blocked by target {target.gameObject.name}");
+            }
+        }
+
+        return blocked;
+    }
+
     private void SaveState()
     {
         if (!string.IsNullOrEmpty(buttonID))
@@ -171,7 +197,7 @@ public class Button : MonoBehaviour
 
         if (type == ButtonType.OneTime && !string.IsNullOrEmpty(buttonID))
         {
-            TempData.SetValue($"{buttonID}_trig", _hasTriggered);
+            TempData.SetValue($"{buttonID}_trig", hasTriggered);
         }
     }
 }
