@@ -11,7 +11,7 @@ public class MovablePlatform : ButtonTarget
     [Header("Platform Settings")]
     public bool pingPong = false;
     public float defaultSpeed = 2f;
-    public float inheritLVGrace = 0.5f;
+    public float inheritLVGrace = 0.25f;
     public float inheritLVMult = 0.75f;
 
     public List<MovingPlatformTarget> targets = new List<MovingPlatformTarget>();
@@ -135,8 +135,7 @@ public class MovablePlatform : ButtonTarget
 
         int destination = state ? 1 : 0;
 
-        if (buttonMoveRoutine != null)
-            StopCoroutine(buttonMoveRoutine);
+        StopAllCoroutines();
         buttonMoveRoutine = StartCoroutine(ToTargetYum(destination));
     }
 

@@ -47,6 +47,7 @@ public class Boomerang : MonoBehaviour
     private Collider2D col;
 
     private bool isThrown = false;
+    private bool isReturning = false;
     private bool hasDeflected = false;
     private bool deflectGrace = false;
 
@@ -387,6 +388,7 @@ public class Boomerang : MonoBehaviour
 
         if (dismultting)
         {
+            isReturning = true;
             scaledSpeed = maxThrownSpeed * (1f + distanceFactor * distanceMult);
         }
 
@@ -567,8 +569,11 @@ public class Boomerang : MonoBehaviour
 
     void Deflect(Collider2D other)
     {
-        deflectGrace = true;
-        Invoke(nameof(UnGrace), deflectGraceTime);
+        if (!isReturning)
+        {
+            deflectGrace = true;
+            Invoke(nameof(UnGrace), deflectGraceTime);
+        }
 
         Vector2 toPlayer = (player.transform.position - transform.position).normalized;
         distmulttimer = distMultDelayTime;
@@ -588,6 +593,7 @@ public class Boomerang : MonoBehaviour
         insideGeometry = false;
 
         isThrown = false;
+        isReturning = false;
 
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
