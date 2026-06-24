@@ -21,13 +21,14 @@ public class MovablePlatform : ButtonTarget
     private bool goingForward = true;
     private Vector2 highestLV = Vector2.zero;
 
-    private bool playerOnPlatform = false;
     private bool playerJumped = false;
     private PlayerController player = null;
-    private Coroutine resetVelocityCoroutine;
-    private Coroutine buttonMoveRoutine;
+    
     private bool initted = false;
     private bool ogState;
+
+    private Coroutine resetVelocityCoroutine;
+    private Coroutine clingCoyoteRoutine;
 
     public override void Awake()
     {
@@ -42,7 +43,7 @@ public class MovablePlatform : ButtonTarget
         if (!collision.gameObject.CompareTag("Player")) return;
 
         player = collision.gameObject.GetComponent<PlayerController>();
-        playerOnPlatform = true;
+        player.Jumped += OnJumpa;
         playerJumped = false;
 
         if (resetVelocityCoroutine != null)
@@ -58,16 +59,46 @@ public class MovablePlatform : ButtonTarget
 
         if (playerJumped && player != null)
         {
-            var gumbo = new Vector2(
-                Mathf.Max(player.FrameVelocity.x, highestLV.x),
-                Mathf.Max(player.FrameVelocity.y, highestLV.y));
-            player.SetFrameVelocity(gumbo * inheritLVMult);
+            ApplyVelocity();
+        }
+        else
+        {
+            if (clingCoyoteRoutine != null)
+                StopCoroutine(clingCoyoteRoutine);
+
+            clingCoyoteRoutine = StartCoroutine(ClingCoyoteInheritance());
+        }
+    }
+
+    private IEnumerator ClingCoyoteInheritance()
+    {
+        while (player.ImWallCoyoting)
+        { 
+            if (player != null && playerJumped)
+            {
+                ApplyVelocity();
+                break;
+            }
+
+            yield return new WaitForFixedUpdate();
         }
 
-        playerOnPlatform = false;
+        clingCoyoteRoutine = null;
+    }
+
+    private void ApplyVelocity()
+    {
+        player.Jumped -= OnJumpa;
         playerJumped = false;
+
+        var gumbo = new Vector2(
+            Mathf.Max(player.FrameVelocity.x, highestLV.x),
+            Mathf.Max(player.FrameVelocity.y, highestLV.y));
+        player.SetFrameVelocity(gumbo * inheritLVMult);
+
         player = null;
     }
+
 
     private void Start()
     {
@@ -136,7 +167,7 @@ public class MovablePlatform : ButtonTarget
         int destination = state ? 1 : 0;
 
         StopAllCoroutines();
-        buttonMoveRoutine = StartCoroutine(ToTargetYum(destination));
+        StartCoroutine(ToTargetYum(destination));
     }
 
     private void HandleToggle()
@@ -144,16 +175,12 @@ public class MovablePlatform : ButtonTarget
         var nextIndex = NextIndex();
         currentIndex = nextIndex;
         StopAllCoroutines();
-        buttonMoveRoutine = StartCoroutine(ToTargetYum(nextIndex));
+        StartCoroutine(ToTargetYum(nextIndex));
     }
 
-    private void Update()
+    private void OnJumpa()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (playerOnPlatform)
-                playerJumped = true;
-        }
+        playerJumped = true;
     }
 
     private IEnumerator ResetHighestLV()
@@ -194,7 +221,6 @@ public class MovablePlatform : ButtonTarget
     {
         yield return StartCoroutine(MoveToTarget(index));
         currentIndex = index;
-        buttonMoveRoutine = null;
     }
 
     private IEnumerator MoveToTarget(int index)

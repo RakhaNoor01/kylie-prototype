@@ -166,7 +166,6 @@ namespace TarodevController
             }
         }
 
-        private bool colTouchGround;
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
@@ -188,8 +187,6 @@ namespace TarodevController
                 results,
                 _stats.GrounderDistance
             );
-
-            colTouchGround = _col.IsTouching(filter);
 
             RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
 
@@ -299,9 +296,11 @@ namespace TarodevController
         private bool _isClinging;
         private bool _isWallSliding;
         private bool _isGliding;
-        private float _wallCoyoteTimer;
+        public float _wallCoyoteTimer;
         private int _lastWallDirection;
         private bool _wasClinging;
+
+        public bool ImWallCoyoting => (_wallCoyoteTimer >= 0);
 
         public void ForceGroundedRespawn()
         {
@@ -338,17 +337,19 @@ namespace TarodevController
 
             bool touchingWall = raysHitWall && colliderTouchingWall;
 
+            _isTouchingWall = touchingWall;
+
             TouchingLeftWall = _facingDirection < 0 && touchingWall;
             TouchingRightWall = _facingDirection > 0 && touchingWall;
 
-            _isTouchingWall = touchingWall;
+#if UNITY_EDITOR
+            Debug.DrawRay(top, checkDirection * _stats.wallCheckDistance, topHit ? (touchingWall ? Color.green : Color.blue) : Color.skyBlue);
+            Debug.DrawRay(bottom, checkDirection * _stats.wallCheckDistance, bottomHit ? (touchingWall ? Color.green : Color.blue) : Color.skyBlue);
+#endif
 
             _clingPlatformRb = touchingWall
                 ? (topHit.rigidbody != null ? topHit.rigidbody : bottomHit.rigidbody)
                 : null;
-
-            if (touchingWall)
-                _lastWallDirection = _facingDirection;
 
             if (colliderTouchingWall && !_grounded && !_isClinging && !_isWallSliding && Mathf.Abs(_frameVelocity.x) > 0.1f)
             {
@@ -685,8 +686,10 @@ namespace TarodevController
         {
             if (_isClinging && !_isDashing)
             {
+                _rb.linearVelocity = Vector2.zero;
+                _frameVelocity = Vector3.zero;
                 Vector2 platformVel = (_clingPlatformRb != null)
-                    ? new Vector2(_clingPlatformRb.linearVelocity.x, _clingPlatformRb.linearVelocity.y)
+                    ? _clingPlatformRb.linearVelocity
                     : Vector2.zero;
                 _platformVelocity = platformVel;
                 return;
@@ -789,8 +792,8 @@ namespace TarodevController
             bool upperHit = upperCount > 0;
 
 #if UNITY_EDITOR
-            Debug.DrawRay(baseOrigin, dir * _stats.stepUpDistance, baseHit ? Color.red : Color.green);
-            Debug.DrawRay(upperOrigin, dir * _stats.stepUpDistance, upperHit ? Color.red : Color.green);
+            Debug.DrawRay(baseOrigin, dir * _stats.stepUpDistance, baseHit ? Color.green : Color.red);
+            Debug.DrawRay(upperOrigin, dir * _stats.stepUpDistance, upperHit ? Color.green : Color.red);
 #endif
 
             if (baseHit && !upperHit && !_steppingUp)

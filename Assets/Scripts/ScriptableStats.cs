@@ -100,7 +100,7 @@ namespace TarodevController
         [Tooltip("How fast the player slides down walls")]
         public float wallSlideSpeed = 2f;
 
-        [Tooltip("idk what this one does tbh")]
+        [Tooltip("Coyote time for wall jump")]
         public float wallCoyoteTime = 0.2f;
 
         [Header("STEP UP")]
