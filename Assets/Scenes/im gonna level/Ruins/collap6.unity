@@ -1465,10 +1465,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &772507377
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1836,6 +1838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 2082761960}
   moveDur: 1.1
   useSpeed: 0
@@ -2353,6 +2356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 428513898}
   moveDur: 0.8
   useSpeed: 0
@@ -10519,10 +10523,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!1 &1479019268
 GameObject:
   m_ObjectHideFlags: 0
@@ -11172,6 +11178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 1982690116}
   moveDur: 2.5
   useSpeed: 0
@@ -11217,6 +11224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -11234,6 +11242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1472206240}
   inverted: 0
+  blocked: 0
   target: {fileID: 724178395}
   moveDur: 2.5
   useSpeed: 0
@@ -11279,6 +11288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1472206240}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -11386,6 +11396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 654261202}
   moveDur: 1
   useSpeed: 0
@@ -44179,7 +44190,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:

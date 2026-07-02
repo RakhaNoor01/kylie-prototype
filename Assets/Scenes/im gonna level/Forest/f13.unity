@@ -5099,6 +5099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!61 &530429214
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10009,6 +10010,8 @@ GameObject:
   - component: {fileID: 766493638}
   - component: {fileID: 766493637}
   - component: {fileID: 766493636}
+  - component: {fileID: 766493641}
+  - component: {fileID: 766493640}
   m_Layer: 0
   m_Name: Spikes placeholder
   m_TagString: Breakable Vines
@@ -10063,7 +10066,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -10081,6 +10084,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!483693784 &766493638
 TilemapRenderer:
   serializedVersion: 2
@@ -12869,6 +12873,78 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &766493640
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766493634}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 766493634}
+--- !u!50 &766493641
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766493634}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &809009569
 GameObject:
   m_ObjectHideFlags: 0
@@ -40897,6 +40973,8 @@ GameObject:
   - component: {fileID: 1144050923}
   - component: {fileID: 1144050922}
   - component: {fileID: 1144050921}
+  - component: {fileID: 1144050926}
+  - component: {fileID: 1144050925}
   m_Layer: 0
   m_Name: Spiky(Moss)
   m_TagString: Untagged
@@ -40931,6 +41009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!19719996 &1144050922
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -40963,7 +41042,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -41669,6 +41748,248 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &1144050925
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144050919}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 1144050922}
+    m_ColliderPaths:
+    - - X: 132500000
+        Y: 87500000
+      - X: 130000000
+        Y: 87500000
+      - X: 130000000
+        Y: 100000000
+      - X: 127500000
+        Y: 100000000
+      - X: 127500000
+        Y: 117500000
+      - X: 122500000
+        Y: 117500000
+      - X: 122500000
+        Y: 97500000
+      - X: 125000000
+        Y: 97500000
+      - X: 125000000
+        Y: 85000000
+      - X: 127500000
+        Y: 85000000
+      - X: 127500000
+        Y: 72500000
+      - X: 132500000
+        Y: 72500000
+    - - X: 25000000
+        Y: 92500000
+      - X: 27500000
+        Y: 92500000
+      - X: 27500000
+        Y: 95000000
+      - X: 30000000
+        Y: 95000000
+      - X: 30000000
+        Y: 97500000
+      - X: 32500000
+        Y: 97500000
+      - X: 32500000
+        Y: 105000000
+      - X: 40000000
+        Y: 105000000
+      - X: 40000000
+        Y: 107500000
+      - X: 47500000
+        Y: 107500000
+      - X: 47500000
+        Y: 110000000
+      - X: 50000000
+        Y: 110000000
+      - X: 50000000
+        Y: 112500000
+      - X: 52500000
+        Y: 112500000
+      - X: 52500000
+        Y: 117500000
+      - X: 42500000
+        Y: 117500000
+      - X: 42500000
+        Y: 115000000
+      - X: 40000000
+        Y: 115000000
+      - X: 40000000
+        Y: 112500000
+      - X: 37500000
+        Y: 112500000
+      - X: 37500000
+        Y: 110000000
+      - X: 30000000
+        Y: 110000000
+      - X: 30000000
+        Y: 107500000
+      - X: 27500000
+        Y: 107500000
+      - X: 27500000
+        Y: 105000000
+      - X: 25000000
+        Y: 105000000
+      - X: 25000000
+        Y: 102500000
+      - X: 22500000
+        Y: 102500000
+      - X: 22500000
+        Y: 95000000
+      - X: 20000000
+        Y: 95000000
+      - X: 20000000
+        Y: 85000000
+      - X: 25000000
+        Y: 85000000
+    - - X: 217500000
+        Y: 80000000
+      - X: 220000000
+        Y: 80000000
+      - X: 220000000
+        Y: 82500000
+      - X: 222500000
+        Y: 82500000
+      - X: 222500000
+        Y: 102500000
+      - X: 217500000
+        Y: 102500000
+      - X: 217500000
+        Y: 90000000
+      - X: 215000000
+        Y: 90000000
+      - X: 215000000
+        Y: 87500000
+      - X: 212500000
+        Y: 87500000
+      - X: 212500000
+        Y: 72500000
+      - X: 217500000
+        Y: 72500000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 13.24997, y: 7.25}
+      - {x: 13.24997, y: 8.75}
+      - {x: 13, y: 8.75003}
+      - {x: 12.99997, y: 10}
+      - {x: 12.75, y: 10.00003}
+      - {x: 12.74997, y: 11.75}
+      - {x: 12.25, y: 11.74997}
+      - {x: 12.25003, y: 9.75}
+      - {x: 12.5, y: 9.74997}
+      - {x: 12.50003, y: 8.5}
+      - {x: 12.75, y: 8.49997}
+      - {x: 12.75003, y: 7.25}
+    - - {x: 2.499971, y: 8.5}
+      - {x: 2.5000293, y: 9.25}
+      - {x: 2.75, y: 9.25003}
+      - {x: 2.7500293, y: 9.5}
+      - {x: 3, y: 9.50003}
+      - {x: 3.0000293, y: 9.75}
+      - {x: 3.25, y: 9.75003}
+      - {x: 3.2500293, y: 10.5}
+      - {x: 4, y: 10.50003}
+      - {x: 4.0000296, y: 10.75}
+      - {x: 4.75, y: 10.75003}
+      - {x: 4.7500296, y: 11}
+      - {x: 5, y: 11.00003}
+      - {x: 5.0000296, y: 11.25}
+      - {x: 5.25, y: 11.25003}
+      - {x: 5.249971, y: 11.75}
+      - {x: 4.25, y: 11.74997}
+      - {x: 4.2499704, y: 11.5}
+      - {x: 4, y: 11.49997}
+      - {x: 3.9999704, y: 11.25}
+      - {x: 3.75, y: 11.24997}
+      - {x: 3.7499704, y: 11}
+      - {x: 3, y: 10.99997}
+      - {x: 2.9999707, y: 10.75}
+      - {x: 2.75, y: 10.74997}
+      - {x: 2.7499707, y: 10.5}
+      - {x: 2.5, y: 10.49997}
+      - {x: 2.4999707, y: 10.25}
+      - {x: 2.25, y: 10.24997}
+      - {x: 2.2499707, y: 9.5}
+      - {x: 2, y: 9.49997}
+      - {x: 2.0000293, y: 8.5}
+    - - {x: 21.749971, y: 7.25}
+      - {x: 21.750029, y: 8}
+      - {x: 22, y: 8.00003}
+      - {x: 22.000029, y: 8.25}
+      - {x: 22.25, y: 8.25003}
+      - {x: 22.249971, y: 10.25}
+      - {x: 21.75, y: 10.24997}
+      - {x: 21.749971, y: 9}
+      - {x: 21.5, y: 8.99997}
+      - {x: 21.499971, y: 8.75}
+      - {x: 21.25, y: 8.74997}
+      - {x: 21.250029, y: 7.25}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 1144050919}
+--- !u!50 &1144050926
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144050919}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1001 &1329480619
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42722,6 +43043,8 @@ GameObject:
   - component: {fileID: 1647275213}
   - component: {fileID: 1647275212}
   - component: {fileID: 1647275214}
+  - component: {fileID: 1647275216}
+  - component: {fileID: 1647275215}
   m_Layer: 6
   m_Name: Collision
   m_TagString: Untagged
@@ -47724,12 +48047,284 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!66 &1647275215
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647275210}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 1647275214}
+    m_ColliderPaths:
+    - - X: 20000000
+        Y: 100000000
+      - X: 25000000
+        Y: 100000000
+      - X: 25000000
+        Y: 105000000
+      - X: 30000000
+        Y: 105000000
+      - X: 30000000
+        Y: 110000000
+      - X: 50000000
+        Y: 110000000
+      - X: 50000000
+        Y: 120000000
+      - X: 270000000
+        Y: 120000000
+      - X: 270000000
+        Y: 130000000
+      - X: -25000000
+        Y: 130000000
+      - X: -25000000
+        Y: 120000000
+      - X: -15000000
+        Y: 120000000
+      - X: -15000000
+        Y: 110000000
+      - X: -5000000
+        Y: 110000000
+      - X: -5000000
+        Y: 105000000
+      - X: 0
+        Y: 105000000
+      - X: 0
+        Y: 35000000
+      - X: 20000000
+        Y: 35000000
+    - - X: 50000000
+        Y: 10000000
+      - X: 60000000
+        Y: 10000000
+      - X: 60000000
+        Y: 60000000
+      - X: 40000000
+        Y: 60000000
+      - X: 40000000
+        Y: 5000000
+      - X: 50000000
+        Y: 5000000
+    - - X: 275000000
+        Y: 45000000
+      - X: 250000000
+        Y: 45000000
+      - X: 250000000
+        Y: 20000000
+      - X: 230000000
+        Y: 20000000
+      - X: 230000000
+        Y: 15000000
+      - X: 240000000
+        Y: 15000000
+      - X: 240000000
+        Y: 10000000
+      - X: 245000000
+        Y: 10000000
+      - X: 245000000
+        Y: 5000000
+      - X: 250000000
+        Y: 5000000
+      - X: 250000000
+        Y: -5000000
+      - X: 245000000
+        Y: -5000000
+      - X: 245000000
+        Y: -15000000
+      - X: 240000000
+        Y: -15000000
+      - X: 240000000
+        Y: -25000000
+      - X: 275000000
+        Y: -25000000
+    - - X: 175000000
+        Y: -15000000
+      - X: 170000000
+        Y: -15000000
+      - X: 170000000
+        Y: -5000000
+      - X: 165000000
+        Y: -5000000
+      - X: 165000000
+        Y: 15000000
+      - X: 140000000
+        Y: 15000000
+      - X: 140000000
+        Y: -15000000
+      - X: 135000000
+        Y: -15000000
+      - X: 135000000
+        Y: -25000000
+      - X: 175000000
+        Y: -25000000
+    - - X: 245000000
+        Y: 10000000
+      - X: 245000000
+        Y: 15000000
+      - X: 250000000
+        Y: 15000000
+      - X: 250000000
+        Y: 10000000
+    - - X: 115000000
+        Y: -5000000
+      - X: 110000000
+        Y: -5000000
+      - X: 110000000
+        Y: 15000000
+      - X: 85000000
+        Y: 15000000
+      - X: 85000000
+        Y: -25000000
+      - X: 115000000
+        Y: -25000000
+    - - X: 35000000
+        Y: -15000000
+      - X: 30000000
+        Y: -15000000
+      - X: 30000000
+        Y: -5000000
+      - X: -30000000
+        Y: -5000000
+      - X: -30000000
+        Y: -25000000
+      - X: 35000000
+        Y: -25000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 1.9999708, y: 3.5}
+      - {x: 2.0000293, y: 10}
+      - {x: 2.5, y: 10.00003}
+      - {x: 2.5000293, y: 10.5}
+      - {x: 3, y: 10.50003}
+      - {x: 3.0000293, y: 11}
+      - {x: 5, y: 11.00003}
+      - {x: 5.0000296, y: 12}
+      - {x: 27, y: 12.00003}
+      - {x: 26.999971, y: 13}
+      - {x: -2.5, y: 12.99997}
+      - {x: -2.499971, y: 12}
+      - {x: -1.5, y: 11.99997}
+      - {x: -1.4999707, y: 11}
+      - {x: -0.5, y: 10.99997}
+      - {x: -0.4999707, y: 10.5}
+      - {x: 0, y: 10.49997}
+      - {x: 0.000029300001, y: 3.5}
+    - - {x: 4.999971, y: 0.5}
+      - {x: 5.0000296, y: 1}
+      - {x: 6, y: 1.0000293}
+      - {x: 5.999971, y: 6}
+      - {x: 4, y: 5.999971}
+      - {x: 4.000029, y: 0.5}
+    - - {x: 27.499971, y: -2.5}
+      - {x: 27.499971, y: 4.5}
+      - {x: 25, y: 4.499971}
+      - {x: 24.999971, y: 2}
+      - {x: 23, y: 1.9999708}
+      - {x: 23.000029, y: 1.5}
+      - {x: 24, y: 1.4999707}
+      - {x: 24.000029, y: 1}
+      - {x: 24.5, y: 1.0000293}
+      - {x: 24.500029, y: 1.5}
+      - {x: 25, y: 1.4999707}
+      - {x: 24.999971, y: 1}
+      - {x: 24.5, y: 0.99997073}
+      - {x: 24.500029, y: 0.5}
+      - {x: 25, y: 0.49997061}
+      - {x: 24.999971, y: -0.5}
+      - {x: 24.5, y: -0.5000293}
+      - {x: 24.499971, y: -1.5}
+      - {x: 24, y: -1.5000293}
+      - {x: 24.000029, y: -2.5}
+    - - {x: 17.499971, y: -2.5}
+      - {x: 17.499971, y: -1.5}
+      - {x: 17, y: -1.4999707}
+      - {x: 16.999971, y: -0.5}
+      - {x: 16.5, y: -0.49997061}
+      - {x: 16.499971, y: 1.5}
+      - {x: 14, y: 1.4999707}
+      - {x: 13.999971, y: -1.5}
+      - {x: 13.5, y: -1.5000293}
+      - {x: 13.500029, y: -2.5}
+    - - {x: 11.49997, y: -2.5}
+      - {x: 11.49997, y: -0.5}
+      - {x: 11, y: -0.49997061}
+      - {x: 10.99997, y: 1.5}
+      - {x: 8.5, y: 1.4999707}
+      - {x: 8.50003, y: -2.5}
+    - - {x: 3.499971, y: -2.5}
+      - {x: 3.499971, y: -1.5}
+      - {x: 3, y: -1.4999707}
+      - {x: 2.999971, y: -0.5}
+      - {x: -3, y: -0.5000293}
+      - {x: -2.999971, y: -2.5}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 1647275210}
+--- !u!50 &1647275216
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647275210}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1673065497
 GameObject:
   m_ObjectHideFlags: 0
@@ -47934,6 +48529,8 @@ GameObject:
   - component: {fileID: 1749699441}
   - component: {fileID: 1749699440}
   - component: {fileID: 1749699439}
+  - component: {fileID: 1749699444}
+  - component: {fileID: 1749699443}
   m_Layer: 0
   m_Name: Spikkk
   m_TagString: Untagged
@@ -47968,6 +48565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!19719996 &1749699440
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -48000,7 +48598,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -50558,6 +51156,668 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &1749699443
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749699437}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 1
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 1749699440}
+    m_ColliderPaths:
+    - - X: 3277499904
+        Y: 197500000
+      - X: 3275000064
+        Y: 197500000
+      - X: 3275000064
+        Y: 200000000
+      - X: 3272499968
+        Y: 200000000
+      - X: 3272499968
+        Y: 205000000
+      - X: 3275000064
+        Y: 205000000
+      - X: 3275000064
+        Y: 207500000
+      - X: 3277499904
+        Y: 207500000
+      - X: 3277499904
+        Y: 245000000
+      - X: 3280000000
+        Y: 245000000
+      - X: 3280000000
+        Y: 247500000
+      - X: 3282500096
+        Y: 247500000
+      - X: 3282500096
+        Y: 252500000
+      - X: 3262500096
+        Y: 252500000
+      - X: 3262500096
+        Y: 247500000
+      - X: 3264999936
+        Y: 247500000
+      - X: 3264999936
+        Y: 245000000
+      - X: 3267500032
+        Y: 245000000
+      - X: 3267500032
+        Y: 237500000
+      - X: 3270000128
+        Y: 237500000
+      - X: 3270000128
+        Y: 235000000
+      - X: 3272499968
+        Y: 235000000
+      - X: 3272499968
+        Y: 220000000
+      - X: 3270000128
+        Y: 220000000
+      - X: 3270000128
+        Y: 217500000
+      - X: 3267500032
+        Y: 217500000
+      - X: 3267500032
+        Y: 197500000
+      - X: 3270000128
+        Y: 197500000
+      - X: 3270000128
+        Y: 195000000
+      - X: 3272499968
+        Y: 195000000
+      - X: 3272499968
+        Y: 192500000
+      - X: 3277499904
+        Y: 192500000
+    - - X: 3057499904
+        Y: 242500000
+      - X: 3049999872
+        Y: 242500000
+      - X: 3049999872
+        Y: 245000000
+      - X: 3047500032
+        Y: 245000000
+      - X: 3047500032
+        Y: 252500000
+      - X: 3037499904
+        Y: 252500000
+      - X: 3037499904
+        Y: 242500000
+      - X: 3044999936
+        Y: 242500000
+      - X: 3044999936
+        Y: 240000000
+      - X: 3047500032
+        Y: 240000000
+      - X: 3047500032
+        Y: 237500000
+      - X: 3049999872
+        Y: 237500000
+      - X: 3049999872
+        Y: 235000000
+      - X: 3052499968
+        Y: 235000000
+      - X: 3052499968
+        Y: 230000000
+      - X: 3049999872
+        Y: 230000000
+      - X: 3049999872
+        Y: 227500000
+      - X: 3047500032
+        Y: 227500000
+      - X: 3047500032
+        Y: 222500000
+      - X: 3049999872
+        Y: 222500000
+      - X: 3049999872
+        Y: 220000000
+      - X: 3052499968
+        Y: 220000000
+      - X: 3052499968
+        Y: 212500000
+      - X: 3057499904
+        Y: 212500000
+    - - X: 3082500096
+        Y: 215000000
+      - X: 3084999936
+        Y: 215000000
+      - X: 3084999936
+        Y: 217500000
+      - X: 3087500032
+        Y: 217500000
+      - X: 3087500032
+        Y: 230000000
+      - X: 3089999872
+        Y: 230000000
+      - X: 3089999872
+        Y: 232500000
+      - X: 3097499904
+        Y: 232500000
+      - X: 3097499904
+        Y: 235000000
+      - X: 3100000000
+        Y: 235000000
+      - X: 3100000000
+        Y: 237500000
+      - X: 3112499968
+        Y: 237500000
+      - X: 3112499968
+        Y: 245000000
+      - X: 3115000064
+        Y: 245000000
+      - X: 3115000064
+        Y: 247500000
+      - X: 3117499904
+        Y: 247500000
+      - X: 3117499904
+        Y: 252500000
+      - X: 3112499968
+        Y: 252500000
+      - X: 3112499968
+        Y: 250000000
+      - X: 3110000128
+        Y: 250000000
+      - X: 3110000128
+        Y: 247500000
+      - X: 3107500032
+        Y: 247500000
+      - X: 3107500032
+        Y: 245000000
+      - X: 3104999936
+        Y: 245000000
+      - X: 3104999936
+        Y: 242500000
+      - X: 3100000000
+        Y: 242500000
+      - X: 3100000000
+        Y: 245000000
+      - X: 3097499904
+        Y: 245000000
+      - X: 3097499904
+        Y: 247500000
+      - X: 3092499968
+        Y: 247500000
+      - X: 3092499968
+        Y: 245000000
+      - X: 3089999872
+        Y: 245000000
+      - X: 3089999872
+        Y: 242500000
+      - X: 3082500096
+        Y: 242500000
+      - X: 3082500096
+        Y: 240000000
+      - X: 3080000000
+        Y: 240000000
+      - X: 3080000000
+        Y: 237500000
+      - X: 3077499904
+        Y: 237500000
+      - X: 3077499904
+        Y: 235000000
+      - X: 3075000064
+        Y: 235000000
+      - X: 3075000064
+        Y: 232500000
+      - X: 3072499968
+        Y: 232500000
+      - X: 3072499968
+        Y: 207500000
+      - X: 3082500096
+        Y: 207500000
+    - - X: 3187500032
+        Y: 222500000
+      - X: 3184999936
+        Y: 222500000
+      - X: 3184999936
+        Y: 225000000
+      - X: 3182500096
+        Y: 225000000
+      - X: 3182500096
+        Y: 230000000
+      - X: 3184999936
+        Y: 230000000
+      - X: 3184999936
+        Y: 232500000
+      - X: 3187500032
+        Y: 232500000
+      - X: 3187500032
+        Y: 247500000
+      - X: 3184999936
+        Y: 247500000
+      - X: 3184999936
+        Y: 250000000
+      - X: 3182500096
+        Y: 250000000
+      - X: 3182500096
+        Y: 252500000
+      - X: 3172499968
+        Y: 252500000
+      - X: 3172499968
+        Y: 242500000
+      - X: 3175000064
+        Y: 242500000
+      - X: 3175000064
+        Y: 240000000
+      - X: 3177499904
+        Y: 240000000
+      - X: 3177499904
+        Y: 217500000
+      - X: 3180000000
+        Y: 217500000
+      - X: 3180000000
+        Y: 215000000
+      - X: 3182500096
+        Y: 215000000
+      - X: 3182500096
+        Y: 192500000
+      - X: 3187500032
+        Y: 192500000
+    - - X: 3112499968
+        Y: 135000000
+      - X: 3115000064
+        Y: 135000000
+      - X: 3115000064
+        Y: 137500000
+      - X: 3117499904
+        Y: 137500000
+      - X: 3117499904
+        Y: 155000000
+      - X: 3120000000
+        Y: 155000000
+      - X: 3120000000
+        Y: 157500000
+      - X: 3122500096
+        Y: 157500000
+      - X: 3122500096
+        Y: 167500000
+      - X: 3120000000
+        Y: 167500000
+      - X: 3120000000
+        Y: 170000000
+      - X: 3117499904
+        Y: 170000000
+      - X: 3117499904
+        Y: 182500000
+      - X: 3112499968
+        Y: 182500000
+      - X: 3112499968
+        Y: 145000000
+      - X: 3110000128
+        Y: 145000000
+      - X: 3110000128
+        Y: 142500000
+      - X: 3107500032
+        Y: 142500000
+      - X: 3107500032
+        Y: 132500000
+      - X: 3112499968
+        Y: 132500000
+    - - X: 3272499968
+        Y: 125000000
+      - X: 3275000064
+        Y: 125000000
+      - X: 3275000064
+        Y: 127500000
+      - X: 3277499904
+        Y: 127500000
+      - X: 3277499904
+        Y: 162500000
+      - X: 3272499968
+        Y: 162500000
+      - X: 3272499968
+        Y: 155000000
+      - X: 3270000128
+        Y: 155000000
+      - X: 3270000128
+        Y: 152500000
+      - X: 3267500032
+        Y: 152500000
+      - X: 3267500032
+        Y: 122500000
+      - X: 3272499968
+        Y: 122500000
+    - - X: 3197499904
+        Y: 140000000
+      - X: 3200000000
+        Y: 140000000
+      - X: 3200000000
+        Y: 142500000
+      - X: 3215000064
+        Y: 142500000
+      - X: 3215000064
+        Y: 140000000
+      - X: 3217499904
+        Y: 140000000
+      - X: 3217499904
+        Y: 137500000
+      - X: 3222500096
+        Y: 137500000
+      - X: 3222500096
+        Y: 142500000
+      - X: 3220000000
+        Y: 142500000
+      - X: 3220000000
+        Y: 145000000
+      - X: 3217499904
+        Y: 145000000
+      - X: 3217499904
+        Y: 147500000
+      - X: 3197499904
+        Y: 147500000
+      - X: 3197499904
+        Y: 145000000
+      - X: 3195000064
+        Y: 145000000
+      - X: 3195000064
+        Y: 142500000
+      - X: 3192499968
+        Y: 142500000
+      - X: 3192499968
+        Y: 137500000
+      - X: 3197499904
+        Y: 137500000
+    - - X: 3142500096
+        Y: 140000000
+      - X: 3144999936
+        Y: 140000000
+      - X: 3144999936
+        Y: 142500000
+      - X: 3160000000
+        Y: 142500000
+      - X: 3160000000
+        Y: 140000000
+      - X: 3162500096
+        Y: 140000000
+      - X: 3162500096
+        Y: 137500000
+      - X: 3167500032
+        Y: 137500000
+      - X: 3167500032
+        Y: 147500000
+      - X: 3142500096
+        Y: 147500000
+      - X: 3142500096
+        Y: 145000000
+      - X: 3140000000
+        Y: 145000000
+      - X: 3140000000
+        Y: 142500000
+      - X: 3137499904
+        Y: 142500000
+      - X: 3137499904
+        Y: 137500000
+      - X: 3142500096
+        Y: 137500000
+    - - X: 3277499904
+        Y: 117500000
+      - X: 3262500096
+        Y: 117500000
+      - X: 3262500096
+        Y: 112500000
+      - X: 3277499904
+        Y: 112500000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 308.25, y: 20.75}
+      - {x: 308.25003, y: 21.5}
+      - {x: 308.5, y: 21.500029}
+      - {x: 308.50003, y: 21.75}
+      - {x: 308.75, y: 21.750029}
+      - {x: 308.75003, y: 23}
+      - {x: 309, y: 23.000029}
+      - {x: 309.00003, y: 23.25}
+      - {x: 309.75, y: 23.250029}
+      - {x: 309.75003, y: 23.5}
+      - {x: 310, y: 23.500029}
+      - {x: 310.00003, y: 23.75}
+      - {x: 311.25, y: 23.750029}
+      - {x: 311.25003, y: 24.5}
+      - {x: 311.5, y: 24.500029}
+      - {x: 311.50003, y: 24.75}
+      - {x: 311.75, y: 24.750029}
+      - {x: 311.74997, y: 25.25}
+      - {x: 311.25, y: 25.249971}
+      - {x: 311.24997, y: 25}
+      - {x: 311.00003, y: 24.999971}
+      - {x: 311, y: 24.75}
+      - {x: 310.75, y: 24.749971}
+      - {x: 310.74997, y: 24.5}
+      - {x: 310.5, y: 24.499971}
+      - {x: 310.49997, y: 24.25}
+      - {x: 310, y: 24.250029}
+      - {x: 309.99997, y: 24.5}
+      - {x: 309.75, y: 24.500029}
+      - {x: 309.74997, y: 24.75}
+      - {x: 309.25, y: 24.749971}
+      - {x: 309.24997, y: 24.5}
+      - {x: 309, y: 24.499971}
+      - {x: 308.99997, y: 24.25}
+      - {x: 308.25, y: 24.249971}
+      - {x: 308.25, y: 24}
+      - {x: 308, y: 23.999971}
+      - {x: 307.99997, y: 23.75}
+      - {x: 307.75, y: 23.749971}
+      - {x: 307.74997, y: 23.5}
+      - {x: 307.5, y: 23.499971}
+      - {x: 307.49997, y: 23.25}
+      - {x: 307.25, y: 23.249971}
+      - {x: 307.25003, y: 20.75}
+    - - {x: 305.74997, y: 21.25}
+      - {x: 305.74997, y: 24.25}
+      - {x: 305, y: 24.250029}
+      - {x: 304.99997, y: 24.5}
+      - {x: 304.75, y: 24.500029}
+      - {x: 304.74997, y: 25.25}
+      - {x: 303.75, y: 25.249971}
+      - {x: 303.75003, y: 24.25}
+      - {x: 304.5, y: 24.249971}
+      - {x: 304.50003, y: 24}
+      - {x: 304.75, y: 23.999971}
+      - {x: 304.75003, y: 23.75}
+      - {x: 305, y: 23.749971}
+      - {x: 305.00003, y: 23.5}
+      - {x: 305.25, y: 23.499971}
+      - {x: 305.24997, y: 23}
+      - {x: 305, y: 22.999971}
+      - {x: 304.99997, y: 22.75}
+      - {x: 304.75, y: 22.749971}
+      - {x: 304.75003, y: 22.25}
+      - {x: 305, y: 22.249971}
+      - {x: 305.00003, y: 22}
+      - {x: 305.25, y: 21.999971}
+      - {x: 305.25003, y: 21.25}
+    - - {x: 318.74997, y: 19.25}
+      - {x: 318.74997, y: 22.25}
+      - {x: 318.5, y: 22.250029}
+      - {x: 318.49997, y: 22.5}
+      - {x: 318.25, y: 22.500029}
+      - {x: 318.25003, y: 23}
+      - {x: 318.5, y: 23.000029}
+      - {x: 318.50003, y: 23.25}
+      - {x: 318.75, y: 23.250029}
+      - {x: 318.74997, y: 24.75}
+      - {x: 318.5, y: 24.750029}
+      - {x: 318.49997, y: 25}
+      - {x: 318.25, y: 25.000029}
+      - {x: 318.25, y: 25.25}
+      - {x: 317.25, y: 25.249971}
+      - {x: 317.25003, y: 24.25}
+      - {x: 317.5, y: 24.249971}
+      - {x: 317.50003, y: 24}
+      - {x: 317.75, y: 23.999971}
+      - {x: 317.75003, y: 21.75}
+      - {x: 318, y: 21.749971}
+      - {x: 318.00003, y: 21.5}
+      - {x: 318.25, y: 21.499971}
+      - {x: 318.25003, y: 19.25}
+    - - {x: 327.74997, y: 19.25}
+      - {x: 327.74997, y: 19.75}
+      - {x: 327.5, y: 19.750029}
+      - {x: 327.49997, y: 20}
+      - {x: 327.25, y: 20.000029}
+      - {x: 327.25003, y: 20.5}
+      - {x: 327.5, y: 20.500029}
+      - {x: 327.50003, y: 20.75}
+      - {x: 327.75, y: 20.750029}
+      - {x: 327.75003, y: 24.5}
+      - {x: 328, y: 24.500029}
+      - {x: 328.00003, y: 24.75}
+      - {x: 328.25, y: 24.750029}
+      - {x: 328.25, y: 25.25}
+      - {x: 326.25, y: 25.249971}
+      - {x: 326.25003, y: 24.75}
+      - {x: 326.5, y: 24.749971}
+      - {x: 326.50003, y: 24.5}
+      - {x: 326.75, y: 24.499971}
+      - {x: 326.75003, y: 23.75}
+      - {x: 327.00003, y: 23.749971}
+      - {x: 327.00003, y: 23.5}
+      - {x: 327.25, y: 23.499971}
+      - {x: 327.24997, y: 22}
+      - {x: 327.00003, y: 21.999971}
+      - {x: 327, y: 21.75}
+      - {x: 326.75, y: 21.749971}
+      - {x: 326.75003, y: 19.75}
+      - {x: 327.00003, y: 19.749971}
+      - {x: 327.00003, y: 19.5}
+      - {x: 327.25, y: 19.499971}
+      - {x: 327.25003, y: 19.25}
+    - - {x: 311.24997, y: 13.25}
+      - {x: 311.25003, y: 13.5}
+      - {x: 311.5, y: 13.500029}
+      - {x: 311.50003, y: 13.75}
+      - {x: 311.75, y: 13.750029}
+      - {x: 311.75003, y: 15.5}
+      - {x: 312, y: 15.500029}
+      - {x: 312.00003, y: 15.75}
+      - {x: 312.25, y: 15.750029}
+      - {x: 312.25, y: 16.75}
+      - {x: 312, y: 16.750029}
+      - {x: 311.99997, y: 17}
+      - {x: 311.75, y: 17.000029}
+      - {x: 311.74997, y: 18.25}
+      - {x: 311.25, y: 18.249971}
+      - {x: 311.24997, y: 14.5}
+      - {x: 311.00003, y: 14.499971}
+      - {x: 311, y: 14.25}
+      - {x: 310.75, y: 14.249971}
+      - {x: 310.75003, y: 13.25}
+    - - {x: 327.24997, y: 12.25}
+      - {x: 327.25003, y: 12.5}
+      - {x: 327.5, y: 12.50003}
+      - {x: 327.50003, y: 12.75}
+      - {x: 327.75, y: 12.75003}
+      - {x: 327.74997, y: 16.25}
+      - {x: 327.25, y: 16.249971}
+      - {x: 327.24997, y: 15.5}
+      - {x: 327.00003, y: 15.499971}
+      - {x: 327, y: 15.25}
+      - {x: 326.75, y: 15.249971}
+      - {x: 326.75003, y: 12.25}
+    - - {x: 319.74997, y: 13.75}
+      - {x: 319.75003, y: 14}
+      - {x: 320, y: 14.000029}
+      - {x: 320.00003, y: 14.25}
+      - {x: 321.5, y: 14.249971}
+      - {x: 321.50003, y: 14}
+      - {x: 321.75, y: 13.999971}
+      - {x: 321.75003, y: 13.75}
+      - {x: 322.25, y: 13.750029}
+      - {x: 322.25, y: 14.25}
+      - {x: 322, y: 14.250029}
+      - {x: 321.99997, y: 14.5}
+      - {x: 321.75, y: 14.500029}
+      - {x: 321.74997, y: 14.75}
+      - {x: 319.75, y: 14.749971}
+      - {x: 319.74997, y: 14.5}
+      - {x: 319.5, y: 14.499971}
+      - {x: 319.49997, y: 14.25}
+      - {x: 319.25, y: 14.249971}
+      - {x: 319.25003, y: 13.75}
+    - - {x: 314.25, y: 13.75}
+      - {x: 314.25003, y: 14}
+      - {x: 314.5, y: 14.000029}
+      - {x: 314.50003, y: 14.25}
+      - {x: 316, y: 14.249971}
+      - {x: 316.00003, y: 14}
+      - {x: 316.25, y: 13.999971}
+      - {x: 316.25003, y: 13.75}
+      - {x: 316.75, y: 13.750029}
+      - {x: 316.74997, y: 14.75}
+      - {x: 314.25, y: 14.749971}
+      - {x: 314.25, y: 14.5}
+      - {x: 314, y: 14.499971}
+      - {x: 313.99997, y: 14.25}
+      - {x: 313.75, y: 14.249971}
+      - {x: 313.75003, y: 13.75}
+    - - {x: 327.74997, y: 11.25}
+      - {x: 327.74997, y: 11.75}
+      - {x: 326.25, y: 11.74997}
+      - {x: 326.25003, y: 11.25}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 1749699437}
+--- !u!50 &1749699444
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749699437}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1849948534
 GameObject:
   m_ObjectHideFlags: 0

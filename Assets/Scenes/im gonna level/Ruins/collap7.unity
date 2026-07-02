@@ -169,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   target: {fileID: 981527395}
   moveDur: 0.35
   useSpeed: 0
@@ -308,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   target: {fileID: 1420815662}
   moveDur: 0.35
   useSpeed: 0
@@ -1554,6 +1556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   target: {fileID: 1107238270}
   moveDur: 0.75
   useSpeed: 0
@@ -1599,6 +1602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   target: {fileID: 1530862930}
   moveDur: 0.75
   useSpeed: 0
@@ -1644,6 +1648,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   target: {fileID: 2139690628}
   moveDur: 0.75
   useSpeed: 0
@@ -1689,6 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   target: {fileID: 835836053}
   moveDur: 0.75
   useSpeed: 0
@@ -2582,6 +2588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   target: {fileID: 1313304556}
   moveDur: 0.6
   useSpeed: 0
@@ -6569,10 +6576,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1317436401
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6707,6 +6716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -6758,6 +6768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   target: {fileID: 1547831372}
   moveDur: 0.45
   useSpeed: 0
@@ -7712,10 +7723,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1548699820
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7850,6 +7863,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -7951,6 +7965,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   thing: {fileID: 838827799}
 --- !u!212 &1674948974
 SpriteRenderer:
@@ -8041,6 +8056,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   target: {fileID: 1686486744}
   moveDur: 1
   useSpeed: 1
@@ -8341,6 +8357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -8363,10 +8380,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1697034237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8520,6 +8539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   target: {fileID: 2032939536}
   moveDur: 0.25
   useSpeed: 0
@@ -8892,10 +8912,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1857070784
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9030,6 +9052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -9072,10 +9095,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &2000360471
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9210,6 +9235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -27815,7 +27841,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:

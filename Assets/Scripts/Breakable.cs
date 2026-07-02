@@ -6,6 +6,13 @@ public class Breakable : MonoBehaviour
     public int health = 1;
     public string boomerangTag = "Goonerang";
     public ParticleSystem article;
+    public string breakableID;
+
+    [Header("Damage Source")]
+    public bool boomerang = true;
+    public bool burnerang = false;
+    public bool bomb = false;
+
     public GameObject fart;
 
     private int currentHealth;
