@@ -34,6 +34,7 @@ public class PlayerAnimator : MonoBehaviour
         gliderOff.GetComponent<SpriteRenderer>().enabled = false;
         gliderOn.GetComponent<SpriteRenderer>().enabled = false;
     }
+
     private void OnEnable()
     {
         // Make sure controller reference is valid after respawn
