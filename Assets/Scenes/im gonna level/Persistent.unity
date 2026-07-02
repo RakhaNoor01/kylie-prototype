@@ -6000,10 +6000,10 @@ MonoBehaviour:
   _glideStamina: 0
   _grounded: 0
   wallClingKey: 324
+  _wallCoyoteTimer: 0
   blockExVel: 0
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
-  Glider: 0
 --- !u!4 &450797597
 Transform:
   m_ObjectHideFlags: 0
@@ -38250,7 +38250,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1495805113}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
   m_Name: 
@@ -38740,7 +38740,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 50.62698, y: 0}
+  m_AnchoredPosition: {x: 50.626953, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1639096980
@@ -39654,8 +39654,8 @@ Canvas:
   m_GameObject: {fileID: 1857933640}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1561298934}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
   m_ReceivesEvents: 1

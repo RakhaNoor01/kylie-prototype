@@ -680,7 +680,7 @@ namespace TarodevController
 
         #region Gravity
 
-        public bool Glider;
+        public bool Glider {get; set;}
 
         private void HandleGravity()
         {

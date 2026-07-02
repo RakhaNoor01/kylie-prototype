@@ -421,6 +421,8 @@ GameObject:
   - component: {fileID: 1679488309}
   - component: {fileID: 1679488308}
   - component: {fileID: 1679488307}
+  - component: {fileID: 1679488311}
+  - component: {fileID: 1679488310}
   m_Layer: 6
   m_Name: Collision
   m_TagString: Untagged
@@ -475,7 +477,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
@@ -4221,6 +4223,290 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &1679488310
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679488305}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 1679488307}
+    m_ColliderPaths:
+    - - X: 4070000128
+        Y: 2044999936
+      - X: 4075000064
+        Y: 2044999936
+      - X: 4075000064
+        Y: 2050000000
+      - X: 4120000000
+        Y: 2050000000
+      - X: 4120000000
+        Y: 2055000064
+      - X: 4140000000
+        Y: 2055000064
+      - X: 4140000000
+        Y: 2060000000
+      - X: 4150000128
+        Y: 2060000000
+      - X: 4150000128
+        Y: 2064999936
+      - X: 4164999936
+        Y: 2064999936
+      - X: 4164999936
+        Y: 2070000000
+      - X: 4249999872
+        Y: 2070000000
+      - X: 4249999872
+        Y: 2075000064
+      - X: 4255000064
+        Y: 2075000064
+      - X: 4255000064
+        Y: 2084999936
+      - X: 4244999936
+        Y: 2084999936
+      - X: 4244999936
+        Y: 2080000000
+      - X: 4155000064
+        Y: 2080000000
+      - X: 4155000064
+        Y: 2075000064
+      - X: 4140000000
+        Y: 2075000064
+      - X: 4140000000
+        Y: 2070000000
+      - X: 4129999872
+        Y: 2070000000
+      - X: 4129999872
+        Y: 2064999936
+      - X: 4110000128
+        Y: 2064999936
+      - X: 4110000128
+        Y: 2060000000
+      - X: 4064999936
+        Y: 2060000000
+      - X: 4064999936
+        Y: 2084999936
+      - X: 4035000064
+        Y: 2084999936
+      - X: 4035000064
+        Y: 2040000000
+      - X: 4070000128
+        Y: 2040000000
+    - - X: 4009999872
+        Y: 1984999936
+      - X: 4024999936
+        Y: 1984999936
+      - X: 4024999936
+        Y: 1990000000
+      - X: 4095000064
+        Y: 1990000000
+      - X: 4095000064
+        Y: 1995000064
+      - X: 4115000064
+        Y: 1995000064
+      - X: 4115000064
+        Y: 2000000000
+      - X: 4180000000
+        Y: 2000000000
+      - X: 4180000000
+        Y: 2015000064
+      - X: 4169999872
+        Y: 2015000064
+      - X: 4169999872
+        Y: 2010000000
+      - X: 4104999936
+        Y: 2010000000
+      - X: 4104999936
+        Y: 2004999936
+      - X: 4084999936
+        Y: 2004999936
+      - X: 4084999936
+        Y: 2000000000
+      - X: 4009999872
+        Y: 2000000000
+      - X: 4009999872
+        Y: 2084999936
+      - X: 3995000064
+        Y: 2084999936
+      - X: 3995000064
+        Y: 1970000000
+      - X: 4009999872
+        Y: 1970000000
+    - - X: 4060000000
+        Y: 2010000000
+      - X: 4035000064
+        Y: 2010000000
+      - X: 4035000064
+        Y: 2004999936
+      - X: 4060000000
+        Y: 2004999936
+    - - X: 4040000000
+        Y: 1895000064
+      - X: 4044999936
+        Y: 1895000064
+      - X: 4044999936
+        Y: 1900000000
+      - X: 4060000000
+        Y: 1900000000
+      - X: 4060000000
+        Y: 1904999936
+      - X: 4064999936
+        Y: 1904999936
+      - X: 4064999936
+        Y: 1910000000
+      - X: 4070000128
+        Y: 1910000000
+      - X: 4070000128
+        Y: 1920000000
+      - X: 4055000064
+        Y: 1920000000
+      - X: 4055000064
+        Y: 1915000064
+      - X: 4020000000
+        Y: 1915000064
+      - X: 4020000000
+        Y: 1910000000
+      - X: 4000000000
+        Y: 1910000000
+      - X: 4000000000
+        Y: 1890000000
+      - X: 4040000000
+        Y: 1890000000
+  m_CompositePaths:
+    m_Paths:
+    - - {x: 407, y: 204}
+      - {x: 407.00003, y: 204.5}
+      - {x: 407.5, y: 204.50002}
+      - {x: 407.50003, y: 205}
+      - {x: 412, y: 205.00003}
+      - {x: 412.00003, y: 205.50002}
+      - {x: 414, y: 205.50003}
+      - {x: 414.00003, y: 206}
+      - {x: 415.00003, y: 206.00003}
+      - {x: 415.00003, y: 206.5}
+      - {x: 416.5, y: 206.50002}
+      - {x: 416.50003, y: 207}
+      - {x: 425, y: 207.00003}
+      - {x: 425.00003, y: 207.50002}
+      - {x: 425.5, y: 207.50003}
+      - {x: 425.5, y: 208.5}
+      - {x: 424.5, y: 208.49997}
+      - {x: 424.49997, y: 208}
+      - {x: 415.5, y: 207.99997}
+      - {x: 415.5, y: 207.50002}
+      - {x: 414, y: 207.49998}
+      - {x: 413.99997, y: 207}
+      - {x: 413, y: 206.99997}
+      - {x: 412.99997, y: 206.5}
+      - {x: 411.00003, y: 206.49997}
+      - {x: 411, y: 206}
+      - {x: 406.5, y: 206.00003}
+      - {x: 406.49997, y: 208.5}
+      - {x: 403.5, y: 208.49997}
+      - {x: 403.50003, y: 204}
+    - - {x: 400.99997, y: 197}
+      - {x: 401.00003, y: 198.5}
+      - {x: 402.5, y: 198.50002}
+      - {x: 402.50003, y: 199}
+      - {x: 409.5, y: 199.00003}
+      - {x: 409.50003, y: 199.50002}
+      - {x: 411.5, y: 199.50003}
+      - {x: 411.50003, y: 200}
+      - {x: 418, y: 200.00003}
+      - {x: 417.99997, y: 201.50002}
+      - {x: 417, y: 201.49998}
+      - {x: 416.99997, y: 201}
+      - {x: 410.5, y: 200.99997}
+      - {x: 410.49997, y: 200.5}
+      - {x: 408.5, y: 200.49997}
+      - {x: 408.49997, y: 200}
+      - {x: 401, y: 200.00003}
+      - {x: 400.99997, y: 208.5}
+      - {x: 399.5, y: 208.49997}
+      - {x: 399.50003, y: 197}
+    - - {x: 405.99997, y: 200.5}
+      - {x: 405.99997, y: 201}
+      - {x: 403.5, y: 200.99997}
+      - {x: 403.50003, y: 200.5}
+    - - {x: 403.99997, y: 189}
+      - {x: 404.00003, y: 189.50002}
+      - {x: 404.5, y: 189.50003}
+      - {x: 404.50003, y: 190}
+      - {x: 406, y: 190.00003}
+      - {x: 406.00003, y: 190.5}
+      - {x: 406.5, y: 190.50002}
+      - {x: 406.50003, y: 191}
+      - {x: 407.00003, y: 191.00003}
+      - {x: 407, y: 192}
+      - {x: 405.5, y: 191.99997}
+      - {x: 405.5, y: 191.50002}
+      - {x: 402, y: 191.49998}
+      - {x: 401.99997, y: 191}
+      - {x: 400, y: 190.99997}
+      - {x: 400.00003, y: 189}
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+  m_UseDelaunayMesh: 0
+  m_CompositeGameObject: {fileID: 1679488305}
+--- !u!50 &1679488311
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679488305}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1700016061
 GameObject:
   m_ObjectHideFlags: 0
@@ -4311,6 +4597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!61 &1700016064
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4654,6 +4941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!483693784 &1933743790
 TilemapRenderer:
   serializedVersion: 2

@@ -85,7 +85,7 @@ public class CameraCollider : MonoBehaviour
 
         // Only take control if there is no active zone
         // or this zone has a higher priority than the active one
-        if (activeZone == null || priority > activeZone.priority)
+        if (activeZone == null || priority >= activeZone.priority)
         {
             activeZone = this;
             ApplyZone();

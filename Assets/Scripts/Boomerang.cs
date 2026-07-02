@@ -565,8 +565,6 @@ public class Boomerang : MonoBehaviour
         insideGeometry = false;
     }
 
-    private Collider2D[] overlapResults = new Collider2D[8];
-
     void Deflect(Collider2D other)
     {
         if (!isReturning)
