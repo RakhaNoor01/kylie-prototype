@@ -77,6 +77,7 @@ public class BlizzardHandler : MonoBehaviour
         blizzardBG.DOKill();
 
         blizzardStuff.SetActive(false);
+        blizzardCover.DOFade(0, 0);
 
         if (checkpointAfterBlizzard) InstantBlizzard();
     }
