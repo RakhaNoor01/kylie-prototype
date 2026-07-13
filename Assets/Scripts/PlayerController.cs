@@ -894,6 +894,12 @@ namespace TarodevController
 
         }
 
+        public void OhTheMisery()
+        {
+            _isGliding = true;
+            _isGliding = false;
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {

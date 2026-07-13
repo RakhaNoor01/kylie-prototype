@@ -44,11 +44,14 @@ public class AirCurrent : MonoBehaviour
         var pc = collision.GetComponent<PlayerController>();
         if (pc != null && internalGlide > 0f)
         {
-            // Seed the carry velocity so the controller's deceleration bleeds it off naturally
             Vector2 vel = pc.FrameVelocity;
-            Vector2 carryContrib = CurrentDirection * internalGlide;
-            vel += carryContrib;
-            pc.SetFrameVelocity(vel);
+            float velocityAlongCurrent = Vector2.Dot(vel, CurrentDirection);
+            float deficit = internalGlide - velocityAlongCurrent;
+            if (deficit > 0f)
+            {
+                vel += CurrentDirection * deficit;
+                pc.SetFrameVelocity(vel);
+            }
         }
 
         internalGlide = 0f;
@@ -78,8 +81,8 @@ public class AirCurrent : MonoBehaviour
         {
             internalGlide = Mathf.Min(internalGlide + glideAccel * Time.fixedDeltaTime, maxGlide);
 
-            // Only push the Deficit: the gap between where they are and the target speed.
-            // This prevents accumulating external velocity on top of already-fast frameVelocity.
+            // Only push the Deficit: the gap between where they are and the target speed
+            // This prevents accumulating external velocity on top of frameVelocity
             float deficit = internalGlide - velocityAlongCurrent;
             if (deficit > 0f)
             {
@@ -90,8 +93,12 @@ public class AirCurrent : MonoBehaviour
 
         if (internalGlide > 0f)
         {
-            vel += dir * internalGlide;
-            pc.SetFrameVelocity(vel);
+            float deficit = internalGlide - velocityAlongCurrent;
+            if (deficit > 0f)
+            {
+                vel += dir * deficit;
+                pc.SetFrameVelocity(vel);
+            }
             internalGlide = 0f;
             return;
         }

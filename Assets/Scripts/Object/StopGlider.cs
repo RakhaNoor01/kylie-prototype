@@ -10,6 +10,7 @@ public class StopGlider : MonoBehaviour
         if (troller != null)
         {
             troller.Glider = false;
+            troller.OhTheMisery();
         }
     }
 }
