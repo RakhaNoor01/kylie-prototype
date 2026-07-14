@@ -11,6 +11,7 @@ public class ButtonMover : ButtonTarget
     public bool useSpeed = false;
     public float moveSpeed = 1;
 
+    [Header("Easing")]
     public Ease onEasing = Ease.Linear;
     public Ease offEasing = Ease.Linear;
 
@@ -33,7 +34,6 @@ public class ButtonMover : ButtonTarget
     public override void SetState(bool setTo)
     {
         base.SetState(setTo);
-
         transform.DOKill();
 
         Vector3 destinationPos = state ? target.position : ogPos;
@@ -47,14 +47,16 @@ public class ButtonMover : ButtonTarget
         }
 
         float duration = moveDur;
-
         if (useSpeed)
         {
             duration = moveSpeed > 0f ? distance / moveSpeed : 0f;
         }
 
-        Tween moveTween = transform.DOMove(destinationPos, duration);
-        Tween rotateTween = transform.DORotate(destinationRot.eulerAngles, duration);
+        Tween moveTween;
+        Tween rotateTween;
+
+        moveTween = transform.DOMove(destinationPos, duration);
+        rotateTween = transform.DORotate(destinationRot.eulerAngles, duration);
 
         if (useCustomEase)
         {
@@ -66,6 +68,11 @@ public class ButtonMover : ButtonTarget
             Ease easing = state ? onEasing : offEasing;
             moveTween.SetEase(easing);
             rotateTween.SetEase(easing);
+        }
+
+        if (gameObject.GetComponent<Rigidbody>() != null)
+        {
+            moveTween.SetUpdate(UpdateType.Fixed);
         }
     }
 }

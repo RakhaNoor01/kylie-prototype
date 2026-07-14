@@ -226,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &46287642
 Transform:
   m_ObjectHideFlags: 0
@@ -6083,11 +6083,12 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: e69198ddfb77fe544951684e905a1805, type: 2}
   _frameVelocity: {x: 0, y: 0}
   _glideStamina: 0
+  _grounded: 0
   wallClingKey: 324
+  _wallCoyoteTimer: 0
   blockExVel: 0
   doWeDeserveDestruction: 0
   _dashEffect: {fileID: 1675437826}
-  Glider: 0
 --- !u!4 &450797597
 Transform:
   m_ObjectHideFlags: 0
@@ -6207,9 +6208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1768deb884afeb14ea110d90deaf6c19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlizzardHandler
-  heat: 20
+  heat: 25
   heatLoss: 1
-  heatRegen: 10
+  heatRegen: 12
   blizzardStuff: {fileID: 1999360724}
   blizzardFadeTime: 5
   blizzardVig: {fileID: 641130366}
@@ -6239,7 +6240,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450797593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe8ecf6197739934c8e9fc420f378df4, type: 3}
   m_Name: 
@@ -6532,7 +6533,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2875273426961667005, guid: a4f60840610b7c140bfa1db714f8aff3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aa9af16229c3fed4f9c84185eaeee049, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6898,7 +6899,7 @@ MonoBehaviour:
   distMultDelayTime: 0.5
   slowDown: 0.1
   tpSpeed: 0.01
-  deflectGraceTime: 0.15
+  deflectGraceTime: 0.03
   visual: {fileID: 716025452}
   torchure: {fileID: 750966576}
   directionIndicator: {fileID: 1389064634}
@@ -38824,7 +38825,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 50.62698, y: 0}
+  m_AnchoredPosition: {x: 50.626953, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1639096980
@@ -39653,7 +39654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1857933641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39738,8 +39739,8 @@ Canvas:
   m_GameObject: {fileID: 1857933640}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1561298934}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
   m_ReceivesEvents: 1

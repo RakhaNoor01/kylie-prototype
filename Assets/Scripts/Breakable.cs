@@ -13,6 +13,8 @@ public class Breakable : MonoBehaviour
     public bool burnerang = false;
     public bool bomb = false;
 
+    public GameObject fart;
+
     private int currentHealth;
     public bool IsDestroyed => currentHealth <= 0;
 
@@ -73,5 +75,6 @@ public class Breakable : MonoBehaviour
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        fart.SetActive(false);
     }
 }

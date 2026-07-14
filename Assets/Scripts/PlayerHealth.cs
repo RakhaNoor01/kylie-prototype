@@ -74,6 +74,7 @@ public class PlayerHealth : MonoBehaviour
         // Disable controller so player can't move
         PlayerController controller = GetComponent<PlayerController>();
         if (controller != null)
+            controller.Glider = false;
             controller.enabled = false;
 
         // Camera shake
@@ -83,7 +84,6 @@ public class PlayerHealth : MonoBehaviour
             Debug.Log("Camera Shaked Boi");
             CameraShake.Instance.Shake(shakeDuration, shakeMagnitude, 0);
         }
-
 
         // Knockback
         if (enableKnockback)

@@ -5,11 +5,13 @@ public class ButtonTarget : MonoBehaviour
     public Button button;
     protected bool state;
     public bool inverted;
+    public bool blocked = false;
 
     public virtual void Awake()
     {
         if (button != null)
             button.RegisterTarget(this);
+        blocked = false;
     }
 
     public virtual void SetState(bool state)

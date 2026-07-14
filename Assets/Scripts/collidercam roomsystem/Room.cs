@@ -10,6 +10,11 @@ public class Room : MonoBehaviour
     [Header("Adjacency")]
     public List<Room> adjacentRooms = new List<Room>();
 
+    [Header("Ligthing")]
+    [Range(0f, 1f)]
+    public float globalLightIntensity = 1f;
+    public Color globalLightColor = Color.white;
+
     private static readonly List<Room> overlappingRooms = new List<Room>();
 
     private GameObject player;
