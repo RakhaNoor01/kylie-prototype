@@ -71,4 +71,26 @@ public class Room : MonoBehaviour
             }
         }
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (adjacentRooms == null)
+            return;
+
+        Gizmos.color = Color.cyan;
+
+        Vector3 start = transform.position;
+
+        foreach (var room in adjacentRooms)
+        {
+            if (room == null)
+                continue;
+
+            Vector3 end = room.transform.position;
+
+            Gizmos.DrawLine(start, end);
+
+            Gizmos.DrawWireSphere(end, 2f);
+        }
+    }
 }
