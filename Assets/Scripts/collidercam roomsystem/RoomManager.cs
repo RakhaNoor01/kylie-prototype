@@ -13,6 +13,7 @@ public class RoomManager : MonoBehaviour
     public List<Room> allRooms = new List<Room>();
 
     public Room CurrentRoom { get; private set; }
+    public bool useLightSys = false;
 
     // Tracks which room scenes are currently loaded
     private readonly HashSet<string> loadedScenes = new HashSet<string>();
@@ -36,7 +37,7 @@ public class RoomManager : MonoBehaviour
         if (startRoom == null) return;
 
         CurrentRoom = startRoom;
-        LightingManager.Instance.SetRoom(startRoom);
+        if (useLightSys) LightingManager.Instance.SetRoom(startRoom);
         StartCoroutine(InitCoroutine(startRoom));
     }
 
