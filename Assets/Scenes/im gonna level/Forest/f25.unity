@@ -1031,8 +1031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc145a7fbda43bc40aedeed8255442f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JacobNPC
+  rb: {fileID: 0}
   animator: {fileID: 236663315}
-  spriteRenderer: {fileID: 236663317}
+  sr: {fileID: 0}
   dialogue: {fileID: 11400000, guid: 115363b475edef546bb62f6a8a13ff69, type: 2}
   npcPortrait: {fileID: 21300000, guid: 5b469bceb4a2ce343980366bfcab0a79, type: 3}
   dialogueBoxSprite: {fileID: 21300000, guid: e8a4eb247c6f241448d92a5738303e46, type: 3}
@@ -1040,6 +1041,20 @@ MonoBehaviour:
   bobHeight: 0.1
   bobSpeed: 3
   defaultFacingRight: 0
+  pathPoints: []
+  moveSpeed: 4
+  waypointReachDistance: 0.3
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.12
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  animRun: IsRunning
+  animJump: Jump
+  onSequenceComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  hasAlreadyPassed: 0
 --- !u!95 &236663315
 Animator:
   serializedVersion: 7
