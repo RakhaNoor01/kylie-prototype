@@ -15,21 +15,20 @@ struct BakeEntry
 public static class BakeSelectedAutoTiles
 {
     private static readonly Dictionary<Sprite, Tile> tileCache = new();
-    private static string thing = "[BakeAutoTiles]";
 
     [MenuItem("Tools/Bake Selected AutoTiles")]
     private static void Bake()
     {
         if (GridSelection.target == null)
         {
-            Debug.LogError($"{thing} Select tiles on a Tilemap first");
+            Debug.LogError("Select tiles on a Tilemap first");
             return;
         }
 
         Tilemap tilemap = GridSelection.target.GetComponent<Tilemap>();
         if (tilemap == null)
         {
-            Debug.LogError($"{thing} Grid selection target is not a Tilemap");
+            Debug.LogError(" Grid selection target is not a Tilemap");
             return;
         }
 
@@ -79,6 +78,6 @@ public static class BakeSelectedAutoTiles
 
         EditorUtility.SetDirty(tilemap);
 
-        Debug.Log($"{thing} Baked {bakeEntries.Count} AutoTiles");
+        Debug.Log($"Baked {bakeEntries.Count} AutoTiles");
     }
 }
