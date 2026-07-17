@@ -166,6 +166,8 @@ namespace TarodevController
             }
         }
 
+        public bool airborne { get; set; }
+
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
@@ -189,10 +191,24 @@ namespace TarodevController
             );
 
             RaycastHit2D groundHit = hitCount > 0 ? results[0] : default;
+            bool collTouchGround = _col.IsTouching(filter);
 
-            bool isGrounded = groundHit;
+            bool isGrounded = false;
 
-            ContactFilter2D ceilFilter = new ContactFilter2D();
+            if (airborne)
+            {
+                isGrounded = groundHit && collTouchGround;
+                if (isGrounded)
+                {
+                    airborne = false;
+                }
+            }
+            else
+            {
+                isGrounded = groundHit;
+            }
+
+                ContactFilter2D ceilFilter = new ContactFilter2D();
             ceilFilter.useTriggers = false;
             ceilFilter.SetLayerMask(~_stats.PlayerLayer);
             ceilFilter.useLayerMask = true;
@@ -536,6 +552,7 @@ namespace TarodevController
             _bufferedJumpUsable = false;
             _jumpToConsume = false;
             _timeJumpWasPressed = float.MinValue;
+            airborne = true;
 
             // Determine dash   direction based on input
             Vector2 inputDirection = _frameInput.Move;
@@ -626,6 +643,8 @@ namespace TarodevController
             _coyoteUsable = false;
 
             _frameVelocity.y = _stats.JumpPower;
+
+            airborne = true;
 
             Jumped?.Invoke();
         }
@@ -859,6 +878,7 @@ namespace TarodevController
         public void AddExternalVelocity(Vector2 velocity)
         {
             _externalVelocity += velocity;
+            airborne = true;
         }
 
         /// <summary>
@@ -880,6 +900,8 @@ namespace TarodevController
             _grounded = false;
             _frameLeftGrounded = _time;
 
+            airborne = true;
+
             _frameVelocity.y = strength;
             Jumped?.Invoke();
         }
@@ -891,7 +913,7 @@ namespace TarodevController
         public void SetFrameVelocity(Vector2 bro)
         {
             _frameVelocity = bro;
-
+            airborne = true;
         }
 
         public void OhTheMisery()
