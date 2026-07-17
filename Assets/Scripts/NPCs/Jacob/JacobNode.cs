@@ -2,37 +2,29 @@ using UnityEngine;
 
 public class JacobNode : MonoBehaviour
 {
+    [Header("Path")]
+    public JacobNode NextNode;
 
-    public enum NodeType
+    public TravelType TravelToNext = TravelType.Run;
+    public NodeAction Action = NodeAction.None;
+
+    public enum TravelType
     {
         Run,
-        Jump,
+        Jump
+    }
+
+    public enum NodeAction
+    {
+        None,
         Wait,
         Finish
     }
 
-
-    [Header("Node")]
-    public NodeType Type;
-
-    public JacobNode NextNode;
-
     [Header("Jump")]
-    public float JumpHeight = 3f;
-    public float JumpDuration = 0.5f;
+    public float jumpHeight = 3f;
+    public float jumpDuration = 0.5f;
 
     [Header("Wait")]
-    public float WaitTime = 1f;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float waitTime = 1f;
 }
