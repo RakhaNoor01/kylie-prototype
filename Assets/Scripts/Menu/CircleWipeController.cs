@@ -81,12 +81,15 @@ public class CircleWipeController : MonoBehaviour
     /// <summary>
     /// Wipe IN: lingkaran mengecil → layar jadi hitam.
     /// Panggil sebelum load scene.
+    /// Target akhir sengaja NEGATIF (bukan 0) supaya area smoothstep + softness
+    /// benar-benar terlewati — mencegah titik kecil di tengah masih sedikit transparan.
     /// </summary>
     public IEnumerator WipeIn()
     {
         gameObject.SetActive(true);
         UpdateAspectRatio();
-        yield return StartCoroutine(AnimateRadius(1.5f, 0f, wipeInDuration));
+        // Target -softness*2 memastikan radius melewati ambang smoothstep sepenuhnya
+        yield return StartCoroutine(AnimateRadius(1.5f, -softness * 2f, wipeInDuration));
     }
 
     /// <summary>
@@ -97,8 +100,19 @@ public class CircleWipeController : MonoBehaviour
     {
         gameObject.SetActive(true);
         UpdateAspectRatio();
-        yield return StartCoroutine(AnimateRadius(0f, 1.5f, wipeOutDuration));
+        yield return StartCoroutine(AnimateRadius(-softness * 2f, 1.5f, wipeOutDuration));
         gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Paksa lingkaran ke kondisi fully closed (full hitam) secara instant,
+    /// tanpa animasi. Dipakai saat loading screen butuh layar hitam total
+    /// langsung, tanpa nunggu wipe selesai natural.
+    /// </summary>
+    public void ForceFullyClosed()
+    {
+        gameObject.SetActive(true);
+        _mat.SetFloat(PropRadius, -softness * 2f);
     }
 
     // ── Private ───────────────────────────────────────────────────────────────

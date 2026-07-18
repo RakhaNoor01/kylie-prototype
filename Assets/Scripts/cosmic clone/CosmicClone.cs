@@ -3,8 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor.Animations;   // ← dibungkus agar tidak error saat build
+#endif
 
 public class CosmicClone : MonoBehaviour
 {

@@ -1,4 +1,7 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -14,6 +17,8 @@ public class Cop : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
         EditorUtility.CopySerialized(imGonnaCopyYou, ts);
+#endif
     }
 }

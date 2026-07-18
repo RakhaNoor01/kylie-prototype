@@ -238,24 +238,30 @@ public class MainMenuManager : MonoBehaviour
     public void LoadMountain() => StartCoroutine(Co_LoadScene(mountainSceneName));
 
     /// <summary>
-    /// PENTING: SoloLeveling.LoadLevel() memanggil SceneManager.LoadScene() yang SYNCHRONOUS.
-    /// Begitu dipanggil, scene Main Menu ini (termasuk coroutine ini sendiri) langsung
-    /// di-destroy. Karena itu, urutannya WAJIB:
-    ///   1. Jalankan & SELESAIKAN dulu animasi circle wipe (visual transisi)
-    ///   2. BARU panggil SoloLeveling.LoadLevel() di baris paling akhir
-    /// Tidak ada kode yang boleh berjalan setelah LoadLevel() dipanggil.
+    /// Urutan WAJIB (LoadLevel di SoloLeveling itu synchronous & destroy scene ini):
+    ///   1. Circle wipe sampai TUNTAS (layar full hitam)
+    ///   2. Loading screen muncul (BG hitam + spinner) — sebagai pengganti tampilan
+    ///      setelah circle wipe, karena dari titik ini loading SUNGGUHAN dimulai
+    ///   3. SoloLeveling.LoadLevel() dipanggil — scene berganti
+    ///   4. (di scene gameplay) RoomManager.InitializeStartRoom() selesai →
+    ///      scene gameplay itu sendiri yang panggil LoadingScreenController.Instance.Hide()
     /// </summary>
     private IEnumerator Co_LoadScene(string sceneName)
     {
         CurrentState = MenuState.Transitioning;
 
-        // 1) Jalankan transisi visual sampai TUNTAS dulu
+        // 1) Circle wipe sampai TUNTAS (layar full hitam, tidak ada celah)
         if (circleWipe != null)
             yield return StartCoroutine(circleWipe.WipeIn());
         else
             yield return StartCoroutine(_anim.FadeGroup(panelFade, 0f, 1f, 0.5f));
 
-        // 2) Transisi sudah selesai (layar sudah tertutup penuh) — baru pindah scene
+        // 2) Tampilkan loading screen (sudah full hitam dari circle wipe,
+        //    ShowInstant supaya tidak ada flicker antara wipe dan loading screen)
+        if (LoadingScreenController.Instance != null)
+            LoadingScreenController.Instance.ShowInstant();
+
+        // 3) Transisi visual selesai — baru pindah scene beneran
         if (soloLeveling != null)
         {
             soloLeveling.LoadLevel(sceneName);
@@ -266,6 +272,8 @@ public class MainMenuManager : MonoBehaviour
         }
 
         // Tidak ada kode setelah ini yang akan jalan — scene sudah berganti.
+        // Loading screen TETAP tampil (karena DontDestroyOnLoad) sampai
+        // scene gameplay yang baru memanggil LoadingScreenController.Instance.Hide().
     }
 
     public void OnClickExit()
