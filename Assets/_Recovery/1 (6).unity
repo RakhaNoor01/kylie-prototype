@@ -22786,7 +22786,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914290854}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -39829,7 +39829,7 @@ MonoBehaviour:
   lineProvider: {fileID: 0}
   saliencyStrategy: 0
   dialoguePresenters:
-  - {fileID: 1857933648}
+  - {fileID: 0}
   verboseLogging: 0
   autoStart: 0
   startNode: Start
@@ -39863,8 +39863,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CelesteDialoguePresenter
   dialogueBoxRoot: {fileID: 713981164}
-  dialogueBoxRect: {fileID: 713981165}
-  dialogueBoxImage: {fileID: 713981167}
   playerPanel:
     root: {fileID: 914290854}
     portrait: {fileID: 533276006}
@@ -39882,12 +39880,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 63661055bac254942b39cd6b43364a86, type: 2}
   - {fileID: 11400000, guid: 45cf4b5f4d50d4245a3c02d10bf50bcf, type: 2}
   secondsPerCharacter: 0.02
-  submitButtonName: Submit
-  dropDistance: 400
-  boxTransitionDuration: 0.35
-  targetCamera: {fileID: 1561298934}
-  zoomedOrthographicSize: 3
-  cameraTransitionDuration: 0.35
 --- !u!1 &1875811225
 GameObject:
   m_ObjectHideFlags: 0
@@ -39913,7 +39905,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1875811225}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
