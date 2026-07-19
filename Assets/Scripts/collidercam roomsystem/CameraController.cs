@@ -19,6 +19,8 @@ public class CameraController : MonoBehaviour
     public bool clampEnabled = false;
     public Bounds clampBounds;
 
+    public Vector3 ShakeOffset { get; set; }
+
     void LateUpdate()
     {
         if (target == null) return;
@@ -36,6 +38,12 @@ public class CameraController : MonoBehaviour
             desiredPosition.y = Mathf.Clamp(desiredPosition.y, clampBounds.min.y + camHalfH, clampBounds.max.y - camHalfH);
         }
 
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
+        Vector3 followPos = Vector3.Lerp(
+            transform.position,
+            desiredPosition,
+            followSpeed * Time.deltaTime
+        );
+
+        transform.position = followPos + ShakeOffset;
     }
 }

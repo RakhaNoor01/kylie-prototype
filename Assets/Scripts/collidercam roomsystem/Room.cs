@@ -17,8 +17,12 @@ public class Room : MonoBehaviour
 
     private static readonly List<Room> overlappingRooms = new List<Room>();
 
+    private GameObject player;
+
     private void Awake()
     {
+        player = Slopburger.instance.gameObject;
+
         HashSet<Room> unique = new HashSet<Room>();
 
         for (int i = adjacentRooms.Count - 1; i >= 0; i--)
@@ -35,7 +39,7 @@ public class Room : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.gameObject != player) return;
         if (!overlappingRooms.Contains(this))
             overlappingRooms.Add(this);
         if (CheckpointManager.Instance.IsRespawning) return;
@@ -44,7 +48,7 @@ public class Room : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (other.gameObject != player) return;
         overlappingRooms.Remove(this);
 
         if (RoomManager.Instance.CurrentRoom != this) return;
@@ -70,6 +74,28 @@ public class Room : MonoBehaviour
                 Debug.LogWarning($"Room '{name}' cannot be adjacent to itself. Removing entry.", this);
                 adjacentRooms.RemoveAt(i);
             }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (adjacentRooms == null)
+            return;
+
+        Gizmos.color = Color.cyan;
+
+        Vector3 start = transform.position;
+
+        foreach (var room in adjacentRooms)
+        {
+            if (room == null)
+                continue;
+
+            Vector3 end = room.transform.position;
+
+            Gizmos.DrawLine(start, end);
+
+            Gizmos.DrawWireSphere(end, 2f);
         }
     }
 }

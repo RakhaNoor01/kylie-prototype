@@ -32,10 +32,10 @@ namespace TarodevController
         [Tooltip("Deceleration in air only after stopping input mid-air")]
         public float AirDeceleration = 30;
 
-        [Tooltip("A constant downward force applied while grounded. Helps on slopes"), Range(0f, -10f)]
+        [Tooltip("A constant downward force applied while grounded. Helps on slopes")]
         public float GroundingForce = -1.5f;
 
-        [Tooltip("The detection distance for grounding and roof detection"), Range(0f, 0.5f)]
+        [Tooltip("The detection distance for grounding and roof detection")]
         public float GrounderDistance = 0.05f;
 
         [Header("JUMP")]
@@ -100,7 +100,21 @@ namespace TarodevController
         [Tooltip("How fast the player slides down walls")]
         public float wallSlideSpeed = 2f;
 
-        [Tooltip("idk what this one does tbh")]
+        [Tooltip("Coyote time for wall jump")]
         public float wallCoyoteTime = 0.2f;
+
+        [Header("STEP UP")]
+
+        [Tooltip("Base/foot of player to check for valid step-up")]
+        public float stepUpBase = 0.25f;
+
+        [Tooltip("Height to check for valid step-up")]
+        public float stepUpHeight = 0.5f;
+
+        [Tooltip("How far the step-up check goes")]
+        public float stepUpDistance = 0.27f;
+
+        [Tooltip("Yeurp")]
+        public float stepUpSpeed = 1;
     }
 }

@@ -17,10 +17,11 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Knockback")]
     public bool enableKnockback = true;
-
+    public bool dieFromVoid = true;
     public float voidThreshold = -40f;
 
     private bool _isDead = false;
+    public bool IsDead => _isDead;
 
     public event Action death;
     public event Action respawn;
@@ -35,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (iframeTimer > 0f) iframeTimer -= Time.deltaTime;
 
-        if (transform.position.y < voidThreshold)
+        if (transform.position.y < voidThreshold && dieFromVoid)
         {
             Die();
         }
@@ -46,6 +47,12 @@ public class PlayerHealth : MonoBehaviour
     public void AddIframes(float seconds)
     {
         iframeTimer = Mathf.Max(iframeTimer, seconds);
+    }
+
+    [ContextMenu("Force Player Death")]
+    public void ForceDeath()
+    {
+        Die();
     }
 
     public void Die(Vector2? hitDirection = null)
@@ -67,6 +74,7 @@ public class PlayerHealth : MonoBehaviour
         // Disable controller so player can't move
         PlayerController controller = GetComponent<PlayerController>();
         if (controller != null)
+            controller.Glider = false;
             controller.enabled = false;
 
         // Camera shake
@@ -74,9 +82,8 @@ public class PlayerHealth : MonoBehaviour
         if (enableCameraShake && CameraShake.Instance != null)
         {
             Debug.Log("Camera Shaked Boi");
-            CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
+            CameraShake.Instance.Shake(shakeDuration, shakeMagnitude, 0);
         }
-
 
         // Knockback
         if (enableKnockback)

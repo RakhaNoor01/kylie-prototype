@@ -11,6 +11,10 @@ public class Bomb : MonoBehaviour
     public float splosionRadius = 2f;
     public bool hasTimer = false;
     public float timer = 6;
+    public int damage = 1;
+    public float respawnDelay = 3;
+    public string bombID;
+    public bool nuke = false;
 
     [Header("Visual")]
     public float minDistance = 1.5f;
@@ -20,24 +24,38 @@ public class Bomb : MonoBehaviour
     public GameObject splosion;
     public GameObject fuse;
     public Animator pulse;
+    public string splodeAnimName = "splode";
 
     public static GameObject theBobm;
     private GameObject player;
     private PlayerHealth hi;
     public bool detonated = false;
     private bool ignited = false;
-    private CircleCollider2D col;
+    private Collider2D col;
     private ParticleSystem farticle;
+    private Vector2 spawnPos;
 
     private float realTimer = 0;
 
     private void Start()
     {
+        spawnPos = transform.position;
+
+        if (TempData.HasKey(bombID))
+        {
+            Destroy(gameObject);
+        }
+
         splosion.SetActive(false);
-        col = GetComponent<CircleCollider2D>();
+        col = GetComponent<Collider2D>();
         fuse.SetActive(false);
-        pulse.enabled = false;
         farticle = fuse.GetComponent<ParticleSystem>();
+
+        if (nuke && TempData.HasKey("nuke_collect"))
+        {
+            var ok = Slopburger.instance.gameObject.transform.position;
+            gameObject.transform.position = ok;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -65,8 +83,16 @@ public class Bomb : MonoBehaviour
             ignited = true;
             fuse.SetActive(true);
             farticle.Play();
-            pulse.enabled = true;
-            pulse.CrossFadeInFixedTime("bomb_pulse", 0.1f);
+            pulse.Play("bomb_pulse");
+        }
+        else
+        {
+            pulse.Play("bomb_pickup");
+        }
+
+        if (nuke)
+        {
+            TempData.SetValue("nuke_collect", true);
         }
     }
 
@@ -85,12 +111,12 @@ public class Bomb : MonoBehaviour
 
         if (realTimer >= tim)
         {
-            Detonate();
+            Detonate(false);
         }
 
         if (realTimer >= timer)
         {
-            pulse.CrossFadeInFixedTime("bomb_finalpulse", 0.1f);
+            pulse.Play("bomb_finalpulse");
         }
 
         realTimer += Time.deltaTime;
@@ -110,13 +136,17 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    public void Detonate()
+    public bool Detonate(bool detonateThing)
     {
-        if (player == null || detonated == true) return;
+        if (nuke && !detonateThing) return false;
+
+        if (player == null || detonated == true) return false;
         detonated = true;
         ignited = false;
 
         hi.AddIframes(iframes);
+
+        transform.position = player.transform.position;
 
         var pc = player.GetComponent<PlayerController>();
         if (pc != null)
@@ -125,13 +155,42 @@ public class Bomb : MonoBehaviour
             pc.CancelDash();
         }
 
+        bool hitBreakable = false;
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, splosionRadius);
+        RaycastHit2D[] rayHits = new RaycastHit2D[1];
         foreach (var hit in hits)
         {
             var breakable = hit.GetComponent<Breakable>();
-            if (breakable != null)
+            if (breakable == null)
+                continue;
+
+            Vector2 origin = transform.position;
+            Vector2 target = hit.bounds.center;
+
+            Vector2 direction = (target - origin).normalized;
+
+            ContactFilter2D filter = new ContactFilter2D();
+            filter.useLayerMask = true;
+            filter.useTriggers = false;
+            filter.SetLayerMask(~LayerMask.GetMask("Player", "Goonerang"));
+
+            Physics2D.Raycast(
+                origin,
+                direction,
+                filter,
+                rayHits,
+                splosionRadius
+            );
+
+            if (rayHits[0].collider == hit)
             {
-                breakable.HitFromBomb();
+                hitBreakable = true;
+                breakable.HitFromBomb(damage);
+
+                if (!string.IsNullOrEmpty(bombID))
+                {
+                    TempData.SetValue(bombID, "hello vro");
+                }
             }
         }
 
@@ -140,10 +199,12 @@ public class Bomb : MonoBehaviour
         pulse.gameObject.SetActive(false);
         fuse.SetActive(false);
 
-        StartCoroutine(Whoa());
+        StartCoroutine(Whoa(hitBreakable));
+
+        return true;
     }
 
-    private IEnumerator Whoa()
+    private IEnumerator Whoa(bool hitBreakable)
     {
         var sr = GetComponent<SpriteRenderer>();
         sr.enabled = false;
@@ -155,13 +216,33 @@ public class Bomb : MonoBehaviour
         var anim = splosion.GetComponent<Animator>();
         if (anim != null)
         {
-            anim.Play("splode");
+            anim.Play(splodeAnimName);
         }
 
         yield return new WaitForSeconds(effectDuration);
 
-        Destroy(splosion);
-        Destroy(gameObject);
+        if (hitBreakable)
+        {
+            Destroy(gameObject);
+            Destroy(splosion);
+            yield break;
+        }
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        // reset bomb
+        transform.position = spawnPos;
+        sr.enabled = true;
+
+        detonated = false;
+        realTimer = 0f;
+        player = null;
+        hi = null;
+
+        col.enabled = true;
+        splosion.SetActive(false);
+        pulse.gameObject.SetActive(true);
+        pulse.Play("bomb_respawn");
     }
 
     private void OnDrawGizmosSelected()

@@ -37,16 +37,13 @@ public class DashRecharge : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        // try interface first for flexibility
-        var player = other.GetComponent<IPlayerController>();
-        if (player == null)
-        {
-            // fallback to concrete type
-            player = other.GetComponent<PlayerController>();
-        }
+        var player = collision.GetComponent<PlayerController>();
+        if (player == null) return;
 
+        var hasDash = player.DashAvailable;
+        if (hasDash) return;
         if (player != null && yummers)
         {
             player.RechargeDash();

@@ -15,7 +15,8 @@ public class Boomerang : MonoBehaviour
 
     [Header("Return")]
     public float returnLerpStrength = 1f;
-    public float maxSpeed = 25f;
+    public float maxThrownSpeed = 25f;
+    public float maxReturnSpeed = 22f;
     public float distanceMult = 10f;
     public float distMultDelayTime = 1f;
 
@@ -24,19 +25,21 @@ public class Boomerang : MonoBehaviour
 
     [Header("Teleport")]
     public float tpSpeed = 0.1f;
-    public Collider2D phaseCol;
+    public float deflectGraceTime = 0.15f;
 
     [Header("Visuals")]
     public GameObject visual;
     public GameObject torchure;
-    public ParticleSystem torc;
     public GameObject directionIndicator;
     public TeleportEffect tpeffect;
     public ParticleSystem rangPhaseParticle;
 
     public TrailRenderer rangTrail;
+    public TrailRenderer burnTrail;
     public Gradient availableTpTrail;
     public Gradient normalTrail;
+    public Gradient tpBurnTrail;
+    public Gradient normalBurnTrail;
 
     private PlayerAudio _playerAudio;
 
@@ -44,13 +47,16 @@ public class Boomerang : MonoBehaviour
     private Collider2D col;
 
     private bool isThrown = false;
+    private bool isReturning = false;
     private bool hasDeflected = false;
+    private bool deflectGrace = false;
+
+    public bool IsThrown => isThrown;
 
     private bool isCharging = false;
     private Vector2 cachedDirection;
 
-    private float ogTime;
-    private float ogDelta;
+    private static float ogTime;
 
     private float distmulttimer;
 
@@ -66,14 +72,12 @@ public class Boomerang : MonoBehaviour
     public bool isBurning;
 
     private bool shouldTrail = false;
-    private bool shouldFire = false;
 
     // --- Alternate throw mode (J + WASD) ---
     private bool isChargingAlt = false;
     private Vector2 altWASDDirection = Vector2.right; // default direction
 
     private float noCatchTimer = 0;
-    private bool theplayerisdead = false;
 
     private bool insideGeometry = false;
 
@@ -87,23 +91,22 @@ public class Boomerang : MonoBehaviour
         slop = player.GetComponent<Slopburger>();
         _playerAudio = player.GetComponent<PlayerAudio>();
 
-        judgement.respawn += ResetBoomerang;
+        judgement.death += ResetBoomerang;
         judgement.tping = false;
 
         var ok = rangPhaseParticle.emission;
         ogROD = ok.rateOverDistance.Evaluate(0);
 
         ogTime = Time.timeScale;
-        ogDelta = Time.fixedDeltaTime;
 
         ResetBoomerang();
     }
 
     void Update()
     {
-        if (theplayerisdead) return;
+        if (judgement.IsDead) return;
 
-        VisualStuff();
+        HandleEffects();
 
         if (noCatchTimer >= 0)
         {
@@ -128,8 +131,6 @@ public class Boomerang : MonoBehaviour
                 burnerang = false;
             }
         }
-
-        HandleEffects();
 
         if (isThrown) return;
 
@@ -168,7 +169,6 @@ public class Boomerang : MonoBehaviour
 
             // Slow time down
             Time.timeScale = slowDown;
-            Time.fixedDeltaTime = ogDelta * slowDown;
 
             imLowkTrolling.doWeDeserveDestruction = true;
         }
@@ -186,7 +186,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -196,7 +195,6 @@ public class Boomerang : MonoBehaviour
 
     public void ResetBoomerang()
     {
-        theplayerisdead = false;
         isThrown = false;
         isCharging = false;
         isChargingAlt = false;
@@ -216,11 +214,10 @@ public class Boomerang : MonoBehaviour
 
         visual.SetActive(false);
         shouldTrail = false;
-        shouldFire = false;
 
         torchure.SetActive(false);
-        torc.Stop();
         rangTrail.emitting = false;
+        burnTrail.emitting = false;
 
         if (directionIndicator != null)
             directionIndicator.SetActive(false);
@@ -229,7 +226,6 @@ public class Boomerang : MonoBehaviour
         transform.parent = player.transform;
 
         Time.timeScale = ogTime;
-        Time.fixedDeltaTime = ogDelta;
 
         imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -239,34 +235,42 @@ public class Boomerang : MonoBehaviour
 
     private void HandleEffects()
     {
+        rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
+        burnTrail.colorGradient = hasTped ? normalBurnTrail : tpBurnTrail;
+
         if (isBurning)
         {
             torchure.SetActive(true);
-            shouldFire = true;
         }
         else
         {
             torchure.SetActive(false);
-            shouldFire = false;
-        }
-
-        if (shouldFire)
-        {
-            if (!torc.isPlaying) torc.Play();
-        }
-        else
-        {
-            if (torc.isPlaying) torc.Stop();
         }
 
         if (shouldTrail)
         {
-            rangTrail.emitting = true;
+            if (isBurning)
+            {
+                burnTrail.emitting = true;
+                rangTrail.emitting = false;
+            } 
+            else
+            {
+                burnTrail.emitting = false;
+                rangTrail.emitting = true;
+            }
+            
         }
         else
         {
             rangTrail.emitting = false;
+            burnTrail.emitting = false;
         }
+
+        var emission = rangPhaseParticle.emission;
+        emission.rateOverDistance = insideGeometry && !deflectGrace ? ogROD : 0;
+        var main = rangPhaseParticle.main;
+        main.startRotation = visual.transform.rotation.z;
     }
 
     void HandleAltThrow()
@@ -285,7 +289,6 @@ public class Boomerang : MonoBehaviour
 
             // Slow time down
             Time.timeScale = slowDown;
-            Time.fixedDeltaTime = ogDelta * slowDown;
 
             imLowkTrolling.doWeDeserveDestruction = true;
         }
@@ -328,7 +331,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
 
@@ -344,7 +346,6 @@ public class Boomerang : MonoBehaviour
                 directionIndicator.SetActive(false);
 
             Time.timeScale = ogTime;
-            Time.fixedDeltaTime = ogDelta;
 
             imLowkTrolling.doWeDeserveDestruction = false;
         }
@@ -383,9 +384,12 @@ public class Boomerang : MonoBehaviour
         float distanceFactor = Mathf.Clamp01(1f / (distance + 0.1f));
         float scaledSpeed = 1f;
 
-        if (distmulttimer >= distMultDelayTime)
+        bool dismultting = distmulttimer >= distMultDelayTime;
+
+        if (dismultting)
         {
-            scaledSpeed = maxSpeed * (1f + distanceFactor * distanceMult);
+            isReturning = true;
+            scaledSpeed = maxThrownSpeed * (1f + distanceFactor * distanceMult);
         }
 
         // Steer velocity toward player direction
@@ -395,8 +399,10 @@ public class Boomerang : MonoBehaviour
             returnLerpStrength * Time.fixedDeltaTime
         );
 
+        var clampTo = dismultting ? maxReturnSpeed : maxThrownSpeed;
+
         // Clamp
-        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxSpeed);
+        rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, clampTo);
     }
 
     void Throw()
@@ -406,7 +412,8 @@ public class Boomerang : MonoBehaviour
 
         transform.parent = null;
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.linearVelocity = cachedDirection * throwPower;
+
+        TheLopcity();
 
         visual.SetActive(true);
         shouldTrail = true;
@@ -422,6 +429,31 @@ public class Boomerang : MonoBehaviour
         StartCoroutine(IgnorePlayerBriefly());
     }
 
+    private void TheLopcity()
+    {
+        var plrb = player.GetComponent<Rigidbody2D>();
+
+        // Base throw velocity
+        Vector2 throwVelocity = cachedDirection * throwPower;
+
+        // Player movement
+        Vector2 playerVelocity = plrb.linearVelocity;
+
+        // Check alignment between velocities
+        float alignment = Vector2.Dot(
+            throwVelocity.normalized,
+            playerVelocity.normalized
+        );
+
+        // Remap to 0,1 to be used for Lerp
+        alignment = Mathf.Clamp01((alignment + 1f) * 0.5f);
+
+        // Larper
+        Vector2 addedVelocity = Vector2.Lerp(Vector2.zero, playerVelocity, alignment);
+
+        rb.linearVelocity = throwVelocity + addedVelocity;
+    }
+
     private IEnumerator IgnorePlayerBriefly()
     {
         int boomerangLayer = gameObject.layer;
@@ -434,7 +466,7 @@ public class Boomerang : MonoBehaviour
 
     void ICameToGoon()
     {
-        if (hasTped || insideGeometry) return;
+        if (hasTped || (insideGeometry && !deflectGrace)) return;
 
         hasTped = true;
         isTping = true;
@@ -494,7 +526,7 @@ public class Boomerang : MonoBehaviour
                 return;
         }
 
-        insideGeometry = IsPhaseCol();
+        insideGeometry = true;
 
         // Deflect off first non-player collision
         if (!hasDeflected && !other.gameObject.CompareTag("Player"))
@@ -533,20 +565,14 @@ public class Boomerang : MonoBehaviour
         insideGeometry = false;
     }
 
-    private Collider2D[] overlapResults = new Collider2D[8];
-
-    private bool IsPhaseCol()
-    {
-        ContactFilter2D filter = new ContactFilter2D();
-        filter.useTriggers = false;
-
-        int count = phaseCol.Overlap(filter, overlapResults);
-
-        return count > 0;
-    }
-
     void Deflect(Collider2D other)
     {
+        if (!isReturning)
+        {
+            deflectGrace = true;
+            Invoke(nameof(UnGrace), deflectGraceTime);
+        }
+
         Vector2 toPlayer = (player.transform.position - transform.position).normalized;
         distmulttimer = distMultDelayTime;
 
@@ -555,24 +581,17 @@ public class Boomerang : MonoBehaviour
         rb.linearVelocity = toPlayer * currentSpeed;
     }
 
+    void UnGrace()
+    {
+        deflectGrace = false;
+    }
+
     void Catch()
     {
         insideGeometry = false;
 
-        // Check pogo condition BEFORE resetting velocity
-        bool caughtFromBelow = false;
-
-        Vector2 boomerangVelocity = rb.linearVelocity;
-        float playerY = player.transform.position.y;
-        float boomerangY = transform.position.y;
-
-        // Was moving upward AND player was above?
-        if (boomerangVelocity.y > 0f && playerY > boomerangY)
-        {
-            caughtFromBelow = true;
-        }
-
         isThrown = false;
+        isReturning = false;
 
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -580,29 +599,9 @@ public class Boomerang : MonoBehaviour
         transform.position = player.transform.position;
         transform.parent = player.transform;
 
-        // Trigger pogo
-        if (caughtFromBelow)
-        {
-            PlayerController controller = player.GetComponent<PlayerController>();
-            if (controller != null)
-            {
-                controller.ActivatePogoWindow();
-            }
-        }
-
         visual.SetActive(false);
         shouldTrail = false;
         isBurning = false;
         col.enabled = false;
-    }
-
-    void VisualStuff()
-    {
-        rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
-
-        var emission = rangPhaseParticle.emission;
-        emission.rateOverDistance = insideGeometry ? ogROD : 0;
-        var main = rangPhaseParticle.main;
-        main.startRotation = visual.transform.rotation.z;
     }
 }

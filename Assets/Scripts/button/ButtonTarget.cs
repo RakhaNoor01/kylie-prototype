@@ -4,15 +4,18 @@ public class ButtonTarget : MonoBehaviour
 {
     public Button button;
     protected bool state;
+    public bool inverted;
+    public bool blocked = false;
 
-    private void Start()
+    public virtual void Awake()
     {
         if (button != null)
             button.RegisterTarget(this);
+        blocked = false;
     }
 
-    public virtual void SetState(bool setTo)
+    public virtual void SetState(bool state)
     {
-        state = setTo;
+        this.state = inverted ? !state : state;
     }
 }

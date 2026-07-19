@@ -155,6 +155,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 101657607}
   - {fileID: 1187643346}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &23095244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,9 +174,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &23095245
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -331,6 +335,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 23095243}
   - {fileID: 1037643127}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
 --- !u!114 &101657608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,9 +354,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &101657609
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -508,9 +516,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &127439645
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -647,6 +657,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 351274824}
   - {fileID: 1407359318}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &131755672
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,9 +696,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &131755674
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -823,6 +837,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1023795161}
   - {fileID: 435748265}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 0.5254902}
 --- !u!1 &158450494
 GameObject:
   m_ObjectHideFlags: 0
@@ -859,6 +875,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 547155538}
   - {fileID: 942697377}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &158450496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,9 +894,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &158450497
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1036,9 +1056,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &201772133
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1175,6 +1197,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1342176370}
   - {fileID: 1352258740}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &220807309
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,9 +1236,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &220807311
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1351,6 +1377,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1407359318}
   - {fileID: 1023795161}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &298161995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,6 +1506,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 942697377}
   - {fileID: 541143226}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &325179197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1495,9 +1525,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &325179198
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1655,9 +1687,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &343221085
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1794,6 +1828,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1463188106}
   - {fileID: 1394212989}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &351274819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1831,9 +1867,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &351274821
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1970,6 +2008,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1394212989}
   - {fileID: 127439648}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &370609513
 GameObject:
   m_ObjectHideFlags: 0
@@ -2236,9 +2276,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &435748262
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2375,6 +2417,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 131755677}
   - {fileID: 1342176370}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &541143225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2411,6 +2455,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 325179196}
   - {fileID: 1120823240}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &541143227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2428,9 +2474,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &541143228
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2587,6 +2635,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1037643127}
   - {fileID: 158450495}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
 --- !u!114 &547155539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2604,9 +2654,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &547155540
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2764,9 +2816,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &660484609
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2903,6 +2957,92 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1352258740}
   - {fileID: 848283876}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!1 &696069478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 696069480}
+  - component: {fileID: 696069479}
+  m_Layer: 0
+  m_Name: Global Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &696069479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696069478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.Light2D
+  m_ComponentVersion: 2
+  m_LightType: 4
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_LightVolumeIntensity: 1
+  m_LightVolumeEnabled: 0
+  m_ApplyToSortingLayers: 0000000047a02ccf11cc889995f88fe521164acf110f8d60
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowsEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowSoftness: 0.3
+  m_ShadowSoftnessFalloffIntensity: 0.5
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
+--- !u!4 &696069480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696069478}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.3697195, y: 1.6128417, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &735424303
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,6 +3170,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 660484612}
   - {fileID: 1187643346}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &848283877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3047,9 +3189,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &848283878
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3206,6 +3350,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 158450495}
   - {fileID: 325179196}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &942697378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3223,9 +3369,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &942697379
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3383,9 +3531,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &1023795158
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3522,6 +3672,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 220807314}
   - {fileID: 131755677}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
 --- !u!1 &1037643126
 GameObject:
   m_ObjectHideFlags: 0
@@ -3558,6 +3710,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 101657607}
   - {fileID: 547155538}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1037643128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3575,9 +3729,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1037643129
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3824,6 +3980,8 @@ MonoBehaviour:
   sceneName: f26
   adjacentRooms:
   - {fileID: 541143226}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1120823241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3841,9 +3999,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1120823242
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4001,9 +4161,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &1130935617
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4139,6 +4301,8 @@ MonoBehaviour:
   sceneName: f1
   adjacentRooms:
   - {fileID: 1463188106}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.124032564, g: 0.3773585, b: 0.115699545, a: 1}
 --- !u!1 &1145716475
 GameObject:
   m_ObjectHideFlags: 0
@@ -4313,6 +4477,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 848283876}
   - {fileID: 23095243}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &1187643347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4330,9 +4496,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1187643348
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4546,6 +4714,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1300838277}
   - component: {fileID: 1300838276}
+  - component: {fileID: 1300838278}
   m_Layer: 0
   m_Name: Room Manager
   m_TagString: Untagged
@@ -4567,6 +4736,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
   firstRoom: {fileID: 1037643127}
   allRooms: []
+  useLightSys: 1
 --- !u!4 &1300838277
 Transform:
   m_ObjectHideFlags: 0
@@ -4582,6 +4752,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1300838278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300838275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61411d2510070e84698b6d54bbf56c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightingManager
+  globalLight: {fileID: 696069479}
 --- !u!1 &1342176365
 GameObject:
   m_ObjectHideFlags: 0
@@ -4619,9 +4802,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1342176367
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4758,6 +4943,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 435748265}
   - {fileID: 201772136}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1352258735
 GameObject:
   m_ObjectHideFlags: 0
@@ -4795,9 +4982,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1352258737
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4934,6 +5123,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 201772136}
   - {fileID: 660484612}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1387201291
 GameObject:
   m_ObjectHideFlags: 0
@@ -5062,9 +5253,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &1394212986
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5201,6 +5394,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 343221088}
   - {fileID: 351274824}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1407359313
 GameObject:
   m_ObjectHideFlags: 0
@@ -5238,9 +5433,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &1407359315
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5377,6 +5574,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 127439648}
   - {fileID: 220807314}
+  globalLightIntensity: 0.5
+  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
 --- !u!1 &1463188101
 GameObject:
   m_ObjectHideFlags: 0
@@ -5414,9 +5613,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 0
+  player: {fileID: 0}
 --- !u!61 &1463188103
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5553,6 +5754,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1130935620}
   - {fileID: 343221088}
+  globalLightIntensity: 1
+  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1582707914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5952,3 +6155,4 @@ SceneRoots:
   - {fileID: 541143230}
   - {fileID: 1120823244}
   - {fileID: 1220096274}
+  - {fileID: 696069480}

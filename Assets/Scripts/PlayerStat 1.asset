@@ -20,10 +20,10 @@ MonoBehaviour:
   HorizontalDeadZoneThreshold: 0.1
   MaxSpeed: 7
   Acceleration: 150
-  GroundDeceleration: 60
+  GroundDeceleration: 150
   AirDeceleration: 45
-  GroundingForce: 0
-  GrounderDistance: 0.05
+  GroundingForce: -0.5
+  GrounderDistance: 0.1
   JumpPower: 12
   MaxFallSpeed: 12
   FallAcceleration: 40
@@ -34,15 +34,20 @@ MonoBehaviour:
   GlideDuration: 5
   GlideEntrySpeed: 30
   GlideSpeedMultiplier: 1.2
-  DashSpeed: 25
+  DashSpeed: 26
   DashDuration: 0.1
   DashCooldown: 1
   DashMomentumRetention: 0.3
   DashRefreshOnGround: 1
-  maxClingTime: 3
-  wallCheckDistance: 0.8
+  maxClingTime: 67
+  wallCheckDistance: 0.5
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
   wallSlideSpeed: 2
   wallCoyoteTime: 0.15
+  wallContactGrace: 0.15
+  stepUpBase: 0.4
+  stepUpHeight: 0.45
+  stepUpDistance: 0.3
+  stepUpSpeed: 0.01

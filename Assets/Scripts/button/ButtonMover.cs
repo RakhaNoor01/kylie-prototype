@@ -1,36 +1,78 @@
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class ButtonMover : ButtonTarget
 {
     public Transform target;
-    public float moveDur;
+    public float moveDur = 1;
+
+    [Header("Speed")]
+    public bool useSpeed = false;
+    public float moveSpeed = 1;
+
+    [Header("Easing")]
+    public Ease onEasing = Ease.Linear;
+    public Ease offEasing = Ease.Linear;
+
+    public bool useCustomEase = false;
+    public AnimationCurve customEase = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Vector3 ogPos;
     private Quaternion ogRot;
+    private float distance;
+    private bool init = false;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         ogPos = transform.position;
         ogRot = transform.rotation;
+        distance = Vector3.Distance(transform.position, target.transform.position);
     }
 
     public override void SetState(bool setTo)
     {
         base.SetState(setTo);
-
         transform.DOKill();
 
-        if (state)
+        Vector3 destinationPos = state ? target.position : ogPos;
+        Quaternion destinationRot = state ? target.rotation : ogRot;
+
+        if (!init)
         {
-            transform.DOMove(target.position, moveDur);
-            transform.DORotate(target.rotation.eulerAngles, moveDur);
-        } 
-        else if (!state)
+            init = true;
+            transform.SetPositionAndRotation(destinationPos, destinationRot);
+            return;
+        }
+
+        float duration = moveDur;
+        if (useSpeed)
         {
-            transform.DOMove(ogPos, moveDur);
-            transform.DORotate(ogRot.eulerAngles, moveDur);
+            duration = moveSpeed > 0f ? distance / moveSpeed : 0f;
+        }
+
+        Tween moveTween;
+        Tween rotateTween;
+
+        moveTween = transform.DOMove(destinationPos, duration);
+        rotateTween = transform.DORotate(destinationRot.eulerAngles, duration);
+
+        if (useCustomEase)
+        {
+            moveTween.SetEase(customEase);
+            rotateTween.SetEase(customEase);
+        }
+        else
+        {
+            Ease easing = state ? onEasing : offEasing;
+            moveTween.SetEase(easing);
+            rotateTween.SetEase(easing);
+        }
+
+        if (gameObject.GetComponent<Rigidbody>() != null)
+        {
+            moveTween.SetUpdate(UpdateType.Fixed);
         }
     }
 }

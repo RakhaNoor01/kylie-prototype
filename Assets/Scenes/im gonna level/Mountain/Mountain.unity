@@ -152,13 +152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 0, y: 2}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &22502133
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -334,9 +336,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &55112759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -508,13 +512,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 5}
+  offset: {x: 5, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
-  lockX: 1
-  lockY: 0
+  resetOnExit: 0
+  priority: 0
+  lockX: 0
+  lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &78917052
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -608,7 +614,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -690,9 +696,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &136763103
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -868,9 +876,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &157329822
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1046,9 +1056,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &163782294
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1224,9 +1236,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &235588120
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1402,9 +1416,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &250910522
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1671,9 +1687,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &324507844
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1849,9 +1867,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &387045597
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2023,13 +2043,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 5}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &396596152
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2123,7 +2145,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -2166,6 +2188,7 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 845128970}
   - {fileID: 404463679}
+  - {fileID: 0}
   globalLightIntensity: 1
   globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &404463674
@@ -2201,13 +2224,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 5}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 1
-  lockY: 0
+  lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &404463676
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2301,7 +2326,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -2322,8 +2347,8 @@ Transform:
   m_GameObject: {fileID: 404463674}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1346.0005, y: 515.00183, z: 0}
-  m_LocalScale: {x: 25.000107, y: 85, z: 1}
+  m_LocalPosition: {x: 1346.0005, y: 479.50183, z: 0}
+  m_LocalScale: {x: 25.000107, y: 14.00035, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2383,9 +2408,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &495206562
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2561,9 +2588,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &516868540
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2739,9 +2768,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &525475322
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2877,7 +2908,6 @@ MonoBehaviour:
   sceneName: m22
   adjacentRooms:
   - {fileID: 250910525}
-  - {fileID: 844885483}
   - {fileID: 157329825}
   globalLightIntensity: 1
   globalLightColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2911,8 +2941,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c651e085f50627418dcef9bfd863efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
-  firstRoom: {fileID: 387045600}
+  firstRoom: {fileID: 844885483}
   allRooms: []
+  useLightSys: 1
 --- !u!4 &603509015
 Transform:
   m_ObjectHideFlags: 0
@@ -3153,9 +3184,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &657169087
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3331,9 +3364,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &674175963
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3508,9 +3543,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &702105814
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3733,9 +3770,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &805033535
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3907,13 +3946,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 4, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &844885480
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4050,7 +4091,6 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 157329825}
   - {fileID: 163782297}
-  - {fileID: 525475325}
   globalLightIntensity: 1
   globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &845128965
@@ -4086,13 +4126,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 2}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &845128967
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4186,7 +4228,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -4207,7 +4249,7 @@ Transform:
   m_GameObject: {fileID: 845128965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1296, y: 464.25174, z: 0}
+  m_LocalPosition: {x: 1296, y: 464.5, z: 0}
   m_LocalScale: {x: 25, y: 21, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4394,9 +4436,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1015429421
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4568,13 +4612,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 2}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1040763053
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4668,7 +4714,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -4689,7 +4735,7 @@ Transform:
   m_GameObject: {fileID: 1040763051}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1296, y: 444.55228, z: 0}
+  m_LocalPosition: {x: 1296, y: 444.5, z: 0}
   m_LocalScale: {x: 25, y: 19, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4750,9 +4796,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1057007244
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4924,13 +4972,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 5, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
-  lockX: 1
-  lockY: 0
+  priority: 0
+  lockX: 0
+  lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1071272781
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5102,13 +5152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 5}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 1
-  lockY: 0
+  lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1083803719
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5202,7 +5254,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -5245,6 +5297,7 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 78917055}
   - {fileID: 404463679}
+  - {fileID: 0}
   globalLightIntensity: 1
   globalLightColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1115926720
@@ -5284,9 +5337,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1115926722
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5462,9 +5517,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1169844373
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5640,9 +5697,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1206884749
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5865,9 +5924,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1255697859
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6363,9 +6424,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1466644166
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6541,9 +6604,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1467775300
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6658,7 +6723,7 @@ Transform:
   m_GameObject: {fileID: 1467775298}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 418, y: 116, z: 0}
+  m_LocalPosition: {x: 418, y: 116.5, z: 0}
   m_LocalScale: {x: 25.0002, y: 14, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6719,9 +6784,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1479334745
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6897,9 +6964,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1573339550
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7075,9 +7144,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1581490480
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7253,9 +7324,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1623161787
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7431,9 +7504,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1663922143
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7605,13 +7680,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 5, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
-  lockX: 1
-  lockY: 0
+  priority: 0
+  lockX: 0
+  lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1693337931
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -7787,9 +7864,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1712931025
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8055,9 +8134,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1766163729
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8324,9 +8405,11 @@ MonoBehaviour:
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1871513199
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8545,13 +8628,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 4, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 1
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1893906401
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8645,7 +8730,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -8723,13 +8808,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 2}
+  offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 0
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &1963939610
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8823,7 +8910,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -8901,13 +8988,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 3}
+  offset: {x: 0, y: 2}
   zoom: 7
   lerpSpeed: 2
-  resetOnExit: 1
+  resetOnExit: 0
+  priority: 0
   lockX: 1
   lockY: 0
   clampToCollider: 1
+  player: {fileID: 0}
 --- !u!61 &2069341474
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9001,7 +9090,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 0a69c49d14ceff74c9d6e1347e6edb23, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.05882353}
@@ -9022,8 +9111,8 @@ Transform:
   m_GameObject: {fileID: 2069341472}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1271, y: 396.0017, z: 0}
-  m_LocalScale: {x: 25.000107, y: 90.10111, z: 1}
+  m_LocalPosition: {x: 1271, y: 396.5017, z: 0}
+  m_LocalScale: {x: 25.000107, y: 91.10124, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
