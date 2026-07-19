@@ -55,6 +55,7 @@ public static class BakeSelectedAutoTiles
             if (!tileCache.TryGetValue(data.sprite, out Tile tile))
             {
                 tile = ScriptableObject.CreateInstance<Tile>();
+                tile.name = $"{tileBase.name}_baked";
                 tile.sprite = data.sprite;
                 tile.colliderType = data.colliderType;
                 tile.flags = TileFlags.LockColor;
