@@ -1,22 +1,18 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 /// <summary>
-/// Pasang di tiap card level (Forest / Mountain).
+/// Pasang di tiap card level (Forest / Mountain / Ruins).
 ///
 /// HIERARCHY per card:
 /// [LevelCard_Forest]          ← pasang LevelCard.cs di sini
-///   ├── Image                 ← portrait/art card (bisa langsung di root)
-///   └── DimOverlay            ← Image, color hitam, alpha 0, raycastTarget OFF
+///   └── Image                 ← portrait/art card
+///
+/// Tidak ada dim overlay lagi — efek selected/unselected cukup dari scale.
 /// </summary>
 public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
-    [Header("References")]
-    [Tooltip("Image overlay hitam untuk efek menggelap saat tidak dipilih")]
-    public Image dimOverlay;
-
     // ── Internal ──────────────────────────────────────────────────────────────
 
     private int _index;
@@ -25,7 +21,6 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
     private Vector3 _originalScale;
 
     private Coroutine _scaleCoroutine;
-    private Coroutine _dimCoroutine;
 
     // ── Setup ─────────────────────────────────────────────────────────────────
 
@@ -36,14 +31,6 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         _manager = manager;
         _rect    = GetComponent<RectTransform>();
         _originalScale = _rect.localScale;
-
-        if (dimOverlay != null)
-        {
-            Color c = dimOverlay.color;
-            c.a = 0f;
-            dimOverlay.color = c;
-            dimOverlay.raycastTarget = false; // jangan block input ke card
-        }
     }
 
     // ── Pointer Events ────────────────────────────────────────────────────────
@@ -61,39 +48,49 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
     // ── Visual ────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Update tampilan card sesuai state selected/unselected.
-    /// Parameter nama cocok dengan panggilan di LevelSelectManager.
+    /// Update tampilan card sesuai state selected/unselected. Cuma scale, tidak ada dim.
     /// </summary>
-    public void SetSelected(bool selected, float selScale, float unselScale,
-                            float dimAlpha, float duration, bool animate)
+    public void SetSelected(bool selected, float selScale, float unselScale, float duration, bool animate)
     {
         float targetScale = selected ? selScale : unselScale;
-        float targetDim   = selected ? 0f : dimAlpha;
 
         if (_scaleCoroutine != null) StopCoroutine(_scaleCoroutine);
-        if (_dimCoroutine   != null) StopCoroutine(_dimCoroutine);
 
         if (animate)
-        {
             _scaleCoroutine = StartCoroutine(Co_Scale(targetScale, duration));
-            if (dimOverlay != null)
-                _dimCoroutine = StartCoroutine(Co_Dim(targetDim, duration));
-        }
         else
-        {
             _rect.localScale = _originalScale * targetScale;
-            ApplyDim(targetDim);
-        }
+    }
+
+    /// <summary>
+    /// Sembunyikan card total (scale 0) sebelum reveal sequence mulai.
+    /// Dipanggil LevelSelectManager.PrepareTransition() sebelum panel Level Select muncul.
+    /// </summary>
+    public void PrepareHidden()
+    {
+        if (_scaleCoroutine != null) StopCoroutine(_scaleCoroutine);
+        _rect.localScale = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Animasi "pop-in": card membesar dari scale 0 ke target (selected/unselected).
+    /// Dipanggil LevelSelectManager saat reveal sequence (staggered per card).
+    /// </summary>
+    public void PopIn(bool selected, float selScale, float unselScale, float duration)
+    {
+        float targetScale = selected ? selScale : unselScale;
+
+        _rect.localScale = Vector3.zero;
+
+        if (_scaleCoroutine != null) StopCoroutine(_scaleCoroutine);
+        _scaleCoroutine = StartCoroutine(Co_Scale(targetScale, duration));
     }
 
     /// <summary>Reset ke tampilan normal (dipanggil saat keluar Level Select)</summary>
     public void ResetVisual()
     {
         if (_scaleCoroutine != null) StopCoroutine(_scaleCoroutine);
-        if (_dimCoroutine   != null) StopCoroutine(_dimCoroutine);
-
         _rect.localScale = _originalScale;
-        ApplyDim(0f);
     }
 
     // ── Coroutines ────────────────────────────────────────────────────────────
@@ -113,32 +110,6 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         }
 
         _rect.localScale = endScale;
-    }
-
-    private IEnumerator Co_Dim(float targetAlpha, float duration)
-    {
-        float startAlpha = dimOverlay.color.a;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            ApplyDim(Mathf.Lerp(startAlpha, targetAlpha, t));
-            yield return null;
-        }
-
-        ApplyDim(targetAlpha);
-    }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private void ApplyDim(float alpha)
-    {
-        if (dimOverlay == null) return;
-        Color c = dimOverlay.color;
-        c.a = alpha;
-        dimOverlay.color = c;
     }
 
     private float EaseOutCubic(float t) => 1f - Mathf.Pow(1f - t, 3f);
