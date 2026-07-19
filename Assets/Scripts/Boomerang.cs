@@ -471,6 +471,7 @@ public class Boomerang : MonoBehaviour
         hasTped = true;
         isTping = true;
         judgement.tping = isTping;
+        imLowkTrolling.airborne = true;
 
         tpeffect.ToggleTrail(true);
 
@@ -484,6 +485,7 @@ public class Boomerang : MonoBehaviour
                 judgement.tping = isTping;
 
                 Catch();
+
                 if (!imLowkTrolling.IsGliding && !imLowkTrolling.IsClinging)
                 {
                     imLowkTrolling.ApplyBounce(0);

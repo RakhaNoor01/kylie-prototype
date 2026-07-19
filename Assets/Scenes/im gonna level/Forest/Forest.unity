@@ -156,7 +156,7 @@ MonoBehaviour:
   - {fileID: 101657607}
   - {fileID: 1187643346}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &23095244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 4, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -335,8 +335,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 23095243}
   - {fileID: 1037643127}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &101657608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,7 +511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 127439647}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -519,7 +519,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &127439645
 BoxCollider2D:
@@ -658,7 +658,7 @@ MonoBehaviour:
   - {fileID: 351274824}
   - {fileID: 1407359318}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &131755672
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 131755676}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -699,7 +699,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &131755674
 BoxCollider2D:
@@ -837,8 +837,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1023795161}
   - {fileID: 435748265}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 0.5254902}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &158450494
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,7 +876,7 @@ MonoBehaviour:
   - {fileID: 547155538}
   - {fileID: 942697377}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &158450496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: -4, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -1198,7 +1198,7 @@ MonoBehaviour:
   - {fileID: 1342176370}
   - {fileID: 1352258740}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &220807309
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,7 +1231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 220807313}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -1239,7 +1239,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &220807311
 BoxCollider2D:
@@ -1378,7 +1378,7 @@ MonoBehaviour:
   - {fileID: 1407359318}
   - {fileID: 1023795161}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &298161995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,7 +1437,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1460,8 +1460,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8639978444447685929, guid: 4437db9914bd9da4aa4ce49e41189be9, type: 3}
-  m_Color: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
+  m_Sprite: {fileID: 21300000, guid: f7ff6d5ff898a2c45b6a1ddf3fa9e316, type: 3}
+  m_Color: {r: 1, g: 0.9755357, b: 0.759434, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1507,7 +1507,7 @@ MonoBehaviour:
   - {fileID: 942697377}
   - {fileID: 541143226}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &325179197
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1521,7 +1521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 4, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -1829,7 +1829,7 @@ MonoBehaviour:
   - {fileID: 1463188106}
   - {fileID: 1394212989}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &351274819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,7 +1862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 351274823}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -1870,7 +1870,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &351274821
 BoxCollider2D:
@@ -1986,7 +1986,7 @@ Transform:
   m_GameObject: {fileID: 351274819}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 111, y: 6.8834457, z: 0}
+  m_LocalPosition: {x: 110.99989, y: 7, z: 0}
   m_LocalScale: {x: 25.000107, y: 13.999562, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2009,7 +2009,7 @@ MonoBehaviour:
   - {fileID: 1394212989}
   - {fileID: 127439648}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &370609513
 GameObject:
   m_ObjectHideFlags: 0
@@ -2068,7 +2068,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2091,8 +2091,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -8
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4515414374987350762, guid: c29931a4974d3ea4aaef9245ac25209f, type: 3}
-  m_Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+  m_Sprite: {fileID: 21300000, guid: d0b678d10571a35408b7ded85dbd6849, type: 3}
+  m_Color: {r: 0.99607843, g: 0.8980392, b: 0.23921569, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2159,7 +2159,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2182,8 +2182,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8077343773851480604, guid: 35266c246d9597741862184dbff05ab1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 63587a3c2c4e560479b50cf08d9bac2e, type: 3}
+  m_Color: {r: 0.40392157, g: 0.23137255, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2271,7 +2271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 435748264}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -2279,7 +2279,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &435748262
 BoxCollider2D:
@@ -2418,7 +2418,7 @@ MonoBehaviour:
   - {fileID: 131755677}
   - {fileID: 1342176370}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &541143225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2455,8 +2455,9 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 325179196}
   - {fileID: 1120823240}
+  - {fileID: 0}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &541143227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2470,7 +2471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 0, y: 2}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -2635,8 +2636,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 1037643127}
   - {fileID: 158450495}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &547155539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2958,7 +2959,7 @@ MonoBehaviour:
   - {fileID: 1352258740}
   - {fileID: 848283876}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &696069478
 GameObject:
   m_ObjectHideFlags: 0
@@ -3101,7 +3102,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3124,8 +3125,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -8
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 4515414374987350762, guid: c29931a4974d3ea4aaef9245ac25209f, type: 3}
-  m_Color: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+  m_Sprite: {fileID: 21300000, guid: d0b678d10571a35408b7ded85dbd6849, type: 3}
+  m_Color: {r: 0.9960785, g: 0.8980393, b: 0.2392157, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3171,7 +3172,7 @@ MonoBehaviour:
   - {fileID: 660484612}
   - {fileID: 1187643346}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &848283877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3351,7 +3352,7 @@ MonoBehaviour:
   - {fileID: 158450495}
   - {fileID: 325179196}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &942697378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3365,7 +3366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: -4}
+  offset: {x: 0, y: -2}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -3526,7 +3527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 1023795160}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -3534,7 +3535,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &1023795158
 BoxCollider2D:
@@ -3672,8 +3673,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 220807314}
   - {fileID: 131755677}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1037643126
 GameObject:
   m_ObjectHideFlags: 0
@@ -3711,7 +3712,7 @@ MonoBehaviour:
   - {fileID: 101657607}
   - {fileID: 547155538}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &1037643128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3725,7 +3726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
   cameraTo: {fileID: 0}
-  offset: {x: 0, y: 0}
+  offset: {x: 4, y: 0}
   zoom: 7
   lerpSpeed: 2
   resetOnExit: 0
@@ -3912,7 +3913,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3935,8 +3936,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -7
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 6205868240738193212, guid: 30e9f98623aba34458bc88babf436493, type: 3}
-  m_Color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+  m_Sprite: {fileID: 21300000, guid: e1a620427db57764eb000d9631bcb978, type: 3}
+  m_Color: {r: 0.89019614, g: 0.7372549, b: 0.27450982, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3981,7 +3982,7 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 541143226}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &1120823241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4156,7 +4157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 1130935619}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -4164,7 +4165,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &1130935617
 BoxCollider2D:
@@ -4301,8 +4302,8 @@ MonoBehaviour:
   sceneName: f1
   adjacentRooms:
   - {fileID: 1463188106}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.124032564, g: 0.3773585, b: 0.115699545, a: 1}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1145716475
 GameObject:
   m_ObjectHideFlags: 0
@@ -4408,7 +4409,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4431,8 +4432,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -6
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2743579983107701457, guid: 1f4ba2bf7bf45054cb464cf28be1ac23, type: 3}
-  m_Color: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
+  m_Sprite: {fileID: 21300000, guid: f6738b693943f5342a8b8b37a89ced6a, type: 3}
+  m_Color: {r: 0.6392157, g: 0.49803925, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4478,7 +4479,7 @@ MonoBehaviour:
   - {fileID: 848283876}
   - {fileID: 23095243}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!114 &1187643347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4694,7 +4695,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.28, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1721206097}
@@ -4734,7 +4735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c651e085f50627418dcef9bfd863efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
-  firstRoom: {fileID: 1037643127}
+  firstRoom: {fileID: 1130935620}
   allRooms: []
   useLightSys: 1
 --- !u!4 &1300838277
@@ -4944,7 +4945,7 @@ MonoBehaviour:
   - {fileID: 435748265}
   - {fileID: 201772136}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1352258735
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,7 +5125,7 @@ MonoBehaviour:
   - {fileID: 201772136}
   - {fileID: 660484612}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1387201291
 GameObject:
   m_ObjectHideFlags: 0
@@ -5183,7 +5184,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5206,8 +5207,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -6
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2743579983107701457, guid: 1f4ba2bf7bf45054cb464cf28be1ac23, type: 3}
-  m_Color: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
+  m_Sprite: {fileID: 21300000, guid: f6738b693943f5342a8b8b37a89ced6a, type: 3}
+  m_Color: {r: 0.6392157, g: 0.49803922, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5248,7 +5249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 1394212988}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -5256,7 +5257,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &1394212986
 BoxCollider2D:
@@ -5395,7 +5396,7 @@ MonoBehaviour:
   - {fileID: 343221088}
   - {fileID: 351274824}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1407359313
 GameObject:
   m_ObjectHideFlags: 0
@@ -5428,7 +5429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 1407359317}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -5436,7 +5437,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &1407359315
 BoxCollider2D:
@@ -5574,8 +5575,8 @@ MonoBehaviour:
   adjacentRooms:
   - {fileID: 127439648}
   - {fileID: 220807314}
-  globalLightIntensity: 0.5
-  globalLightColor: {r: 0.1254902, g: 0.3764706, b: 0.11764706, a: 1}
+  globalLightIntensity: 1
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1463188101
 GameObject:
   m_ObjectHideFlags: 0
@@ -5608,7 +5609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3e79e97027eb848b3563be16c9ae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraCollider
-  cameraTo: {fileID: 1463188105}
+  cameraTo: {fileID: 0}
   offset: {x: 0, y: 0}
   zoom: 7
   lerpSpeed: 2
@@ -5616,7 +5617,7 @@ MonoBehaviour:
   priority: 0
   lockX: 1
   lockY: 1
-  clampToCollider: 0
+  clampToCollider: 1
   player: {fileID: 0}
 --- !u!61 &1463188103
 BoxCollider2D:
@@ -5755,7 +5756,7 @@ MonoBehaviour:
   - {fileID: 1130935620}
   - {fileID: 343221088}
   globalLightIntensity: 1
-  globalLightColor: {r: 1, g: 1, b: 1, a: 1}
+  globalLightColor: {r: 0.675784, g: 1, b: 0.4669811, a: 1}
 --- !u!1 &1582707914
 GameObject:
   m_ObjectHideFlags: 0
@@ -5814,7 +5815,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5837,8 +5838,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -9
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -8639978444447685929, guid: 4437db9914bd9da4aa4ce49e41189be9, type: 3}
-  m_Color: {r: 0.8018868, g: 0.8018868, b: 0.8018868, a: 1}
+  m_Sprite: {fileID: 21300000, guid: f7ff6d5ff898a2c45b6a1ddf3fa9e316, type: 3}
+  m_Color: {r: 1, g: 0.9755357, b: 0.759434, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5905,7 +5906,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5928,8 +5929,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8077343773851480604, guid: 35266c246d9597741862184dbff05ab1, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 63587a3c2c4e560479b50cf08d9bac2e, type: 3}
+  m_Color: {r: 0.4039216, g: 0.23137257, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -5984,6 +5985,97 @@ Transform:
   - {fileID: 1708104451}
   - {fileID: 380573199}
   m_Father: {fileID: 1220096274}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1809622716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1809622718}
+  - component: {fileID: 1809622717}
+  m_Layer: 0
+  m_Name: Square
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &1809622717
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809622716}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 0.019607844, g: 0.3529412, b: 0.78431374, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+--- !u!4 &1809622718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809622716}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14, y: -20.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1835288846
 GameObject:
@@ -6090,7 +6182,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6113,8 +6205,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -7
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 6205868240738193212, guid: 30e9f98623aba34458bc88babf436493, type: 3}
-  m_Color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+  m_Sprite: {fileID: 21300000, guid: e1a620427db57764eb000d9631bcb978, type: 3}
+  m_Color: {r: 0.8901961, g: 0.7372549, b: 0.27450982, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6156,3 +6248,4 @@ SceneRoots:
   - {fileID: 1120823244}
   - {fileID: 1220096274}
   - {fileID: 696069480}
+  - {fileID: 1809622718}

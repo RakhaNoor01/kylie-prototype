@@ -74,7 +74,6 @@ public class PlayerAnimator : MonoBehaviour
             _anim.SetBool("IsClinging", clinging);
     }
 
-
     public void SetWallSlide(bool sliding)
     {
         if (_anim != null)

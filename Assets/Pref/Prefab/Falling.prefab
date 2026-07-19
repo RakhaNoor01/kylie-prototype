@@ -4948,6 +4948,9 @@ MonoBehaviour:
   respawnWait: 3
   stopCollision: {fileID: 0}
   particle: {fileID: 3699303807449301863}
+  noUnsolid: 0
+  noRespawn: 0
+  fallOnTouch: 1
   linearFall: 1
   linearFallSpeed: 6
 --- !u!50 &5542064247780720655
@@ -4973,9 +4976,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &3392844211155823912
 BoxCollider2D:
