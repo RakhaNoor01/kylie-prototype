@@ -16,20 +16,34 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Main Menu Elements")]
     public RectTransform logo;
-    [Tooltip("Urutan: Play, Controls, Exit")]
+    [Tooltip("Urutan: Play, Controls, Credit, Exit")]
     public RectTransform[] menuButtons;
 
-    [Header("Scene Names")]
-    public string forestSceneName   = "Level_Forest";
-    public string mountainSceneName = "Level_Mountain";
-
     [Header("Timing")]
-    public float introFadeDuration   = 1f;
-    public float logoDelay           = 0.3f;
-    public float buttonStagger       = 0.18f;   
+    public float introFadeDuration = 1f;
+    public float logoDelay = 0.3f;
+    public float buttonStagger = 0.18f;
     public float buttonSlideDuration = 0.4f;
-    public float panelTransDuration  = 0.45f;
-    public float circleWipeDuration  = 0.6f;
+    public float panelTransDuration = 0.45f;
+    public float circleWipeDuration = 0.6f;
+
+    [Header("Slide Offsets")]
+    [Tooltip("Offset X awal logo sebelum slide masuk (logo tetap geser horizontal seperti semula)")]
+    public float logoOffsetX = -300f;
+
+    [Tooltip("Offset Y awal tombol sebelum slide ke atas (layout sekarang center, jadi tombol naik dari bawah, bukan dari kiri)")]
+    public float buttonOffsetY = -380f;
+
+    [Header("Transition Distance (MANUAL, bukan auto dari Canvas)")]
+    [Tooltip("Jarak geser vertikal panel Main Menu <-> Level Select, dalam unit anchoredPosition. " +
+             "CARA NENTUIN: Play, pas lagi di Main Menu, klik Group_LevelSelect di Hierarchy, geser " +
+             "Pos Y di Inspector sampai keluar penuh dari Game view (Group_MainMenu juga harus hilang " +
+             "total pas ini), catat selisih Pos Y dari posisi awal (0) ke posisi itu, isi angkanya di sini. " +
+             "Kasih sedikit lebih dari cukup biar aman.")]
+    public float verticalSlideDistance = 1200f;
+
+    [Tooltip("Jarak geser horizontal panel Main Menu <-> Controls Guide, caranya sama seperti di atas tapi geser Pos X.")]
+    public float horizontalSlideDistance = 1920f;
 
     [Header("Logo Floating Animation")]
     [Tooltip("Kecepatan naik turun logo")]
@@ -41,6 +55,7 @@ public class MainMenuManager : MonoBehaviour
     public MenuState CurrentState { get; private set; } = MenuState.Intro;
 
     private float _canvasWidth;
+    private float _canvasHeight;
     private MenuAnimator _anim;
     private LevelSelectManager _levelSelect;
     private MenuNavigator _navigator;
@@ -51,19 +66,23 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake()
     {
-        _anim        = GetComponent<MenuAnimator>();
+        _anim = GetComponent<MenuAnimator>();
         _levelSelect = GetComponent<LevelSelectManager>();
-        _navigator   = GetComponent<MenuNavigator>();
+        _navigator = GetComponent<MenuNavigator>();
 
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        _canvasWidth  = ((RectTransform)canvas.transform).rect.width;
+        // Jarak slide sekarang FIXED dari Inspector (verticalSlideDistance /
+        // horizontalSlideDistance), BUKAN dihitung otomatis dari Canvas lagi.
+        // Ini paling konsisten: berapapun ukuran Canvas / device, panel akan selalu
+        // digeser sejauh angka yang kamu set manual, gak akan pernah "ketebak salah".
+        _canvasWidth = horizontalSlideDistance;
+        _canvasHeight = verticalSlideDistance;
 
         GroupOff(groupMainMenu);
         GroupOff(groupLevelSelect);
         GroupOff(groupControlsGuide);
 
-        panelFade.alpha          = 1f;
-        panelFade.interactable   = false;
+        panelFade.alpha = 1f;
+        panelFade.interactable = false;
         panelFade.blocksRaycasts = false;
     }
 
@@ -78,9 +97,9 @@ public class MainMenuManager : MonoBehaviour
 
         if (CurrentState == MenuState.ControlsGuide)
         {
-            if (Input.GetKeyDown(KeyCode.W)       || Input.GetKeyDown(KeyCode.S) ||
-                Input.GetKeyDown(KeyCode.UpArrow)  || Input.GetKeyDown(KeyCode.DownArrow) ||
-                Input.GetKeyDown(KeyCode.Escape)   || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S) ||
+                Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) ||
+                Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(0))
                 CloseControlsGuide();
         }
 
@@ -121,14 +140,17 @@ public class MainMenuManager : MonoBehaviour
         yield return new WaitForSeconds(logoDelay);
 
         GroupOn(groupMainMenu);
-        yield return null; 
-        yield return null; 
+        yield return null;
+        yield return null;
 
-        _anim.PrepareSlide(logo, offsetX: -300f);
+        // Logo tetap slide horizontal seperti semula
+        _anim.PrepareSlide(logo, offsetX: logoOffsetX);
+
+        // Tombol sekarang center, jadi slide dari bawah ke atas (offset Y negatif)
         foreach (var btn in menuButtons)
-            _anim.PrepareSlide(btn, offsetX: -380f);  
+            _anim.PrepareSlide(btn, new Vector2(0f, buttonOffsetY));
 
-        yield return null; 
+        yield return null;
 
         StartCoroutine(_anim.SlideToHome(logo, buttonSlideDuration));
         yield return new WaitForSeconds(buttonStagger);
@@ -157,17 +179,20 @@ public class MainMenuManager : MonoBehaviour
         CurrentState = MenuState.Transitioning;
         _navigator.Deactivate();
 
-        // Paksa kartu mengecil sebelum panel Journey digeser masuk
+        // Kosongkan dulu isi Level Select (card, title, line, control hint)
+        // supaya reveal sequence-nya mulai dari kondisi benar-benar blank
         _levelSelect.PrepareTransition();
 
-        yield return StartCoroutine(_anim.SlideOutLeft(groupMainMenu, panelTransDuration, _canvasWidth));
+        // Slide ke atas: Main Menu keluar, Level Select masuk dari bawah
+        yield return StartCoroutine(_anim.SlideOutUp(groupMainMenu, panelTransDuration, _canvasHeight));
         GroupOff(groupMainMenu);
+        _navigator.ResetButtonsVisual(); // aman direset sekarang, karena sudah invisible
 
         GroupOn(groupLevelSelect);
-        yield return StartCoroutine(_anim.SlideInRight(groupLevelSelect, panelTransDuration, _canvasWidth));
+        yield return StartCoroutine(_anim.SlideInUp(groupLevelSelect, panelTransDuration, _canvasHeight));
 
         CurrentState = MenuState.LevelSelect;
-        _levelSelect.OnEnter(); 
+        _levelSelect.OnEnter();
     }
 
     public void CloseLevelSelect()
@@ -180,17 +205,24 @@ public class MainMenuManager : MonoBehaviour
     {
         CurrentState = MenuState.Transitioning;
 
+        // OnExit() cuma matiin input (_isActive). Title/garis/hint/card SENGAJA
+        // dibiarkan seperti terakhir kelihatan, biar ikut ke-slide turun bareng
+        // panel — bukan lenyap instan sebelum panel sempat bergerak.
         _levelSelect.OnExit();
 
-        yield return StartCoroutine(_anim.SlideOutRight(groupLevelSelect, panelTransDuration, _canvasWidth));
+        // Slide ke bawah: Level Select keluar, Main Menu masuk dari atas
+        yield return StartCoroutine(_anim.SlideOutDown(groupLevelSelect, panelTransDuration, _canvasHeight));
         GroupOff(groupLevelSelect);
+        // Panel sudah invisible di sini — PrepareTransition() di Co_ToLevelSelect
+        // nanti yang akan reset ulang (card hidden, title/garis/hint alpha 0)
+        // sebelum reveal sequence berikutnya dimulai.
 
         GroupOn(groupMainMenu);
-        
+
         // Aktifkan hover Main Menu di SINI agar tombol langsung terlihat aktif saat panel bergerak masuk
         _navigator.Activate();
-        
-        yield return StartCoroutine(_anim.SlideInLeft(groupMainMenu, panelTransDuration, _canvasWidth));
+
+        yield return StartCoroutine(_anim.SlideInDown(groupMainMenu, panelTransDuration, _canvasHeight));
 
         CurrentState = MenuState.MainMenu;
     }
@@ -227,25 +259,17 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnClickControlsBackground() => CloseControlsGuide();
 
-    // ── Load Level (Circle Wipe) ───────────────────────────────────────────────
+    // ── Main Menu -> Credits (PLACEHOLDER) ─────────────────────────────────────
 
-    public void LoadForest()   => StartCoroutine(Co_LoadScene(forestSceneName));
-    public void LoadMountain() => StartCoroutine(Co_LoadScene(mountainSceneName));
-
-    private IEnumerator Co_LoadScene(string sceneName)
+    /// <summary>
+    /// Sementara belum ada panel Credits beneran — buat sekarang cuma buka
+    /// developer console bawaan Unity buat kebutuhan debug/testing.
+    /// TODO: ganti isi method ini kalau panel/scene Credits udah jadi.
+    /// </summary>
+    public void OnClickCredits()
     {
-        CurrentState = MenuState.Transitioning;
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false;
-
-        if (circleWipe != null)
-            yield return StartCoroutine(circleWipe.WipeIn());
-        else
-            yield return StartCoroutine(_anim.FadeGroup(panelFade, 0f, 1f, 0.5f));
-
-        asyncLoad.allowSceneActivation = true;
-        while (!asyncLoad.isDone) yield return null;
+        if (CurrentState != MenuState.MainMenu) return;
+        Debug.developerConsoleVisible = true;
     }
 
     public void OnClickExit()
@@ -259,6 +283,6 @@ public class MainMenuManager : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    public void GroupOn(CanvasGroup g)  { g.alpha = 1f; g.interactable = true;  g.blocksRaycasts = true;  }
+    public void GroupOn(CanvasGroup g) { g.alpha = 1f; g.interactable = true; g.blocksRaycasts = true; }
     public void GroupOff(CanvasGroup g) { g.alpha = 0f; g.interactable = false; g.blocksRaycasts = false; }
 }

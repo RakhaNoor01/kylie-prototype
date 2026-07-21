@@ -1,139 +1,194 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /// <summary>
-/// Pasang di tiap tombol (Btn_Play, Btn_Controls, Btn_Exit).
+/// Pasang di tiap tombol (Btn_Play, Btn_Settings, dst).
+///
+/// HIERARCHY per tombol (sesuai struktur yang sudah dipakai):
+/// [Button_Play]                ← pasang MenuButton.cs di sini (root, ini yang di-scale saat selected)
+///   ├── Icon                   ← Image, sprite ditukar normal/hover (instan, tidak fade)
+///   ├── ButtonUI                ← Image, versi normal shape tombol
+///   ├── ButtonHoverUI           ← Image, versi hover shape tombol
+///   └── Text (TMP)             ← tidak disentuh script ini
+///
+/// AUTO-FIND: field iconImage / buttonNormalUI / buttonHoverUI dicari otomatis
+/// berdasarkan nama child persis ("Icon", "ButtonUI", "ButtonHoverUI") kalau slotnya
+/// dibiarkan kosong di Inspector.
+///
+/// TIDAK ADA FADE: ButtonUI/ButtonHoverUI/Icon langsung ditukar instan (alpha 0/1
+/// langsung, bukan di-lerp). Feedback-nya justru dari animasi "pop" (scale membesar
+/// dengan sedikit overshoot/mantul) saat tombol di-hover/dipilih.
 /// </summary>
 public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
-    [Header("References")]
-    [Tooltip("GameObject Arrow ◄")]
-    public GameObject arrowIndicator;
+    [Header("References (auto-find by child name kalau kosong)")]
+    public Image iconImage;
+    public CanvasGroup buttonNormalUI;   // child "ButtonUI"
+    public CanvasGroup buttonHoverUI;    // child "ButtonHoverUI"
 
-    [Tooltip("CanvasGroup untuk background shape kuning (hover/selected)")]
-    public CanvasGroup hoverShapeGroup;
+    [Header("Icon Sprites - Normal / Hover")]
+    public Sprite iconNormalSprite;
+    public Sprite iconHoverSprite;
 
-    [Header("Shift on Select")]
-    [Tooltip("Seberapa jauh tombol geser ke kanan saat dipilih (pixels)")]
-    public float selectShiftX = 18f;
+    [Header("Pop Animation on Select")]
+    [Tooltip("Skala tombol saat dipilih/hover (1 = ukuran normal)")]
+    public float selectedScale = 1.1f;
 
-    [Tooltip("Durasi animasi geser dan fade shape")]
-    public float shiftDuration = 0.15f;
+    [Tooltip("Durasi animasi pop/mantul")]
+    public float popDuration = 0.18f;
 
     [HideInInspector] public System.Action onHover;
     [HideInInspector] public System.Action onClick;
 
+    // ── Internal ──────────────────────────────────────────────────────────────
+
     private RectTransform _rect;
-    private Vector2 _homePos;
-    private Coroutine _shiftCoroutine;
-    private bool _isSelected = false;
-    private bool _isInitialized = false;
+    private Vector3 _originalScale;
+    private Coroutine _popCoroutine;
+    private bool _isSelected     = false;
+    private bool _isInitialized  = false;
 
     private void Awake()
     {
-        // Memastikan inisialisasi lokal aman saat giliran Awake-nya jalan
         EnsureInitialized();
     }
 
     private void Start()
     {
-        // Memastikan kondisi awal benar-benar bersih saat game dimulai (Fix Semua Panah Muncul)
         ForceInitializeState(false);
     }
 
     /// <summary>
-    /// Fungsi pengaman untuk menjamin komponen RectTransform tidak null 
-    /// meskipun dipanggil lebih awal oleh script lain (MenuNavigator).
+    /// Memastikan referensi RectTransform & child (Icon/ButtonUI/ButtonHoverUI) terisi.
+    /// Auto-find dijalankan sekali saja, aman dipanggil berkali-kali.
     /// </summary>
     private void EnsureInitialized()
     {
         if (_rect == null)
         {
             _rect = GetComponent<RectTransform>();
-            _homePos = _rect.anchoredPosition;
+            _originalScale = _rect.localScale;
         }
+
+        if (iconImage == null)
+        {
+            Transform t = transform.Find("Icon");
+            if (t != null) iconImage = t.GetComponent<Image>();
+        }
+
+        if (buttonNormalUI == null)
+        {
+            Transform t = transform.Find("ButtonUI");
+            if (t != null) buttonNormalUI = GetOrAddCanvasGroup(t);
+        }
+
+        if (buttonHoverUI == null)
+        {
+            Transform t = transform.Find("ButtonHoverUI");
+            if (t != null) buttonHoverUI = GetOrAddCanvasGroup(t);
+        }
+    }
+
+    private CanvasGroup GetOrAddCanvasGroup(Transform t)
+    {
+        CanvasGroup cg = t.GetComponent<CanvasGroup>();
+        if (cg == null) cg = t.gameObject.AddComponent<CanvasGroup>();
+        // Layer visual saja, biar tidak rebutan raycast dengan root tombol
+        cg.blocksRaycasts = false;
+        cg.interactable   = false;
+        return cg;
     }
 
     public void SetSelected(bool selected)
     {
         EnsureInitialized();
 
-        // Jika sudah dalam state yang sama DAN sudah terinisialisasi secara eksternal, lewati proses
         if (_isInitialized && _isSelected == selected) return;
-        
-        _isSelected = selected;
+
+        _isSelected    = selected;
         _isInitialized = true;
 
-        if (arrowIndicator != null)
-            arrowIndicator.SetActive(selected);
+        // Swap instan, tidak ada fade
+        if (iconImage != null && iconNormalSprite != null && iconHoverSprite != null)
+            iconImage.sprite = selected ? iconHoverSprite : iconNormalSprite;
 
-        // Jalankan Animasi geser tombol + Fade In/Out Shape Kuning
-        if (_shiftCoroutine != null) StopCoroutine(_shiftCoroutine);
-        _shiftCoroutine = StartCoroutine(Co_Shift(selected));
+        if (buttonNormalUI != null) buttonNormalUI.alpha = selected ? 0f : 1f;
+        if (buttonHoverUI  != null) buttonHoverUI.alpha  = selected ? 1f : 0f;
+
+        // Animasi hover: pop/mantul di scale root tombol
+        if (_popCoroutine != null) StopCoroutine(_popCoroutine);
+        _popCoroutine = StartCoroutine(Co_Pop(selected));
     }
 
-    /// <summary>Reset ke posisi home (dipanggil saat navigator deactivate)</summary>
+    /// <summary>Reset ke tampilan normal (dipanggil saat navigator deactivate)</summary>
     public void ResetPosition()
     {
-        if (_shiftCoroutine != null) StopCoroutine(_shiftCoroutine);
+        if (_popCoroutine != null) StopCoroutine(_popCoroutine);
         ForceInitializeState(false);
     }
+
+    /// <summary>Dipanggil ulang saat PrepareSlide (intro) supaya baseline scale tetap benar</summary>
+    public void RefreshOriginalScale()
+    {
+        EnsureInitialized();
+        _originalScale = _rect.localScale;
+    }
+
+    // ── Internal ──────────────────────────────────────────────────────────────
 
     private void ForceInitializeState(bool selected)
     {
         EnsureInitialized();
 
-        _isSelected = selected;
+        _isSelected    = selected;
         _isInitialized = true;
-        
-        if (arrowIndicator != null) 
-            arrowIndicator.SetActive(selected);
-            
-        if (hoverShapeGroup != null) 
-            hoverShapeGroup.alpha = selected ? 1f : 0f;
-            
-        _rect.anchoredPosition = selected ? (_homePos + new Vector2(selectShiftX, 0f)) : _homePos;
+
+        if (iconImage != null && iconNormalSprite != null && iconHoverSprite != null)
+            iconImage.sprite = selected ? iconHoverSprite : iconNormalSprite;
+
+        if (buttonNormalUI != null) buttonNormalUI.alpha = selected ? 0f : 1f;
+        if (buttonHoverUI  != null) buttonHoverUI.alpha  = selected ? 1f : 0f;
+
+        _rect.localScale = selected ? _originalScale * selectedScale : _originalScale;
     }
 
-    private IEnumerator Co_Shift(bool shiftRight)
+    /// <summary>
+    /// Animasi "pop": saat selected, tombol membesar dengan sedikit overshoot (ease-out-back)
+    /// biar terasa mantul. Saat deselect, mengecil normal (ease-out-cubic).
+    /// </summary>
+    private IEnumerator Co_Pop(bool selected)
     {
-        EnsureInitialized();
-
-        Vector2 startPos = _rect.anchoredPosition;
-        Vector2 targetPos = _homePos + (shiftRight ? new Vector2(selectShiftX, 0f) : Vector2.zero);
-
-        float startAlpha = hoverShapeGroup != null ? hoverShapeGroup.alpha : 0f;
-        float targetAlpha = shiftRight ? 1f : 0f;
+        Vector3 startScale  = _rect.localScale;
+        Vector3 targetScale = selected ? _originalScale * selectedScale : _originalScale;
 
         float e = 0f;
-        while (e < shiftDuration)
+        while (e < popDuration)
         {
-            e += Time.deltaTime;
-            // Menggunakan Ease Out Cubic agar transisi terasa empuk
-            float t = 1f - Mathf.Pow(1f - Mathf.Clamp01(e / shiftDuration), 3f);
-            
+            // unscaledDeltaTime, BUKAN deltaTime — supaya animasi pop tetap jalan
+            // meskipun Time.timeScale = 0 (dipakai pas Pause Menu aktif).
+            e += Time.unscaledDeltaTime;
+            float tRaw = Mathf.Clamp01(e / popDuration);
+            float t = selected ? EaseOutBack(tRaw) : EaseOutCubic(tRaw);
+
             if (_rect != null)
-                _rect.anchoredPosition = Vector2.Lerp(startPos, targetPos, t);
-            
-            if (hoverShapeGroup != null)
-                hoverShapeGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, t);
+                _rect.localScale = Vector3.LerpUnclamped(startScale, targetScale, t);
 
             yield return null;
         }
-        
-        if (_rect != null) 
-            _rect.anchoredPosition = targetPos;
-            
-        if (hoverShapeGroup != null) 
-            hoverShapeGroup.alpha = targetAlpha;
+
+        if (_rect != null)
+            _rect.localScale = targetScale;
     }
 
-    // Saat PrepareSlide dipanggil ulang (intro), update homePos
-    public void RefreshHomePos()
+    private float EaseOutCubic(float t) => 1f - Mathf.Pow(1f - t, 3f);
+
+    private float EaseOutBack(float t)
     {
-        EnsureInitialized();
-        _homePos = _rect.anchoredPosition;
+        const float c1 = 1.70158f;
+        const float c3 = c1 + 1f;
+        return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
     }
 
     public void OnPointerEnter(PointerEventData eventData) => onHover?.Invoke();

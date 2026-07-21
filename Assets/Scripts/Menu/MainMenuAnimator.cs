@@ -26,12 +26,20 @@ public class MenuAnimator : MonoBehaviour
 
     // ── Individual Slide (logo & tombol) ──────────────────────────────────────
 
+    /// <summary>Overload lama, tetap dipakai logo (slide horizontal dari kiri).</summary>
     public void PrepareSlide(RectTransform rect, float offsetX = -350f)
+        => PrepareSlide(rect, new Vector2(offsetX, 0f));
+
+    /// <summary>
+    /// Versi umum: offset bebas arah (mis. Vector2(0, -380) untuk slide dari bawah ke atas).
+    /// Dipakai tombol menu sekarang karena layout sudah center, jadi geser vertikal bukan horizontal.
+    /// </summary>
+    public void PrepareSlide(RectTransform rect, Vector2 offset)
     {
         _homePos[rect] = rect.anchoredPosition;
         CanvasGroup cg = rect.GetComponent<CanvasGroup>();
         if (cg != null) cg.alpha = 0f;
-        rect.anchoredPosition = _homePos[rect] + new Vector2(offsetX, 0f);
+        rect.anchoredPosition = _homePos[rect] + offset;
     }
 
     public IEnumerator SlideToHome(RectTransform rect, float duration)
@@ -59,7 +67,7 @@ public class MenuAnimator : MonoBehaviour
         if (cg != null) cg.alpha = 1f;
     }
 
-    // ── Panel Slide ───────────────────────────────────────────────────────────
+    // ── Panel Slide - Horizontal (dipakai Main Menu ↔ Controls Guide) ──────────
 
     public IEnumerator SlideInRight(CanvasGroup group, float duration, float canvasW)
     {
@@ -125,6 +133,76 @@ public class MenuAnimator : MonoBehaviour
             yield return null;
         }
         rect.anchoredPosition = origin;
+    }
+
+    // ── Panel Slide - Vertical (dipakai Main Menu ↔ Level Select) ──────────────
+    // Ke Level Select: semuanya geser ke ATAS (Main Menu keluar ke atas, Level Select
+    // masuk dari bawah ke atas). Balik ke Main Menu: semuanya geser ke BAWAH (kebalikannya).
+
+    public IEnumerator SlideOutUp(CanvasGroup group, float duration, float canvasH)
+    {
+        RectTransform rect = group.GetComponent<RectTransform>();
+        Vector2 origin = rect.anchoredPosition;
+        Vector2 end    = origin + new Vector2(0f, canvasH);
+
+        float e = 0f;
+        while (e < duration)
+        {
+            e += Time.deltaTime;
+            rect.anchoredPosition = Vector2.Lerp(origin, end, EaseInOut(Mathf.Clamp01(e / duration)));
+            yield return null;
+        }
+        rect.anchoredPosition = origin;
+    }
+
+    public IEnumerator SlideInUp(CanvasGroup group, float duration, float canvasH)
+    {
+        RectTransform rect = group.GetComponent<RectTransform>();
+        Vector2 target = rect.anchoredPosition;
+        Vector2 start  = target - new Vector2(0f, canvasH);
+        rect.anchoredPosition = start;
+
+        float e = 0f;
+        while (e < duration)
+        {
+            e += Time.deltaTime;
+            rect.anchoredPosition = Vector2.Lerp(start, target, EaseOut(Mathf.Clamp01(e / duration)));
+            yield return null;
+        }
+        rect.anchoredPosition = target;
+    }
+
+    public IEnumerator SlideOutDown(CanvasGroup group, float duration, float canvasH)
+    {
+        RectTransform rect = group.GetComponent<RectTransform>();
+        Vector2 origin = rect.anchoredPosition;
+        Vector2 end    = origin - new Vector2(0f, canvasH);
+
+        float e = 0f;
+        while (e < duration)
+        {
+            e += Time.deltaTime;
+            rect.anchoredPosition = Vector2.Lerp(origin, end, EaseInOut(Mathf.Clamp01(e / duration)));
+            yield return null;
+        }
+        rect.anchoredPosition = origin;
+    }
+
+    public IEnumerator SlideInDown(CanvasGroup group, float duration, float canvasH)
+    {
+        RectTransform rect = group.GetComponent<RectTransform>();
+        Vector2 target = rect.anchoredPosition;
+        Vector2 start  = target + new Vector2(0f, canvasH);
+        rect.anchoredPosition = start;
+
+        float e = 0f;
+        while (e < duration)
+        {
+            e += Time.deltaTime;
+            rect.anchoredPosition = Vector2.Lerp(start, target, EaseOut(Mathf.Clamp01(e / duration)));
+            yield return null;
+        }
+        rect.anchoredPosition = target;
     }
 
     // ── Circle Wipe ───────────────────────────────────────────────────────────
