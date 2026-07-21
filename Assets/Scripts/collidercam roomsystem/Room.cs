@@ -98,4 +98,10 @@ public class Room : MonoBehaviour
             Gizmos.DrawWireSphere(end, 2f);
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(gameObject.transform.position, gameObject.transform.localScale);
+    }
 }

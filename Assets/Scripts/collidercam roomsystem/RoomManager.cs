@@ -62,6 +62,7 @@ public class RoomManager : MonoBehaviour
         CurrentRoom = room;
         LoadRoom(room);
 
+        if (!useLightSys) return;
         LightingManager.Instance.SetRoom(room);
     }
 

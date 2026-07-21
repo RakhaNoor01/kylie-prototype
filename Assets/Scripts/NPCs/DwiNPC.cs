@@ -1,14 +1,18 @@
 using UnityEngine;
+using Yarn.Unity;
 
 public class DwiNPC : MonoBehaviour
 {
     public Animator      animator;
     public SpriteRenderer spriteRenderer;
 
-    [Header("DIALOGUE")]
-    public DialogueData dialogue;
-    public Sprite       npcPortrait;
-    public Sprite       dialogueBoxSprite;
+    [Header("DIALOGUE (Yarn Spinner)")]
+    [Tooltip("Kalau dikosongin, otomatis dicari di scene (di-retry tiap frame sampai ketemu, " +
+             "penting kalau scene Persistent yang isinya DialogueRunner baru selesai load belakangan)")]
+    public DialogueRunner dialogueRunner;
+
+    [Tooltip("Nama node (title:) di file .yarn yang dijalankan saat player interaksi, contoh: 'Dwi_Start'")]
+    public string startNode = "Dwi_Start";
 
     public SpriteRenderer interactionIndicator;
 
@@ -20,26 +24,38 @@ public class DwiNPC : MonoBehaviour
     [Header("FACING")]
     public bool defaultFacingRight = true;
 
-    private Transform      player;
-    private Rigidbody2D    playerRb;
-    private bool           playerInRange;
-    private Vector3        indicatorOrigin;
+    private Transform player;
+    private bool      playerInRange;
+    private Vector3   indicatorOrigin;
+
+    // Dulu pencarian DialogueRunner cuma dilakukan sekali di Start().
+    // Kalau scene "Persistent" (tempat DialogueRunner hidup) belum selesai
+    // di-load pas Start() NPC ini jalan, dialogueRunner selamanya null dan
+    // interaksi diam-diam gagal tanpa error apapun. Sekarang di-retry tiap
+    // Update() sampai benar-benar ketemu, sama kayak pencarian "player".
+    private bool loggedRunnerFound;
 
     private void Start()
     {
         if (interactionIndicator != null)
             indicatorOrigin = interactionIndicator.transform.localPosition;
+
+        TryFindDialogueRunner();
     }
 
     private void Update()
     {
+        if (dialogueRunner == null)
+        {
+            TryFindDialogueRunner();
+        }
+
         if (player == null)
         {
             var go = GameObject.FindGameObjectWithTag("Player");
             if (go != null)
             {
-                player   = go.transform;
-                playerRb = go.GetComponent<Rigidbody2D>();
+                player = go.transform;
             }
             return;
         }
@@ -52,8 +68,9 @@ public class DwiNPC : MonoBehaviour
             spriteRenderer.flipX = defaultFacingRight ? !playerIsRight : playerIsRight;
         }
 
+        bool dialogueActive = dialogueRunner != null && dialogueRunner.IsDialogueRunning;
+
         // ── Sembunyikan indikator saat dialogue aktif ─────────────
-        bool dialogueActive = DialogueManager.Instance != null && DialogueManager.Instance.IsDialogueActive;
         if (interactionIndicator != null)
         {
             bool shouldShow = playerInRange && !dialogueActive;
@@ -70,9 +87,24 @@ public class DwiNPC : MonoBehaviour
         // ── Trigger dialogue ──────────────────────────────────────
         if (playerInRange
             && Input.GetButtonDown("Submit")
-            && !dialogueActive)
+            && !dialogueActive
+            && dialogueRunner != null)
         {
-            DialogueManager.Instance.StartDialogue(dialogue, npcPortrait, dialogueBoxSprite);
+            dialogueRunner.StartDialogue(startNode);
+        }
+    }
+
+    void TryFindDialogueRunner()
+    {
+        if (dialogueRunner != null) return;
+
+        dialogueRunner = FindAnyObjectByType<DialogueRunner>();
+
+        if (dialogueRunner != null && !loggedRunnerFound)
+        {
+            loggedRunnerFound = true;
+            // Boleh dihapus setelah yakin semuanya jalan normal.
+            Debug.Log("[DwiNPC] DialogueRunner ketemu: " + dialogueRunner.name, this);
         }
     }
 

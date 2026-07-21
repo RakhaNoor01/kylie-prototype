@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MenuNavigator : MonoBehaviour
 {
-    [Header("Tombol (urutan: Play, Controls, Exit)")]
+    [Header("Tombol (urutan: Play, Controls, Credit, Exit)")]
     public MenuButton[] buttons;
 
     private int _index   = 0;
@@ -32,7 +32,21 @@ public class MenuNavigator : MonoBehaviour
     public void Deactivate()
     {
         _active = false;
-        // #4: Reset semua tombol ke home, termasuk geseran kanan
+        // Visual tombol SENGAJA tidak direset di sini — dibiarkan apa adanya
+        // (mis. tombol Play yang lagi hover/scaled) supaya ikut ke-slide keluar
+        // bareng panel Main Menu. Kalau direset instan di sini, tombol yang lagi
+        // membesar (hover) bakal "snap" balik ke ukuran normal dalam 1 frame
+        // sebelum panel sempat bergerak — kelihatan seperti blink/bug.
+        // Panggil ResetButtonsVisual() setelah Main Menu benar-benar invisible.
+    }
+
+    /// <summary>
+    /// Reset semua tombol ke kondisi normal (scale, sprite icon, dsb).
+    /// Panggil ini SETELAH groupMainMenu di-GroupOff (sudah invisible),
+    /// supaya tidak ada snap instan yang kelihatan pemain.
+    /// </summary>
+    public void ResetButtonsVisual()
+    {
         foreach (var b in buttons) b.ResetPosition();
     }
 
@@ -70,7 +84,8 @@ public class MenuNavigator : MonoBehaviour
         {
             case 0: _mainMenu.OnClickPlay();     break;
             case 1: _mainMenu.OnClickControls(); break;
-            case 2: _mainMenu.OnClickExit();     break;
+            case 2: _mainMenu.OnClickCredits();  break;
+            case 3: _mainMenu.OnClickExit();     break;
         }
     }
 }
