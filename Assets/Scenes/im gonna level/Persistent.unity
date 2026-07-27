@@ -23124,7 +23124,8 @@ GameObject:
   - component: {fileID: 874633620}
   - component: {fileID: 874633623}
   - component: {fileID: 874633622}
-  - component: {fileID: 874633621}
+  - component: {fileID: 874633624}
+  - component: {fileID: 874633625}
   m_Layer: 0
   m_Name: Pixel Camera
   m_TagString: Untagged
@@ -23140,25 +23141,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 874633619}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -27, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1561298938}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &874633621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 874633619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00830941faf7eb2488d766aa66417bdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SyncCamera
 --- !u!114 &874633622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23254,6 +23243,31 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &874633624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874633619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d6c6e56acff23549a5f26e230dc3642, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PixelCamera
+  pixelsPerUnit: 16
+--- !u!114 &874633625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 874633619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00830941faf7eb2488d766aa66417bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SyncCamera
 --- !u!1 &883628838
 GameObject:
   m_ObjectHideFlags: 0
@@ -39948,7 +39962,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 874633620}
   - {fileID: 266297586}
   - {fileID: 1455784210}
   - {fileID: 46287642}
@@ -52550,6 +52563,7 @@ SceneRoots:
   - {fileID: 1948920039}
   - {fileID: 1206627874}
   - {fileID: 1561298938}
+  - {fileID: 874633620}
   - {fileID: 450797597}
   - {fileID: 445019509}
   - {fileID: 2134265128}
