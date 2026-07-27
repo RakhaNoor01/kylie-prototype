@@ -23568,6 +23568,7 @@ GameObject:
   - component: {fileID: 1001379878}
   - component: {fileID: 1001379877}
   - component: {fileID: 1001379876}
+  - component: {fileID: 1001379879}
   m_Layer: 3
   m_Name: Visual
   m_TagString: Player
@@ -23688,6 +23689,25 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1001379879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001379874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9796f4a73a08c248ab8d75ce2744780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  controller: {fileID: 450797596}
+  maxStretch: 0.5
+  maxVerticalSpeed: 20
+  smoothSpeed: 20
+  maxLandingSquash: 0.18
+  landingRecoverSpeed: 12
+  minFallSpeed: 5
 --- !u!1 &1008116102
 GameObject:
   m_ObjectHideFlags: 0
@@ -23810,7 +23830,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 960.21, y: 879}
+  m_AnchoredPosition: {x: 960.20996, y: 879}
   m_SizeDelta: {x: 389, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1009351924
@@ -39876,7 +39896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   target: {fileID: 450797597}
   followSpeed: 6
-  offset: {x: 0, y: 0}
+  offset: {x: 4.84, y: 0}
   lockX: 0
   lockY: 0
   clampEnabled: 0
