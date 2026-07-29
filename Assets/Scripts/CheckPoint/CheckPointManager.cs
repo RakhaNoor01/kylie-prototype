@@ -48,7 +48,8 @@ public class CheckpointManager : MonoBehaviour
 
     private void Start()
     {
-        FindPlayer();
+    FindPlayer();
+    LoadCheckpointFromSave();
     }
 
     private void FindPlayer()
@@ -64,17 +65,20 @@ public class CheckpointManager : MonoBehaviour
 
     public void SetCheckpoint(Vector3 newCheckpoint, string sceneName, bool firsCpoint)
     {
-        currentCheckpoint = newCheckpoint;
-        checkpointScene = sceneName;
-        hasCheckpoint = true;
+    currentCheckpoint = newCheckpoint;
+    checkpointScene = sceneName;
+    hasCheckpoint = true;
 
-        // If player isn't found yet, try now (starting checkpoint fires before Start sometimes)
-        FindPlayer();
+    FindPlayer();
 
-        // Teleport the player immediately on first checkpoint set
-        if (player != null && firsCpoint && !firstCpSet)
-            player.transform.position = currentCheckpoint; firstCpSet = true;
+    if (player != null && firsCpoint && !firstCpSet)
+    {
+        player.transform.position = currentCheckpoint;
+        firstCpSet = true;
     }
+
+    SaveCheckpointToFile();
+    }   
 
     public void PlayerDied()
     {
@@ -189,14 +193,21 @@ public class CheckpointManager : MonoBehaviour
 
     public void SpawnAtRoom(Room room)
     {
-        // Find the starting checkpoint in the room scene, or fall back to room origin
-        Vector3 spawnPos = GetRoomSpawnPosition(room);
-        SetCheckpoint(spawnPos, room.sceneName, false); // false = don't use isStartingPoint logic
+    if (hasCheckpoint && !string.IsNullOrEmpty(checkpointScene) && checkpointScene == room.sceneName)
+    {
         FindPlayer();
         if (player != null)
-            player.transform.position = spawnPos;
+            player.transform.position = currentCheckpoint;
+        return;
     }
 
+    Vector3 spawnPos = GetRoomSpawnPosition(room);
+    SetCheckpoint(spawnPos, room.sceneName, false);
+
+    FindPlayer();
+    if (player != null)
+        player.transform.position = spawnPos;
+    }
     private Vector3 GetRoomSpawnPosition(Room room)
     {
         // Look for a Checkpoint with isStartingPoint in the loaded scene
@@ -217,7 +228,31 @@ public class CheckpointManager : MonoBehaviour
         // No checkpoint found — you could fall back to a Room-defined spawn point here
         Debug.LogWarning($"[CheckpointManager] No checkpoint found in {room.sceneName}, using zero");
         return Vector3.zero;
+
+        
     }
 
+public Vector3 GetCheckpointPosition() => currentCheckpoint;
+public string GetCheckpointScene() => checkpointScene;
+private void SaveCheckpointToFile()
+{
+    SaveSystem.SavePlayerData(this);
+}
+
+private void LoadCheckpointFromSave()
+{
+    PlayerData data = SaveSystem.LoadPlayerData();
+    if (data == null || !data.hasCheckpoint)
+        return;
+
+    currentCheckpoint = data.GetCheckpointPosition();
+    checkpointScene = data.sceneName;
+    hasCheckpoint = true;
+    firstCpSet = true;
+
+    FindPlayer();
+    if (player != null && SceneManager.GetActiveScene().name == checkpointScene)
+        player.transform.position = currentCheckpoint;
+}
     public bool IsPlayerInvincible() => invincibilityTimer > 0;
 }
