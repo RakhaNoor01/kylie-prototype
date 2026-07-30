@@ -5117,7 +5117,6 @@ GameObject:
   m_Component:
   - component: {fileID: 283994103}
   - component: {fileID: 283994106}
-  - component: {fileID: 283994105}
   - component: {fileID: 283994104}
   m_Layer: 0
   m_Name: SpikesMoss
@@ -5197,44 +5196,6 @@ TilemapRenderer:
   m_SortOrder: 0
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
---- !u!19719996 &283994105
-TilemapCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283994102}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 1000
-  m_ExtrusionFactor: 0
-  m_UseDelaunayMesh: 0
 --- !u!1839735485 &283994106
 Tilemap:
   m_ObjectHideFlags: 0
@@ -35273,6 +35234,7 @@ GameObject:
   - component: {fileID: 711228463}
   - component: {fileID: 711228462}
   - component: {fileID: 711228461}
+  - component: {fileID: 711228464}
   m_Layer: 0
   m_Name: Spikes
   m_TagString: Untagged
@@ -38105,6 +38067,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &711228464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711228459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2e3264c1a550749b62537e2e9da09c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathZone
+  detonationOnly: 0
 --- !u!4 &975008003 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7772582087211300206, guid: bab160afa299a6a45b4a7cbe3e798dcf, type: 3}
