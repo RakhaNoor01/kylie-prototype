@@ -41,8 +41,16 @@ public class LevelSelectManager : MonoBehaviour
     private void Awake()
     {
         _cards = new LevelCard[] { cardForest, cardMountain, cardRuins };
+
         for (int i = 0; i < _cards.Length; i++)
+        {
+            if (_cards[i] == null)
+            {
+                Debug.LogError($"[LevelSelectManager] Card index {i} belum di-assign di Inspector!", this);
+                continue;
+            }
             _cards[i].Setup(i, this);
+        }
 
         if (soloLeveling == null)
         {
@@ -56,20 +64,27 @@ public class LevelSelectManager : MonoBehaviour
 
     public void PrepareTransition()
     {
+        Debug.Log("[LevelSelectManager] PrepareTransition");
         _selectedIndex = 0;
-        foreach (var card in _cards) card.PrepareHidden();
+        foreach (var card in _cards)
+        {
+            if (card == null) continue;
+            card.PrepareHidden();
+        }
         if (titleGroup != null) titleGroup.alpha = 0f;
         if (controlHintGroup != null) controlHintGroup.alpha = 0f;
     }
 
     public void OnEnter()
     {
+        Debug.Log("[LevelSelectManager] OnEnter");
         _selectedIndex = 0;
         StartCoroutine(Co_RevealSequence());
     }
 
     public void OnExit()
     {
+        Debug.Log("[LevelSelectManager] OnExit");
         _isActive = false;
         _currentTween?.Kill();
     }
@@ -106,6 +121,7 @@ public class LevelSelectManager : MonoBehaviour
 
         for (int i = 0; i < _cards.Length; i++)
         {
+            if (_cards[i] == null) continue;
             bool selected = i == _selectedIndex;
             _cards[i].PopIn(selected, selectedScale, unselectedScale, cardPopDuration);
             yield return new WaitForSeconds(cardPopStagger);

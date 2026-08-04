@@ -8,11 +8,16 @@ using DG.Tweening;
 /// </summary>
 public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
+    [Header("Tilt saat hover")]
+    public float tiltAngle = -3f;
+    public float tiltDuration = 0.18f;
+
     private int _index;
     private LevelSelectManager _manager;
     private RectTransform _rect;
     private Vector3 _originalScale;
     private Tween _tween;
+    private Tween _tiltTween;
 
     public void Setup(int index, LevelSelectManager manager)
     {
@@ -20,6 +25,7 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         _manager = manager;
         _rect = GetComponent<RectTransform>();
         _originalScale = _rect.localScale;
+        _rect.localRotation = Quaternion.Euler(0f, 0f, tiltAngle);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -46,6 +52,16 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         {
             _rect.localScale = _originalScale * targetScale;
         }
+
+        ApplyTilt(selected);
+    }
+
+    private void ApplyTilt(bool selected)
+    {
+        float targetZ = selected ? 0f : tiltAngle;
+        _tiltTween?.Kill();
+        _tiltTween = _rect.DORotate(new Vector3(0f, 0f, targetZ), tiltDuration)
+            .SetEase(Ease.OutBack);
     }
 
     public void PrepareHidden()
@@ -61,11 +77,15 @@ public class LevelCard : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         _rect.localScale = Vector3.zero;
         _tween = _rect.DOScale(_originalScale * targetScale, duration)
             .SetEase(Ease.OutCubic);
+
+        ApplyTilt(selected);
     }
 
     public void ResetVisual()
     {
         _tween?.Kill();
+        _tiltTween?.Kill();
         _rect.localScale = _originalScale;
+        _rect.localRotation = Quaternion.Euler(0f, 0f, tiltAngle);
     }
 }

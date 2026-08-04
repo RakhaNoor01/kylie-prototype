@@ -179,8 +179,15 @@ public class RoomManager : MonoBehaviour
         isSyncing = false;
     }
 
+    public void RefreshRoomList()
+    {
+        allRooms.Clear();
+        allRooms.AddRange(FindObjectsByType<Room>(FindObjectsSortMode.None));
+    }
+
     public Room GetRoomByName(string sceneName)
     {
+        RefreshRoomList();
         return allRooms.Find(r => r.sceneName == sceneName);
     }
 

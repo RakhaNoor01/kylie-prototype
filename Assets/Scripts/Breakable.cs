@@ -75,6 +75,6 @@ public class Breakable : MonoBehaviour
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        fart.SetActive(false);
+        if (fart != null) fart.SetActive(false);
     }
 }

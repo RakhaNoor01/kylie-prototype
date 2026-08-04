@@ -7,7 +7,7 @@ public static class DumbAndStupid
     private const string MenuPath = "Tools/Always Start From Main Menu";
     private const string PrefKey = "ForceStartSceneEnabled";
     private const string ScenePath = 
-        "Assets/Scenes/im gonna level/A level select.unity";
+        "Assets/Scenes/Menu/Main Menu.unity";
 
     static DumbAndStupid()
     {

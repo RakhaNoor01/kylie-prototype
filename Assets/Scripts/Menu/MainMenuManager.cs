@@ -1,7 +1,6 @@
 // MainMenuManager.cs - FULL CODE (dengan Credits Escape fix)
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class MainMenuManager : MonoBehaviour
@@ -10,20 +9,20 @@ public class MainMenuManager : MonoBehaviour
     public CanvasGroup groupMainMenu;
     public CanvasGroup groupSettings;
     public CanvasGroup groupCredits;
+    public CanvasGroup groupLevelSelect;
 
     [Header("References")]
     public MenuNavigator navigator;
     public SettingsMenuManager settingsMenu;
+    public LevelSelectManager levelSelectManager;
 
     [Header("Durasi Transisi")]
     public float transitionOutDuration = 0.22f;
     public float transitionInDuration = 0.32f;
 
-    [Header("Start Journey")]
-    public string startSceneName;
-
     private Tween _currentTween;
     private bool _isInCredits = false;
+    private bool _isInLevelSelect = false;
 
     private void Awake()
     {
@@ -33,6 +32,7 @@ public class MainMenuManager : MonoBehaviour
         GroupOn(groupMainMenu);
         GroupOff(groupSettings);
         GroupOff(groupCredits);
+        GroupOff(groupLevelSelect);
     }
 
     private void Start()
@@ -48,16 +48,49 @@ public class MainMenuManager : MonoBehaviour
             Debug.Log("[MainMenuManager] ESC pressed in Credits - closing...");
             CloseCredits();
         }
+
+        // ESC untuk keluar dari Level Select
+        if (_isInLevelSelect && Input.GetKeyDown(KeyCode.Escape))
+        {
+            Debug.Log("[MainMenuManager] ESC pressed in Level Select - closing...");
+            CloseLevelSelect();
+        }
     }
 
     public void OnClickPlay()
     {
-        if (string.IsNullOrEmpty(startSceneName))
+        Debug.Log("[MainMenuManager] OnClickPlay ditekan");
+        StartCoroutine(Co_ToLevelSelect());
+    }
+
+    public void CloseLevelSelect() => StartCoroutine(Co_BackFromLevelSelect());
+
+    private IEnumerator Co_ToLevelSelect()
+    {
+        if (levelSelectManager == null)
         {
-            Debug.LogWarning("[MainMenuManager] startSceneName belum diisi di Inspector");
-            return;
+            Debug.LogWarning("[MainMenuManager] levelSelectManager belum di-set di Inspector");
+            yield break;
         }
-        SceneManager.LoadScene(startSceneName);
+
+        levelSelectManager.PrepareTransition();
+
+        _currentTween?.Kill();
+        yield return StartCoroutine(Co_SwapPanels(groupMainMenu, groupLevelSelect, zoomIn: false));
+
+        _isInLevelSelect = true;
+        levelSelectManager.OnEnter();
+    }
+
+    private IEnumerator Co_BackFromLevelSelect()
+    {
+        _isInLevelSelect = false;
+        levelSelectManager?.OnExit();
+
+        _currentTween?.Kill();
+        yield return StartCoroutine(Co_SwapPanels(groupLevelSelect, groupMainMenu, zoomIn: true));
+
+        navigator.RestoreSelection();
     }
 
     public void OnClickOptions() => StartCoroutine(Co_ToOptions());
@@ -133,7 +166,7 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
-            toRect.localScale = Vector3.one * 1.3f;
+            toRect.localScale = Vector3.one * 1.1f;
             _currentTween = toRect.DOScale(1f, transitionInDuration)
                 .SetEase(Ease.OutBack);
         }
@@ -144,6 +177,11 @@ public class MainMenuManager : MonoBehaviour
 
     private void GroupOn(CanvasGroup g)
     {
+        if (g == null)
+        {
+            Debug.LogError("[MainMenuManager] CanvasGroup kosong — cek Inspector!", this);
+            return;
+        }
         g.alpha = 1f;
         g.interactable = true;
         g.blocksRaycasts = true;
@@ -151,6 +189,11 @@ public class MainMenuManager : MonoBehaviour
 
     private void GroupOff(CanvasGroup g)
     {
+        if (g == null)
+        {
+            Debug.LogError("[MainMenuManager] CanvasGroup kosong — cek Inspector!", this);
+            return;
+        }
         g.alpha = 0f;
         g.interactable = false;
         g.blocksRaycasts = false;
