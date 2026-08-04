@@ -6327,6 +6327,8 @@ GameObject:
   - component: {fileID: 503392550}
   - component: {fileID: 503392552}
   - component: {fileID: 503392551}
+  - component: {fileID: 503392554}
+  - component: {fileID: 503392553}
   m_Layer: 5
   m_Name: Button_Quit
   m_TagString: Untagged
@@ -6380,13 +6382,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c9e780674dc214d85509f7cc947b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButton
-  iconImage: {fileID: 0}
-  buttonNormalUI: {fileID: 1528241344}
-  buttonHoverUI: {fileID: 1772321873}
-  iconNormalSprite: {fileID: 0}
-  iconHoverSprite: {fileID: 0}
-  selectedScale: 1.1
-  popDuration: 0.18
+  background: {fileID: 0}
+  label: {fileID: 0}
+  normalBackground: {r: 0, g: 0, b: 0, a: 1}
+  normalText: {r: 1, g: 1, b: 1, a: 1}
+  selectedBackground: {r: 1, g: 1, b: 1, a: 1}
+  selectedText: {r: 0, g: 0, b: 0, a: 1}
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineDistance: {x: 2, y: -2}
+  tiltAngle: -8
+  tiltDuration: 0.18
+  useOvershoot: 1
+--- !u!114 &503392553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503392549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &503392554
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 503392549}
+  m_CullTransparentMesh: 1
 --- !u!1 &533276003
 GameObject:
   m_ObjectHideFlags: 0
@@ -6593,6 +6637,8 @@ GameObject:
   - component: {fileID: 549251670}
   - component: {fileID: 549251672}
   - component: {fileID: 549251671}
+  - component: {fileID: 549251674}
+  - component: {fileID: 549251673}
   m_Layer: 5
   m_Name: Button_Resume
   m_TagString: Untagged
@@ -6646,13 +6692,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c9e780674dc214d85509f7cc947b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButton
-  iconImage: {fileID: 0}
-  buttonNormalUI: {fileID: 1008116106}
-  buttonHoverUI: {fileID: 1307920137}
-  iconNormalSprite: {fileID: 0}
-  iconHoverSprite: {fileID: 0}
-  selectedScale: 1.1
-  popDuration: 0.18
+  background: {fileID: 0}
+  label: {fileID: 0}
+  normalBackground: {r: 0, g: 0, b: 0, a: 1}
+  normalText: {r: 1, g: 1, b: 1, a: 1}
+  selectedBackground: {r: 1, g: 1, b: 1, a: 1}
+  selectedText: {r: 0, g: 0, b: 0, a: 1}
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineDistance: {x: 2, y: -2}
+  tiltAngle: -8
+  tiltDuration: 0.18
+  useOvershoot: 1
+--- !u!114 &549251673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549251669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &549251674
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549251669}
+  m_CullTransparentMesh: 1
 --- !u!1 &554643259
 GameObject:
   m_ObjectHideFlags: 0
@@ -7576,6 +7664,8 @@ GameObject:
   - component: {fileID: 623321644}
   - component: {fileID: 623321646}
   - component: {fileID: 623321645}
+  - component: {fileID: 623321648}
+  - component: {fileID: 623321647}
   m_Layer: 5
   m_Name: Button_Menu
   m_TagString: Untagged
@@ -7629,13 +7719,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c9e780674dc214d85509f7cc947b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButton
-  iconImage: {fileID: 0}
-  buttonNormalUI: {fileID: 846757188}
-  buttonHoverUI: {fileID: 1374251329}
-  iconNormalSprite: {fileID: 0}
-  iconHoverSprite: {fileID: 0}
-  selectedScale: 1.1
-  popDuration: 0.18
+  background: {fileID: 0}
+  label: {fileID: 0}
+  normalBackground: {r: 0, g: 0, b: 0, a: 1}
+  normalText: {r: 1, g: 1, b: 1, a: 1}
+  selectedBackground: {r: 1, g: 1, b: 1, a: 1}
+  selectedText: {r: 0, g: 0, b: 0, a: 1}
+  outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  outlineDistance: {x: 2, y: -2}
+  tiltAngle: -8
+  tiltDuration: 0.18
+  useOvershoot: 1
+--- !u!114 &623321647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623321643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &623321648
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623321643}
+  m_CullTransparentMesh: 1
 --- !u!1 &630769846
 GameObject:
   m_ObjectHideFlags: 0
@@ -41212,7 +41344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1792744369
 MonoBehaviour:
   m_ObjectHideFlags: 0
