@@ -14,7 +14,6 @@ public class SyncCamera : MonoBehaviour
 
     void LateUpdate()
     {
-        //adjust texture size based on size float and camera ortho size
         cam.orthographicSize = mainCam.orthographicSize;
     }
 }
