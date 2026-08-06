@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Breakable : MonoBehaviour
 {
@@ -74,7 +75,17 @@ public class Breakable : MonoBehaviour
     private void FUCK()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
-        fart.SetActive(false);
+        var the = gameObject.GetComponent<SpriteRenderer>();
+        if (the == null)
+        {
+            var the2 = gameObject.GetComponent<TilemapRenderer>();
+            the2.enabled = false;
+        }
+        else
+        {
+            the.enabled = false;
+        }
+        
+        if (fart != null) fart.SetActive(false);
     }
 }
