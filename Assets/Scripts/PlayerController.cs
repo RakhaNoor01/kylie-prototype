@@ -20,9 +20,29 @@ namespace TarodevController
 
         private bool _cachedQueryStartInColliders;
 
+        //dashstuff
         private Vector2 _dashDirection;
         private float _dashEndTime;
         private bool _dashAvailable = true;
+
+        //dashflagger
+        private bool _dashEnabled = true;
+        public bool DashEnabled => _dashEnabled;
+
+        //TESTING STUFFFSSSSSSSSS DELETE LATER
+        [ContextMenu("Disable Dash")]
+        private void DebugDisableDash()
+        {
+            SetDashEnabled(false);
+        }
+
+        [ContextMenu("Enable Dash")]
+        private void DebugEnableDash()
+        {
+            SetDashEnabled(true);
+        }
+
+
         private PlayerKnockback _knockback;
 
         private Rigidbody2D _groundedPlatformRb;
@@ -533,6 +553,14 @@ namespace TarodevController
                 return;
             }
 
+            // If level even allow dash or not, a Forest gate
+            if (!_dashEnabled)
+            {
+                _dashToConsume = false;
+                return;
+            }
+
+            //If level allow dash AND dash is available
             if (!_dashToConsume || !_dashAvailable)
             {
                 _dashToConsume = false;
@@ -581,6 +609,19 @@ namespace TarodevController
             if (_dashEffect != null)
             {
                 _dashEffect.OnDash(_dashDirection);
+            }
+        }
+
+        public void SetDashEnabled(bool enabled)
+        {
+            _dashEnabled = enabled;
+
+            if (!enabled)
+            {
+                _dashToConsume = false;
+
+                if (_isDashing)
+                    CancelDash();
             }
         }
 

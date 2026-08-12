@@ -64,6 +64,22 @@ public class Boomerang : MonoBehaviour
     private PlayerHealth judgement;
     private Slopburger slop;
     public bool hasTped;
+    //sum flagign ghtings for forest
+    private bool teleportEnabled = false;
+    public bool TeleportEnabled => teleportEnabled;
+
+    [ContextMenu("Enable Teleport")]
+    private void DebugEnableTeleport()
+    {
+        SetTeleportEnabled(true);
+    }
+
+    [ContextMenu("Disable Teleport")]
+    private void DebugDisableTeleport()
+    {
+        SetTeleportEnabled(false);
+    }
+    //end shere
     private bool isTping;
 
     private float ogROD;
@@ -116,7 +132,11 @@ public class Boomerang : MonoBehaviour
         // Teleport while thrown
         if (isThrown && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(throwKey)))
         {
-            ICameToGoon();
+            if (teleportEnabled)
+            {
+                ICameToGoon();
+            }
+
             return;
         }
 
@@ -605,5 +625,15 @@ public class Boomerang : MonoBehaviour
         shouldTrail = false;
         isBurning = false;
         col.enabled = false;
+    }
+
+    public void SetTeleportEnabled(bool enabled)
+    {
+        teleportEnabled = enabled;
+
+        if (!enabled)
+        {
+            hasTped = false;
+        }
     }
 }
