@@ -8,6 +8,9 @@ public class Playerpref : MonoBehaviour
     public TMP_Text statusText;
     private const string SavedRoomPrefsKey = "SavedRoomSceneName";
 
+    public static bool HasSavedCheckpoint => PlayerPrefs.HasKey(SavedRoomPrefsKey);
+    public static string GetSavedRoomName => PlayerPrefs.GetString(SavedRoomPrefsKey, "");
+
     public void SaveCurrentRoom()
     {
         if (RoomManager.Instance == null)
@@ -33,6 +36,9 @@ public class Playerpref : MonoBehaviour
 
     public void LoadSavedRoom()
     {
+        // ===== CRITICAL FIX: UNFREEZE DULU =====
+        Time.timeScale = 1f;
+
         if (RoomManager.Instance == null)
         {
             Debug.LogWarning("[Playerpref] No RoomManager found.");

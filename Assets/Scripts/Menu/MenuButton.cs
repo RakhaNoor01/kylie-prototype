@@ -70,7 +70,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         float targetZ = selected ? 0f : tiltAngle;
         _tiltTween?.Kill();
         _tiltTween = _rect.DORotate(new Vector3(0f, 0f, targetZ), tiltDuration)
-            .SetEase(Ease.OutBack);
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true); // ignore Time.timeScale, biar tetap animasi walau game di-pause (timeScale = 0)
     }
 
     public void OnPointerEnter(PointerEventData eventData) 
