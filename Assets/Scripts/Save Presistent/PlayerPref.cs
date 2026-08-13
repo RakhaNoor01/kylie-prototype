@@ -7,9 +7,11 @@ public class Playerpref : MonoBehaviour
 {
     public TMP_Text statusText;
     private const string SavedRoomPrefsKey = "SavedRoomSceneName";
+    private const string SavedSoloLevelingSceneKey = "SavedSoloLevelingSceneName";
 
     public static bool HasSavedCheckpoint => PlayerPrefs.HasKey(SavedRoomPrefsKey);
     public static string GetSavedRoomName => PlayerPrefs.GetString(SavedRoomPrefsKey, "");
+    public static string GetSavedSoloLevelingSceneName => PlayerPrefs.GetString(SavedSoloLevelingSceneKey, "");
 
     public void SaveCurrentRoom()
     {
@@ -28,10 +30,15 @@ public class Playerpref : MonoBehaviour
             return;
         }
 
-        PlayerPrefs.SetString(SavedRoomPrefsKey, currentRoom.sceneName);
+        string savedRoomName = currentRoom.sceneName;
+        string savedSoloLevelingName = SoloLeveling.lastLoadedLevelSceneName;
+
+        PlayerPrefs.SetString(SavedRoomPrefsKey, savedRoomName);
+        PlayerPrefs.SetString(SavedSoloLevelingSceneKey, savedSoloLevelingName);
         PlayerPrefs.Save();
-        Debug.Log($"[Playerpref] Saved current room: {currentRoom.sceneName}");
-        UpdateStatus($"Saved room: {currentRoom.sceneName}");
+        Debug.Log($"[Playerpref] Saved current room: {savedRoomName}");
+        Debug.Log($"[Playerpref] Saved SoloLeveling button-passed scene name: {savedSoloLevelingName}");
+        UpdateStatus($"Saved room: {savedRoomName} (SoloLeveling: {savedSoloLevelingName})");
     }
 
     public void LoadSavedRoom()
@@ -54,7 +61,7 @@ public class Playerpref : MonoBehaviour
         }
 
         string savedSceneName = PlayerPrefs.GetString(SavedRoomPrefsKey);
-        StartCoroutine(LoadSavedRoomCoroutine(savedSceneName));
+        StartCoroutine(LoadSavedRoomCoroutine(savedSceneName)); 
     }
 
     private IEnumerator LoadSavedRoomCoroutine(string sceneName)
@@ -80,6 +87,36 @@ public class Playerpref : MonoBehaviour
         UpdateStatus($"Loaded room: {sceneName}");
     }
 
+public void LoadSavedSoloLevelingScene()
+{
+    if (!PlayerPrefs.HasKey(SavedSoloLevelingSceneKey))
+    {
+        Debug.LogWarning("[Playerpref] No saved SoloLeveling scene name found.");
+        UpdateStatus("Load failed: no saved level scene.");
+        return;
+    }
+
+    string savedLevelSceneName = PlayerPrefs.GetString(SavedSoloLevelingSceneKey);
+    Debug.Log($"[Playerpref] Loading saved SoloLeveling scene name: {savedLevelSceneName}");
+
+    SoloLeveling soloLeveling = FindObjectOfType<SoloLeveling>();
+    if (soloLeveling == null)
+    {
+        Debug.LogWarning("[Playerpref] SoloLeveling instance not found.");
+        UpdateStatus("Load failed: SoloLeveling missing.");
+        return;
+    }
+
+    soloLeveling.LoadLevel(savedLevelSceneName);
+    StartCoroutine(LoadRoomAfterSceneLoad());
+}
+
+private IEnumerator LoadRoomAfterSceneLoad()
+{
+    LoadSavedRoom();
+
+    yield return null;
+}
     private void UpdateStatus(string message)
     {
         if (statusText != null)

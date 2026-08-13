@@ -60,10 +60,6 @@ public class LevelSelectManager : MonoBehaviour
         {
             Debug.LogWarning("LevelSelectManager: SoloLeveling reference belum di-set di inspector.", this);
         }
-        else
-        {
-            DontDestroyOnLoad(soloLeveling.gameObject);
-        }
 
         // Find Playerpref (kalau Persistent udah ke-load sebelumnya, mis. balik dari Pause)
         _playerPref = FindObjectOfType<Playerpref>();
@@ -139,46 +135,7 @@ public class LevelSelectManager : MonoBehaviour
     {
         if (!_isActive) return;
         _isActive = false;
-        StartCoroutine(Co_ContinueFromCheckpoint());
-    }
 
-    private IEnumerator Co_ContinueFromCheckpoint()
-    {
-        if (!PlayerPrefs.HasKey("SavedRoomSceneName"))
-        {
-            Debug.Log("[LevelSelectManager] No saved checkpoint found.");
-            yield break;
-        }
-
-        if (soloLeveling == null)
-        {
-            Debug.LogWarning("[LevelSelectManager] soloLeveling belum di-set, tidak bisa continue.");
-            yield break;
-        }
-
-        string savedScene = PlayerPrefs.GetString("SavedRoomSceneName");
-        Debug.Log($"[LevelSelectManager] Continue from checkpoint: {savedScene}");
-
-        // Pola sama kayak SoloLeveling.LoadLevel (Persistent + room barengan),
-        // tapi kita nggak panggil LoadLevel langsung karena itu bakal manggil
-        // InitializeStartRoom() -- kita mau spawn di checkpoint, bukan start room.
-        SoloLeveling.playerStatic = soloLeveling.player;
-        SceneManager.LoadScene(SoloLeveling.playerStatic);
-
-        yield return SceneManager.LoadSceneAsync(savedScene, LoadSceneMode.Additive);
-
-        // Persistent (RoomManager, Playerpref, dst) baru ada SEKARANG, setelah di atas selesai
-        _playerPref = FindObjectOfType<Playerpref>();
-
-        var room = RoomManager.Instance?.GetRoomByName(savedScene);
-        if (room == null)
-        {
-            Debug.LogWarning($"[LevelSelectManager] Room '{savedScene}' tidak ditemukan setelah di-load.");
-            yield break;
-        }
-
-        CheckpointManager.Instance?.SpawnAtRoom(room);
-        Debug.Log($"[LevelSelectManager] Continue selesai, spawn di: {savedScene}");
     }
 
     private IEnumerator Co_RevealSequence()
