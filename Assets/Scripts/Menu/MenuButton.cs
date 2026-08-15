@@ -1,196 +1,91 @@
-using System.Collections;
+// MenuButton.cs - FULL CODE (dengan OnPointerExit)
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
+using DG.Tweening;
 
 /// <summary>
-/// Pasang di tiap tombol (Btn_Play, Btn_Settings, dst).
-///
-/// HIERARCHY per tombol (sesuai struktur yang sudah dipakai):
-/// [Button_Play]                ← pasang MenuButton.cs di sini (root, ini yang di-scale saat selected)
-///   ├── Icon                   ← Image, sprite ditukar normal/hover (instan, tidak fade)
-///   ├── ButtonUI                ← Image, versi normal shape tombol
-///   ├── ButtonHoverUI           ← Image, versi hover shape tombol
-///   └── Text (TMP)             ← tidak disentuh script ini
-///
-/// AUTO-FIND: field iconImage / buttonNormalUI / buttonHoverUI dicari otomatis
-/// berdasarkan nama child persis ("Icon", "ButtonUI", "ButtonHoverUI") kalau slotnya
-/// dibiarkan kosong di Inspector.
-///
-/// TIDAK ADA FADE: ButtonUI/ButtonHoverUI/Icon langsung ditukar instan (alpha 0/1
-/// langsung, bukan di-lerp). Feedback-nya justru dari animasi "pop" (scale membesar
-/// dengan sedikit overshoot/mantul) saat tombol di-hover/dipilih.
+/// Pasang di tiap tombol menu (termasuk popup Yes/No)
 /// </summary>
-public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
+[RequireComponent(typeof(Image))]
+public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [Header("References (auto-find by child name kalau kosong)")]
-    public Image iconImage;
-    public CanvasGroup buttonNormalUI;   // child "ButtonUI"
-    public CanvasGroup buttonHoverUI;    // child "ButtonHoverUI"
+    [Header("References (auto-find kalau kosong)")]
+    public Image background;
+    public TMP_Text label;
 
-    [Header("Icon Sprites - Normal / Hover")]
-    public Sprite iconNormalSprite;
-    public Sprite iconHoverSprite;
+    [Header("Warna Normal / Selected (invert)")]
+    public Color normalBackground = Color.black;
+    public Color normalText = Color.white;
+    public Color selectedBackground = Color.white;
+    public Color selectedText = Color.black;
 
-    [Header("Pop Animation on Select")]
-    [Tooltip("Skala tombol saat dipilih/hover (1 = ukuran normal)")]
-    public float selectedScale = 1.1f;
+    [Header("Outline saat selected")]
+    public Color outlineColor = Color.black;
+    public Vector2 outlineDistance = new Vector2(2f, -2f);
+    public bool showOutlineWhenSelected = true;
 
-    [Tooltip("Durasi animasi pop/mantul")]
-    public float popDuration = 0.18f;
+    [Header("Tilt saat selected")]
+    public float tiltAngle = -3f;
+    public float tiltDuration = 0.18f;
 
     [HideInInspector] public System.Action onHover;
-    [HideInInspector] public System.Action onClick;
+    [HideInInspector] public System.Action onExit; // Tambahan untuk exit hover
+    [HideInInspector] public System.Action onSubmit;
 
-    // ── Internal ──────────────────────────────────────────────────────────────
-
+    private Outline _outline;
     private RectTransform _rect;
-    private Vector3 _originalScale;
-    private Coroutine _popCoroutine;
-    private bool _isSelected     = false;
-    private bool _isInitialized  = false;
+    private Tween _tiltTween;
 
     private void Awake()
     {
-        EnsureInitialized();
-    }
+        _rect = (RectTransform)transform;
 
-    private void Start()
-    {
-        ForceInitializeState(false);
-    }
+        if (background == null) background = GetComponent<Image>();
+        if (label == null) label = GetComponentInChildren<TMP_Text>();
 
-    /// <summary>
-    /// Memastikan referensi RectTransform & child (Icon/ButtonUI/ButtonHoverUI) terisi.
-    /// Auto-find dijalankan sekali saja, aman dipanggil berkali-kali.
-    /// </summary>
-    private void EnsureInitialized()
-    {
-        if (_rect == null)
-        {
-            _rect = GetComponent<RectTransform>();
-            _originalScale = _rect.localScale;
-        }
+        // Setup outline
+        _outline = background.GetComponent<Outline>();
+        if (_outline == null) _outline = background.gameObject.AddComponent<Outline>();
+        _outline.effectColor = outlineColor;
+        _outline.effectDistance = outlineDistance;
+        _outline.useGraphicAlpha = false;
+        _outline.enabled = false;
 
-        if (iconImage == null)
-        {
-            Transform t = transform.Find("Icon");
-            if (t != null) iconImage = t.GetComponent<Image>();
-        }
-
-        if (buttonNormalUI == null)
-        {
-            Transform t = transform.Find("ButtonUI");
-            if (t != null) buttonNormalUI = GetOrAddCanvasGroup(t);
-        }
-
-        if (buttonHoverUI == null)
-        {
-            Transform t = transform.Find("ButtonHoverUI");
-            if (t != null) buttonHoverUI = GetOrAddCanvasGroup(t);
-        }
-    }
-
-    private CanvasGroup GetOrAddCanvasGroup(Transform t)
-    {
-        CanvasGroup cg = t.GetComponent<CanvasGroup>();
-        if (cg == null) cg = t.gameObject.AddComponent<CanvasGroup>();
-        // Layer visual saja, biar tidak rebutan raycast dengan root tombol
-        cg.blocksRaycasts = false;
-        cg.interactable   = false;
-        return cg;
+        SetSelected(false);
     }
 
     public void SetSelected(bool selected)
     {
-        EnsureInitialized();
+        if (background != null) 
+            background.color = selected ? selectedBackground : normalBackground;
+        
+        if (label != null) 
+            label.color = selected ? selectedText : normalText;
 
-        if (_isInitialized && _isSelected == selected) return;
+        if (_outline != null && showOutlineWhenSelected)
+            _outline.enabled = selected;
 
-        _isSelected    = selected;
-        _isInitialized = true;
-
-        // Swap instan, tidak ada fade
-        if (iconImage != null && iconNormalSprite != null && iconHoverSprite != null)
-            iconImage.sprite = selected ? iconHoverSprite : iconNormalSprite;
-
-        if (buttonNormalUI != null) buttonNormalUI.alpha = selected ? 0f : 1f;
-        if (buttonHoverUI  != null) buttonHoverUI.alpha  = selected ? 1f : 0f;
-
-        // Animasi hover: pop/mantul di scale root tombol
-        if (_popCoroutine != null) StopCoroutine(_popCoroutine);
-        _popCoroutine = StartCoroutine(Co_Pop(selected));
+        float targetZ = selected ? 0f : tiltAngle;
+        _tiltTween?.Kill();
+        _tiltTween = _rect.DORotate(new Vector3(0f, 0f, targetZ), tiltDuration)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true); // ignore Time.timeScale, biar tetap animasi walau game di-pause (timeScale = 0)
     }
 
-    /// <summary>Reset ke tampilan normal (dipanggil saat navigator deactivate)</summary>
-    public void ResetPosition()
+    public void OnPointerEnter(PointerEventData eventData) 
     {
-        if (_popCoroutine != null) StopCoroutine(_popCoroutine);
-        ForceInitializeState(false);
+        onHover?.Invoke();
     }
 
-    /// <summary>Dipanggil ulang saat PrepareSlide (intro) supaya baseline scale tetap benar</summary>
-    public void RefreshOriginalScale()
+    public void OnPointerExit(PointerEventData eventData) 
     {
-        EnsureInitialized();
-        _originalScale = _rect.localScale;
+        onExit?.Invoke();
     }
 
-    // ── Internal ──────────────────────────────────────────────────────────────
-
-    private void ForceInitializeState(bool selected)
+    public void OnPointerClick(PointerEventData eventData) 
     {
-        EnsureInitialized();
-
-        _isSelected    = selected;
-        _isInitialized = true;
-
-        if (iconImage != null && iconNormalSprite != null && iconHoverSprite != null)
-            iconImage.sprite = selected ? iconHoverSprite : iconNormalSprite;
-
-        if (buttonNormalUI != null) buttonNormalUI.alpha = selected ? 0f : 1f;
-        if (buttonHoverUI  != null) buttonHoverUI.alpha  = selected ? 1f : 0f;
-
-        _rect.localScale = selected ? _originalScale * selectedScale : _originalScale;
+        onSubmit?.Invoke();
     }
-
-    /// <summary>
-    /// Animasi "pop": saat selected, tombol membesar dengan sedikit overshoot (ease-out-back)
-    /// biar terasa mantul. Saat deselect, mengecil normal (ease-out-cubic).
-    /// </summary>
-    private IEnumerator Co_Pop(bool selected)
-    {
-        Vector3 startScale  = _rect.localScale;
-        Vector3 targetScale = selected ? _originalScale * selectedScale : _originalScale;
-
-        float e = 0f;
-        while (e < popDuration)
-        {
-            // unscaledDeltaTime, BUKAN deltaTime — supaya animasi pop tetap jalan
-            // meskipun Time.timeScale = 0 (dipakai pas Pause Menu aktif).
-            e += Time.unscaledDeltaTime;
-            float tRaw = Mathf.Clamp01(e / popDuration);
-            float t = selected ? EaseOutBack(tRaw) : EaseOutCubic(tRaw);
-
-            if (_rect != null)
-                _rect.localScale = Vector3.LerpUnclamped(startScale, targetScale, t);
-
-            yield return null;
-        }
-
-        if (_rect != null)
-            _rect.localScale = targetScale;
-    }
-
-    private float EaseOutCubic(float t) => 1f - Mathf.Pow(1f - t, 3f);
-
-    private float EaseOutBack(float t)
-    {
-        const float c1 = 1.70158f;
-        const float c3 = c1 + 1f;
-        return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData) => onHover?.Invoke();
-    public void OnPointerClick(PointerEventData eventData) => onClick?.Invoke();
 }
