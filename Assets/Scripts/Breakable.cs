@@ -75,7 +75,10 @@ public class Breakable : MonoBehaviour
     private void FUCK()
     {
         gameObject.GetComponent<Collider2D>().enabled = false;
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        var sr = gameObject.GetComponent<SpriteRenderer>();
+        var tr = gameObject.GetComponent<TilemapRenderer>();
+        if (sr != null) sr.enabled = false;
+        if (tr != null) tr.enabled = false;
         if (fart != null) fart.SetActive(false);
     }
 }
