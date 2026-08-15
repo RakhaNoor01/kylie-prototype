@@ -12,6 +12,15 @@ public class Playerpref : MonoBehaviour
     public static bool HasSavedCheckpoint => PlayerPrefs.HasKey(SavedRoomPrefsKey);
     public static string GetSavedRoomName => PlayerPrefs.GetString(SavedRoomPrefsKey, "");
     public static string GetSavedSoloLevelingSceneName => PlayerPrefs.GetString(SavedSoloLevelingSceneKey, "");
+    public static GameObject playersPrefd = null;
+
+    void Awake()
+    {
+        // its horrific
+        Destroy(playersPrefd);
+        playersPrefd = gameObject;
+        DontDestroyOnLoad(gameObject);
+    }
 
     public void SaveCurrentRoom()
     {
@@ -87,39 +96,33 @@ public class Playerpref : MonoBehaviour
         UpdateStatus($"Loaded room: {sceneName}");
     }
 
-public void LoadSavedSoloLevelingScene()
-{
-    if (!PlayerPrefs.HasKey(SavedSoloLevelingSceneKey))
+    public void LoadSavedSoloLevelingScene()
     {
-        Debug.LogWarning("[Playerpref] No saved SoloLeveling scene name found.");
-        UpdateStatus("Load failed: no saved level scene.");
-        return;
+        if (!PlayerPrefs.HasKey(SavedSoloLevelingSceneKey))
+        {
+            Debug.LogWarning("[Playerpref] No saved SoloLeveling scene name found.");
+            UpdateStatus("Load failed: no saved level scene.");
+            return;
+        }
+
+        string savedLevelSceneName = PlayerPrefs.GetString(SavedSoloLevelingSceneKey);
+        Debug.Log($"[Playerpref] Loading saved SoloLeveling scene name: {savedLevelSceneName}");
+
+        SoloLeveling soloLeveling = FindObjectOfType<SoloLeveling>();
+        if (soloLeveling == null)
+        {
+            Debug.LogWarning("[Playerpref] SoloLeveling instance not found.");
+            UpdateStatus("Load failed: SoloLeveling missing.");
+            return;
+        }
+
+        soloLeveling.LoadLevel(savedLevelSceneName, LoadSavedRoom);
     }
 
-    string savedLevelSceneName = PlayerPrefs.GetString(SavedSoloLevelingSceneKey);
-    Debug.Log($"[Playerpref] Loading saved SoloLeveling scene name: {savedLevelSceneName}");
-
-    SoloLeveling soloLeveling = FindObjectOfType<SoloLeveling>();
-    if (soloLeveling == null)
-    {
-        Debug.LogWarning("[Playerpref] SoloLeveling instance not found.");
-        UpdateStatus("Load failed: SoloLeveling missing.");
-        return;
-    }
-
-    soloLeveling.LoadLevel(savedLevelSceneName);
-    StartCoroutine(LoadRoomAfterSceneLoad());
-}
-
-private IEnumerator LoadRoomAfterSceneLoad()
-{
-    LoadSavedRoom();
-
-    yield return null;
-}
     private void UpdateStatus(string message)
     {
         if (statusText != null)
             statusText.text = message;
+            Debug.Log($"[IM GOING TO KILL YOU] {message}");
     }
 }

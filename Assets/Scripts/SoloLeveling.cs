@@ -8,18 +8,24 @@ public class SoloLeveling : MonoBehaviour
     public static string playerStatic = "Persistent";
     public static string lastLoadedLevelSceneName = "";
 
-    public void LoadLevel(string sceneName)
+    public void LoadLevel(string sceneName, System.Action onLoaded = null)
     {
         playerStatic = player;
         lastLoadedLevelSceneName = sceneName;
 
-        if (string.IsNullOrEmpty(sceneName)) { Debug.LogWarning("[SoloLeveling] LoadLevel called with empty sceneName."); return; }
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning("[SoloLeveling] LoadLevel called with empty sceneName.");
+            return;
+        }
 
         SceneManager.LoadScene(playerStatic);
-        // Use the callback overload so we init *after* both scenes exist
         SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive).completed += _ =>
         {
-            RoomManager.Instance?.InitializeStartRoom();
+            if (onLoaded != null)
+                onLoaded();
+            else
+                RoomManager.Instance?.InitializeStartRoom();
         };
     }
 }
