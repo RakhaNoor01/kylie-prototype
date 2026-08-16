@@ -3160,11 +3160,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zipline
   resolution: 30
-  speed: 25
+  speed: 20
   ziplineFx: {fileID: 608551254}
   canDismount: 0
   inheritVelocity: 1
-  velocityInheritanceScale: 1
+  velocityInheritanceScale: 1.25
   isActive: 0
   spline: {fileID: 104749236}
   line: {fileID: 104749233}
@@ -10022,6 +10022,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc145a7fbda43bc40aedeed8255442f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JacobNPC
+  rb: {fileID: 0}
+  animator: {fileID: 0}
+  sr: {fileID: 0}
+  dialogue: {fileID: 0}
+  npcPortrait: {fileID: 0}
+  dialogueBoxSprite: {fileID: 0}
+  interactionIndicator: {fileID: 0}
+  bobHeight: 0.1
+  bobSpeed: 3
+  defaultFacingRight: 0
+  pathPoints: []
+  moveSpeed: 4
+  waypointReachDistance: 0.3
+  groundCheck: {fileID: 0}
+  groundCheckRadius: 0.12
+  groundLayer:
+    m_Bits: 0
+  animRun: IsRunning
+  animJump: Jump
+  onSequenceComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  hasAlreadyPassed: 0
 --- !u!95 &236663315
 Animator:
   serializedVersion: 7
@@ -86542,7 +86565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zipline
   resolution: 30
-  speed: 37
+  speed: 30
   ziplineFx: {fileID: 270155879}
   canDismount: 0
   inheritVelocity: 1
@@ -152991,11 +153014,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Zipline
   resolution: 30
-  speed: 28
+  speed: 23
   ziplineFx: {fileID: 2013765576}
   canDismount: 0
   inheritVelocity: 1
-  velocityInheritanceScale: 1
+  velocityInheritanceScale: 1.25
   isActive: 0
   spline: {fileID: 1867820753}
   line: {fileID: 1867820750}

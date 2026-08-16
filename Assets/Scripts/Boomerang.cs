@@ -7,6 +7,7 @@ using System.Collections;
 public class Boomerang : MonoBehaviour
 {
     public GameObject player;
+    public GameObject horror;
 
     [Header("Throw")]
     public float throwPower = 15f;
@@ -64,6 +65,23 @@ public class Boomerang : MonoBehaviour
     private PlayerHealth judgement;
     private Slopburger slop;
     public bool hasTped;
+    //sum flagign ghtings for forest
+    //uh im setting this to true by default for now
+    private bool teleportEnabled = true;
+    public bool TeleportEnabled => teleportEnabled;
+
+    [ContextMenu("Enable Teleport")]
+    private void DebugEnableTeleport()
+    {
+        SetTeleportEnabled(true);
+    }
+
+    [ContextMenu("Disable Teleport")]
+    private void DebugDisableTeleport()
+    {
+        SetTeleportEnabled(false);
+    }
+    //end shere
     private bool isTping;
 
     private float ogROD;
@@ -116,7 +134,11 @@ public class Boomerang : MonoBehaviour
         // Teleport while thrown
         if (isThrown && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(throwKey)))
         {
-            ICameToGoon();
+            if (teleportEnabled)
+            {
+                ICameToGoon();
+            }
+
             return;
         }
 
@@ -235,8 +257,8 @@ public class Boomerang : MonoBehaviour
 
     private void HandleEffects()
     {
-        rangTrail.colorGradient = hasTped ? normalTrail : availableTpTrail;
-        burnTrail.colorGradient = hasTped ? normalBurnTrail : tpBurnTrail;
+        rangTrail.colorGradient = hasTped || !teleportEnabled ? normalTrail : availableTpTrail;
+        burnTrail.colorGradient = hasTped || !teleportEnabled ? normalBurnTrail : tpBurnTrail;
 
         if (isBurning)
         {
@@ -446,7 +468,7 @@ public class Boomerang : MonoBehaviour
         );
 
         // Remap to 0,1 to be used for Lerp
-        alignment = Mathf.Clamp01((alignment + 1f) * 0.5f);
+        //alignment = Mathf.Clamp01((alignment + 1f) * 0.5f);
 
         // Larper
         Vector2 addedVelocity = Vector2.Lerp(Vector2.zero, playerVelocity, alignment);
@@ -605,5 +627,15 @@ public class Boomerang : MonoBehaviour
         shouldTrail = false;
         isBurning = false;
         col.enabled = false;
+    }
+
+    public void SetTeleportEnabled(bool enabled)
+    {
+        teleportEnabled = enabled;
+
+        if (!enabled)
+        {
+            hasTped = false;
+        }
     }
 }

@@ -54,7 +54,7 @@ public class Zipline : MonoBehaviour
 #endif
         if (playerSplineAnim != null && playerSplineAnim.IsPlaying)
         {
-            cachedTravelDirection = GetSplineTravelDirection();
+            GetSplineTravelDirection();
 
             if (!canDismount || !isActive) return;
             if (Input.GetButtonDown("Jump"))
@@ -95,16 +95,16 @@ public class Zipline : MonoBehaviour
         ziplineFx.Play();
     }
 
-    private Vector2 GetSplineTravelDirection()
+    private void GetSplineTravelDirection()
     {
         float t = playerSplineAnim.NormalizedTime;
         Vector3 localTangent = (Vector3)spline.EvaluateTangent(t);
         Vector3 worldTangent = transform.TransformDirection(localTangent);
 
+        cachedTravelDirection = new Vector2(worldTangent.x, worldTangent.y).normalized;
+
         // for boomerang
         playerController.SetFrameVelocity(cachedTravelDirection * speed);
-
-        return new Vector2(worldTangent.x, worldTangent.y).normalized;
     }
 
     private void ApplyInheritedVelocity()
