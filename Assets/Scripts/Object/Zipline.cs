@@ -100,6 +100,10 @@ public class Zipline : MonoBehaviour
         float t = playerSplineAnim.NormalizedTime;
         Vector3 localTangent = (Vector3)spline.EvaluateTangent(t);
         Vector3 worldTangent = transform.TransformDirection(localTangent);
+
+        // for boomerang
+        playerController.SetFrameVelocity(cachedTravelDirection * speed);
+
         return new Vector2(worldTangent.x, worldTangent.y).normalized;
     }
 
