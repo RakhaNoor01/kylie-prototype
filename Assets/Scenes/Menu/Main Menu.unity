@@ -708,6 +708,7 @@ GameObject:
   - component: {fileID: 141936385}
   - component: {fileID: 141936384}
   - component: {fileID: 141936383}
+  - component: {fileID: 141936387}
   m_Layer: 5
   m_Name: Continue
   m_TagString: Untagged
@@ -814,6 +815,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1167426134}
+        m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &141936385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -852,6 +865,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141936381}
   m_CullTransparentMesh: 1
+--- !u!114 &141936387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141936381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1167426134}
+          m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+          m_MethodName: PlayButtonHover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &146265626
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1225,7 @@ GameObject:
   - component: {fileID: 193470193}
   - component: {fileID: 193470192}
   - component: {fileID: 193470191}
+  - component: {fileID: 193470195}
   m_Layer: 5
   m_Name: Exit-Menu
   m_TagString: Untagged
@@ -1276,7 +1319,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 193470193}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1167426134}
+        m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &193470193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,6 +1370,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193470189}
   m_CullTransparentMesh: 1
+--- !u!114 &193470195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193470189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1167426134}
+          m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+          m_MethodName: PlayCardHover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &242861205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1987,6 +2071,7 @@ GameObject:
   - component: {fileID: 493131395}
   - component: {fileID: 493131394}
   - component: {fileID: 493131393}
+  - component: {fileID: 493131397}
   m_Layer: 5
   m_Name: Credits-Menu
   m_TagString: Untagged
@@ -2080,7 +2165,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 493131395}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1167426134}
+        m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &493131395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2119,6 +2216,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 493131391}
   m_CullTransparentMesh: 1
+--- !u!114 &493131397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 493131391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1167426134}
+          m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+          m_MethodName: PlayCardHover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &544888340
 GameObject:
   m_ObjectHideFlags: 0
@@ -5308,6 +5434,7 @@ GameObject:
   - component: {fileID: 1167426132}
   - component: {fileID: 1167426131}
   - component: {fileID: 1167426130}
+  - component: {fileID: 1167426134}
   m_Layer: 5
   m_Name: Menu Screen
   m_TagString: Untagged
@@ -5403,6 +5530,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1167426134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167426129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12eb4a2a63097b439d6945b6838873d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAudioManager
+  _sfxSource: {fileID: 0}
+  buttonHoverClip: {fileID: 8300000, guid: 463d4477fe25a8e428f29a97d297f8b9, type: 3}
+  buttonClickClip: {fileID: 8300000, guid: 13fe6247111f53c4381cad70685b1d21, type: 3}
+  cardHoverClip: {fileID: 8300000, guid: 463d4477fe25a8e428f29a97d297f8b9, type: 3}
+  cardClickClip: {fileID: 8300000, guid: 13fe6247111f53c4381cad70685b1d21, type: 3}
+  cardPopInClip: {fileID: 8300000, guid: 463d4477fe25a8e428f29a97d297f8b9, type: 3}
+  minPitch: 0.9
+  maxPitch: 1.1
+  autoDetectOnStart: 1
+  scanDelay: 0.1
 --- !u!1 &1175193199
 GameObject:
   m_ObjectHideFlags: 0
@@ -13330,6 +13479,7 @@ GameObject:
   - component: {fileID: 1782881166}
   - component: {fileID: 1782881165}
   - component: {fileID: 1782881164}
+  - component: {fileID: 1782881168}
   m_Layer: 5
   m_Name: Play-Menu
   m_TagString: Untagged
@@ -13423,7 +13573,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1782881166}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1167426134}
+        m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1782881166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13462,6 +13624,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782881162}
   m_CullTransparentMesh: 1
+--- !u!114 &1782881168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782881162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1167426134}
+          m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+          m_MethodName: PlayCardHover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1783491074
 GameObject:
   m_ObjectHideFlags: 0
@@ -15469,6 +15660,7 @@ GameObject:
   - component: {fileID: 2120694752}
   - component: {fileID: 2120694751}
   - component: {fileID: 2120694750}
+  - component: {fileID: 2120694754}
   m_Layer: 5
   m_Name: Options-Menu
   m_TagString: Untagged
@@ -15562,7 +15754,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2120694752}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1167426134}
+        m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2120694752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15601,6 +15805,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2120694748}
   m_CullTransparentMesh: 1
+--- !u!114 &2120694754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120694748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1167426134}
+          m_TargetAssemblyTypeName: MenuAudioManager, Assembly-CSharp
+          m_MethodName: PlayCardHover
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
