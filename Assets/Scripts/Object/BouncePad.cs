@@ -24,6 +24,8 @@ public class BouncePad : MonoBehaviour
 
     public bool gbug;
 
+    public Animator anim;
+
     private void Reset()
     {
         GetComponent<Collider2D>().isTrigger = true;
@@ -114,6 +116,9 @@ public class BouncePad : MonoBehaviour
         {
             rang.hasTped = false;
         }
+
+ 
+        anim.SetTrigger("Boop");
     }
 
     private void OnDrawGizmos()
