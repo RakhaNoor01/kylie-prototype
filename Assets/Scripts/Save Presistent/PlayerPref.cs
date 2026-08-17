@@ -1,4 +1,4 @@
-using UnityEngine;
+    using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -13,6 +13,8 @@ public class Playerpref : MonoBehaviour
     public static string GetSavedRoomName => PlayerPrefs.GetString(SavedRoomPrefsKey, "");
     public static string GetSavedSoloLevelingSceneName => PlayerPrefs.GetString(SavedSoloLevelingSceneKey, "");
     public static GameObject playersPrefd = null;
+
+    private const string RuinsUnlockedKey = "RuinsUnlocked";
 
     void Awake()
     {
@@ -124,5 +126,25 @@ public class Playerpref : MonoBehaviour
         if (statusText != null)
             statusText.text = message;
             Debug.Log($"[IM GOING TO KILL YOU] {message}");
+    }
+
+    //SPECIFICALLY RUINS STUFF
+    public static bool RuinsUnlocked =>
+    PlayerPrefs.GetInt(RuinsUnlockedKey, 0) == 1;
+
+    public static void UnlockRuins()
+    {
+        PlayerPrefs.SetInt(RuinsUnlockedKey, 1);
+        PlayerPrefs.Save();
+
+        Debug.Log("[Playerpref] RUINS UNLOCKED!");
+    }
+
+        public static void LockRuins()
+    {
+        PlayerPrefs.SetInt(RuinsUnlockedKey, 0);
+        PlayerPrefs.Save();
+
+        Debug.Log("[Playerpref] RUINS LOCKED!");
     }
 }
