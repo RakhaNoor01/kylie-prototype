@@ -4,7 +4,7 @@ using TarodevController;
 [RequireComponent(typeof(AudioSource))]
 public class PlayerAudio : MonoBehaviour
 {
-    [Header("Clips")]
+    [Header("=== CLIPS ===")]
     [SerializeField] private AudioClip walkClip;
     [SerializeField] private AudioClip jumpClip;
     [SerializeField] private AudioClip dashClip;
@@ -15,41 +15,98 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip teleportClip;
     [SerializeField] private AudioClip swingClip;
     [SerializeField] private AudioClip deathClip;
+    [SerializeField] private AudioClip wallJumpClip;
+    [SerializeField] private AudioClip wallSlideClip;
 
-    [Header("Footstep")]
-    [SerializeField] private float minStepInterval = 0.25f;
-    [SerializeField] private float maxStepInterval = 0.5f;
+    [Header("=== FOOTSTEP SETTINGS ===")]
+    [SerializeField] private float minStepInterval = 0.15f;
+    [SerializeField] private float maxStepInterval = 0.45f;
+    [SerializeField] private float walkThreshold = 0.5f;
+    [SerializeField] private float runThreshold = 6f;
 
-    private AudioSource _sfx;   // jump, walk, dll
-    private AudioSource _loop;  // glide loop
+    [Header("=== PITCH VARIATION ===")]
+    [SerializeField] private float minPitch = 0.9f;
+    [SerializeField] private float maxPitch = 1.1f;
 
-    private PlayerController _player;
-    private Rigidbody2D _rb;
+    [Header("=== REFERENCES ===")]
+    [Tooltip("Kosongin biar otomatis cari di parent/child. Drag manual kalo mau explicit.")]
+    [SerializeField] private PlayerController _player;
+    [Tooltip("Kosongin biar otomatis cari di parent/child. Drag manual kalo mau explicit.")]
+    [SerializeField] private Rigidbody2D _rb;
+    [Tooltip("Aktifin kalo GameObject ini dipisah dari Player DAN spatialBlend diubah jadi 3D")]
+    [SerializeField] private bool followPlayerPosition = false;
 
-    private float _stepTimer;
+    // ========================
+    // PRIVATE
+    // ========================
+    private AudioSource _sfx;
+    private AudioSource _loop;
+
+    private float _nextStepTime;
     private bool _wasGrounded;
+    private float _currentPitch;
+
+    private bool _wasDashing;
+    private bool _wasClingingOrSliding;
+    private float _clingGraceUntil;
+    private const float ClingGraceDuration = 0.15f;
+    private bool _isClimbing;
+    private bool _isWallSliding;
+
+    // ========================
+    // LIFECYCLE
+    // ========================
 
     private void Awake()
     {
         _sfx = GetComponent<AudioSource>();
-
-        // bikin audio source kedua buat loop
         _loop = gameObject.AddComponent<AudioSource>();
 
-        _player = GetComponent<PlayerController>();
-        _rb = GetComponent<Rigidbody2D>();
+        // 🔥 OTOSARIS: Cari PlayerController di parent/child kalo belum di-assign
+        if (_player == null)
+        {
+            _player = GetComponentInParent<PlayerController>();
+            if (_player == null)
+            {
+                _player = GetComponentInChildren<PlayerController>();
+            }
 
-        // setup SFX
-        _sfx.playOnAwake = false;
-        _sfx.loop = false;
-        _sfx.spatialBlend = 0f;
+            if (_player == null)
+            {
+                Debug.LogError($"[PlayerAudio] PlayerController tidak ditemukan di parent/child {gameObject.name}. Drag manual ke slot 'Player'.", this);
+                enabled = false;
+                return;
+            }
+            else
+            {
+                Debug.Log($"[PlayerAudio] PlayerController otomatis ditemukan di {(transform.IsChildOf(_player.transform) ? "parent" : "child")}: {_player.gameObject.name}");
+            }
+        }
 
-        // setup LOOP
-        _loop.playOnAwake = false;
-        _loop.loop = true;
-        _loop.spatialBlend = 0f;
+        // 🔥 OTOSARIS: Cari Rigidbody2D di parent/child kalo belum di-assign
+        if (_rb == null)
+        {
+            _rb = GetComponentInParent<Rigidbody2D>();
+            if (_rb == null)
+            {
+                _rb = GetComponentInChildren<Rigidbody2D>();
+            }
 
-        // subscribe event
+            if (_rb == null)
+            {
+                Debug.LogError($"[PlayerAudio] Rigidbody2D tidak ditemukan di parent/child {gameObject.name}. Drag manual ke slot 'Rigidbody'.", this);
+                enabled = false;
+                return;
+            }
+            else
+            {
+                Debug.Log($"[PlayerAudio] Rigidbody2D otomatis ditemukan di {(transform.IsChildOf(_rb.transform) ? "parent" : "child")}: {_rb.gameObject.name}");
+            }
+        }
+
+        SetupAudioSource(_sfx, false, false);
+        SetupAudioSource(_loop, false, true);
+
         _player.GroundedChanged += OnGroundedChanged;
         _player.Jumped += OnJumped;
     }
@@ -63,105 +120,203 @@ public class PlayerAudio : MonoBehaviour
         }
     }
 
+    private void SetupAudioSource(AudioSource source, bool playOnAwake, bool loop)
+    {
+        source.playOnAwake = playOnAwake;
+        source.loop = loop;
+        source.spatialBlend = 0f;
+    }
+
     private void Update()
     {
+        HandleClingAndSlideState();
         HandleFootstep();
+        HandleWallSlide();
+        HandleDashDetection();
     }
 
-    // ========================
-    // EVENT
-    // ========================
-
-    private void OnJumped()
+    private void LateUpdate()
     {
-        if (jumpClip)
-            _sfx.PlayOneShot(jumpClip);
-    }
-
-    private void OnGroundedChanged(bool grounded, float fallSpeed)
-    {
-        if (grounded && !_wasGrounded)
+        if (followPlayerPosition && _player != null)
         {
-            if (landClip)
-                _sfx.PlayOneShot(landClip);
+            transform.position = _player.transform.position;
+        }
+    }
+
+    // ========================
+    // CLING / SLIDE STATE TRACKING
+    // ========================
+
+    private bool IsEffectivelyClinging =>
+        _player.IsClinging || _player.IsWallSliding || Time.time < _clingGraceUntil;
+
+    private void HandleClingAndSlideState()
+    {
+        bool isClingingOrSliding = _player.IsClinging || _player.IsWallSliding;
+
+        if (isClingingOrSliding)
+        {
+            _clingGraceUntil = Time.time + ClingGraceDuration;
         }
 
-        _wasGrounded = grounded;
+        if (isClingingOrSliding && !_wasClingingOrSliding)
+        {
+            _nextStepTime = Time.time + 0.2f;
+
+            if (!_isClimbing)
+            {
+                _isClimbing = true;
+                if (climbClip)
+                {
+                    _sfx.pitch = Random.Range(0.9f, 1.1f);
+                    _sfx.PlayOneShot(climbClip);
+                }
+            }
+        }
+        else if (!isClingingOrSliding && _wasClingingOrSliding && Time.time >= _clingGraceUntil)
+        {
+            _isClimbing = false;
+        }
+
+        _wasClingingOrSliding = isClingingOrSliding;
+    }
+
+    // ========================
+    // DASH DETECTION (Polling)
+    // ========================
+
+    private void HandleDashDetection()
+    {
+        bool isDashing = _player.IsDashing;
+        _wasDashing = isDashing;
     }
 
     // ========================
     // FOOTSTEP
     // ========================
 
-    private float _nextStepTime;
-
     private void HandleFootstep()
     {
-        bool walking = _wasGrounded && Mathf.Abs(_rb.linearVelocity.x) > 0.2f;
+        if (IsEffectivelyClinging) return;
 
-        if (!walking) return;
+        float speed = Mathf.Abs(_rb.linearVelocity.x);
+        bool isMoving = _player.Grounded && speed > walkThreshold;
+
+        if (!isMoving) return;
+
+        float speedFactor = Mathf.InverseLerp(walkThreshold, 12f, speed);
+        float interval = Mathf.Lerp(maxStepInterval, minStepInterval, speedFactor);
+        interval *= Random.Range(0.9f, 1.1f);
 
         if (Time.time >= _nextStepTime)
         {
-            if (walkClip)
-            {
-                _sfx.pitch = Random.Range(0.95f, 1.05f);
-                _sfx.PlayOneShot(walkClip);
-            }
-
-            float speed = Mathf.Abs(_rb.linearVelocity.x);
-            float interval = Mathf.Lerp(0.5f, 0.25f, speed / 10f);
-
-            _nextStepTime = Time.time + interval; // 🔥 kunci utama
+            _currentPitch = Mathf.Lerp(minPitch, maxPitch, speedFactor);
+            _sfx.pitch = _currentPitch * Random.Range(0.97f, 1.03f);
+            _sfx.PlayOneShot(walkClip);
+            _nextStepTime = Time.time + interval;
         }
     }
 
     // ========================
-    // LOOP AUDIO
+    // WALL SLIDE
     // ========================
 
-    public void StartGlide()
+    private void HandleWallSlide()
     {
-        if (_loop.isPlaying) return;
+        bool isWallSliding = _player.IsWallSliding;
 
-        if (glideClip)
+        if (isWallSliding && !_isWallSliding)
         {
-            _loop.clip = glideClip;
-            _loop.Play();
+            if (wallSlideClip != null)
+            {
+                _loop.clip = wallSlideClip;
+                _loop.pitch = 0.8f;
+                _loop.Play();
+            }
+            _isWallSliding = true;
+        }
+        else if (!isWallSliding && _isWallSliding)
+        {
+            _loop.Stop();
+            _isWallSliding = false;
+        }
+
+        if (_isWallSliding && _loop.isPlaying)
+        {
+            float verticalSpeed = Mathf.Abs(_rb.linearVelocity.y);
+            _loop.pitch = Mathf.Lerp(0.8f, 1.2f, verticalSpeed / 10f);
         }
     }
 
-    public void StopGlide()
+    // ========================
+    // EVENT HANDLERS
+    // ========================
+
+    private void OnJumped()
     {
-        _loop.Stop();
+        if (jumpClip)
+        {
+            _sfx.pitch = Random.Range(0.95f, 1.05f);
+            _sfx.PlayOneShot(jumpClip);
+        }
+    }
+
+    private void OnGroundedChanged(bool grounded, float fallSpeed)
+    {
+        if (grounded && !_wasGrounded && !IsEffectivelyClinging)
+        {
+            if (landClip)
+            {
+                float landPitch = Mathf.Lerp(0.8f, 1.2f, Mathf.Abs(fallSpeed) / 15f);
+                _sfx.pitch = Mathf.Clamp(landPitch, 0.7f, 1.3f);
+                _sfx.PlayOneShot(landClip);
+            }
+            _nextStepTime = Time.time + 0.05f;
+        }
+        _wasGrounded = grounded;
     }
 
     // ========================
-    // ONE SHOT SFX
+    // PUBLIC ONE-SHOT
     // ========================
 
-    public void PlayThrow() => Play(throwClip);
-    public void PlayTeleport() => Play(teleportClip);
-    public void PlaySwing() => Play(swingClip);
-    public void PlayDeath() => Play(deathClip);
+    public void PlayThrow() => PlayOneShot(throwClip);
+    public void PlayTeleport() => PlayOneShot(teleportClip);
+    public void PlaySwing() => PlayOneShot(swingClip);
+    public void PlayDeath() => PlayOneShot(deathClip);
+    public void PlayWallJump() => PlayOneShot(wallJumpClip);
 
     public void PlayDash()
     {
         if (dashClip)
+        {
+            _sfx.pitch = Random.Range(0.9f, 1.1f);
             _sfx.PlayOneShot(dashClip);
+        }
     }
 
-    public void StartClimb()
+    private void PlayOneShot(AudioClip clip, float pitchMult = 1f)
     {
-        if (climbClip)
-            _sfx.PlayOneShot(climbClip);
+        if (clip == null) return;
+        _sfx.pitch = Random.Range(minPitch, maxPitch) * pitchMult;
+        _sfx.PlayOneShot(clip);
     }
 
+    // ========================
+    // GLIDE / LOOP CONTROL
+    // ========================
+
+    public void StartGlide()
+    {
+        if (_loop.isPlaying || glideClip == null) return;
+        _loop.clip = glideClip;
+        _loop.pitch = 1f;
+        _loop.Play();
+    }
+
+    public void StopGlide() => _loop.Stop();
+
+    // No-op: biar PlayerController tetep bisa manggil tanpa error
+    public void StartClimb() { }
     public void StopClimb() { }
-
-    private void Play(AudioClip clip)
-    {
-        if (clip)
-            _sfx.PlayOneShot(clip);
-    }
 }

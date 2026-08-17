@@ -53,7 +53,7 @@ public class CheckpointManager : MonoBehaviour
 
     private void FindPlayer()
     {
-        if (player == null)
+        if (player == null && Slopburger.instance != null)
             player = Slopburger.instance.gameObject;
     }
 
