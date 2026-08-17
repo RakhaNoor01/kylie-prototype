@@ -122,7 +122,7 @@ public class PlayerHealth : MonoBehaviour
     private void Respawn()
     {
         _isDead = false;
-        respawn.Invoke();
+        respawn.Invoke();   
         CheckpointManager.Instance.PlayerDied();
     }
 }

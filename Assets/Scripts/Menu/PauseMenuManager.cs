@@ -200,6 +200,12 @@ public class PauseMenuManager : MonoBehaviour
     public void OnClickQuitToMainMenu()
     {
         if (!IsPaused) return;
+
+        _navActive = false;
+        StartCoroutine(Co_QuitToMainMenu());
+    }
+    public void QuitToMainMenu()
+    {
         _navActive = false;
         StartCoroutine(Co_QuitToMainMenu());
     }

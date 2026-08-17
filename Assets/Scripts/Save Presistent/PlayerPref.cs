@@ -14,6 +14,8 @@ public class Playerpref : MonoBehaviour
     public static string GetSavedSoloLevelingSceneName => PlayerPrefs.GetString(SavedSoloLevelingSceneKey, "");
     public static GameObject playersPrefd = null;
 
+    private const string RuinsUnlockedKey = "RuinsUnlocked";
+
     void Awake()
     {
         // its horrific
@@ -124,5 +126,17 @@ public class Playerpref : MonoBehaviour
         if (statusText != null)
             statusText.text = message;
             Debug.Log($"[IM GOING TO KILL YOU] {message}");
+    }
+
+    //SPECIFICALLY RUINS STUFF
+    public static bool RuinsUnlocked =>
+    PlayerPrefs.GetInt(RuinsUnlockedKey, 0) == 1;
+
+    public static void UnlockRuins()
+    {
+        PlayerPrefs.SetInt(RuinsUnlockedKey, 1);
+        PlayerPrefs.Save();
+
+        Debug.Log("[Playerpref] RUINS UNLOCKED!");
     }
 }
