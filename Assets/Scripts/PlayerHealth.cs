@@ -34,7 +34,8 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        if (iframeTimer > 0f) iframeTimer -= Time.deltaTime;
+        if (iframeTimer > 0f)
+            iframeTimer -= Time.deltaTime;
 
         if (transform.position.y < voidThreshold && dieFromVoid)
         {
@@ -57,14 +58,21 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die(Vector2? hitDirection = null)
     {
-        if (_isDead || tping) return;
-        if (IsInvincible) return;
-        if (CheckpointManager.Instance != null && CheckpointManager.Instance.IsPlayerInvincible()) return;
+        if (_isDead || tping)
+            return;
+
+        if (IsInvincible)
+            return;
+
+        if (CheckpointManager.Instance != null &&
+            CheckpointManager.Instance.IsPlayerInvincible())
+            return;
 
         _isDead = true;
 
         // Stop movement
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -73,56 +81,90 @@ public class PlayerHealth : MonoBehaviour
 
         // Disable controller so player can't move
         PlayerController controller = GetComponent<PlayerController>();
+
         if (controller != null)
+        {
             controller.Glider = false;
             controller.enabled = false;
+        }
 
-        // Camera shake
         // Camera shake
         if (enableCameraShake && CameraShake.Instance != null)
         {
             Debug.Log("Camera Shaked Boi");
-            CameraShake.Instance.Shake(shakeDuration, shakeMagnitude, 0);
+            CameraShake.Instance.Shake(
+                shakeDuration,
+                shakeMagnitude,
+                0
+            );
         }
 
         // Knockback
         if (enableKnockback)
         {
             PlayerKnockback knockback = GetComponent<PlayerKnockback>();
+
             if (knockback != null)
+            {
                 knockback.ApplyKnockback(hitDirection ?? Vector2.zero);
+            }
         }
 
         // Death particle
         if (deathEffect != null)
-            Instantiate(deathEffect, transform.position, Quaternion.identity);
+        {
+            Instantiate(
+                deathEffect,
+                transform.position,
+                Quaternion.identity
+            );
+        }
 
         // Death sound
         PlayerAudio audio = GetComponent<PlayerAudio>();
 
         if (audio != null)
+        {
             audio.PlayDeath();
+        }
 
         // Death animation
         PlayerAnimator anim = GetComponentInChildren<PlayerAnimator>();
-        if (anim != null)
-            anim.PlayDeath();
 
+        if (anim != null)
+        {
+            anim.PlayDeath();
+        }
+
+        // Invoke death event safely
         death?.Invoke();
 
-        // Fade out UI+
+        // Fade out UI
         UIFadeManager fade = FindFirstObjectByType<UIFadeManager>();
-        if (fade != null)
-            fade.PlayFadeOut();
 
+        if (fade != null)
+        {
+            fade.PlayFadeOut();
+        }
+
+        // Respawn after delay
         if (CheckpointManager.Instance != null)
+        {
             Invoke(nameof(Respawn), 0.8f);
+        }
     }
 
     private void Respawn()
     {
         _isDead = false;
-        respawn.Invoke();
-        CheckpointManager.Instance.PlayerDied();
+
+        // Invoke respawn event safely
+        respawn?.Invoke();
+
+        // Respawn at checkpoint
+        if (CheckpointManager.Instance != null)
+        {
+            CheckpointManager.Instance.PlayerDied();
+        }
     }
 }
