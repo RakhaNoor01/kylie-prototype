@@ -139,4 +139,12 @@ public class Playerpref : MonoBehaviour
 
         Debug.Log("[Playerpref] RUINS UNLOCKED!");
     }
+
+        public static void LockRuins()
+    {
+        PlayerPrefs.SetInt(RuinsUnlockedKey, 0);
+        PlayerPrefs.Save();
+
+        Debug.Log("[Playerpref] RUINS LOCKED!");
+    }
 }
