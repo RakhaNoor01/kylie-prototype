@@ -3,7 +3,6 @@ using UnityEngine;
 public class MountainEnding : MonoBehaviour
 {
     private PauseMenuManager pauseMenu;
-
     private bool triggered;
 
     private void Awake()
@@ -23,8 +22,14 @@ public class MountainEnding : MonoBehaviour
 
         triggered = true;
 
+        // 1. UNLOCK RUINS
         Playerpref.UnlockRuins();
+        Debug.Log("[MountainEnding] Ruins UNLOCKED!");
 
+        // 2. SET FLAG bahwa player dari Ruins
+        PauseMenuManager.SetFromRuins(true);
+
+        // 3. QUIT TO MAIN MENU
         PauseMenuManager pauseMenu = FindObjectOfType<PauseMenuManager>();
 
         if (pauseMenu != null)
