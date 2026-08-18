@@ -14,6 +14,6 @@ public class Cop : MonoBehaviour
 
     private void Update()
     {
-        EditorUtility.CopySerialized(imGonnaCopyYou, ts);
+        //EditorUtility.CopySerialized(imGonnaCopyYou, ts);
     }
 }
