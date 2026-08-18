@@ -97,6 +97,7 @@ namespace TarodevController
 
         private bool firstInput;
         public bool FirstInput => firstInput;
+        public KeyCode dashkey = KeyCode.LeftShift;
         private void GatherInput()
         {
             if (_spliner.IsPlaying)
@@ -120,7 +121,7 @@ namespace TarodevController
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
                 JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
                 Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")),
-                DashDown = Input.GetKeyDown(KeyCode.LeftShift)
+                DashDown = Input.GetKeyDown(dashkey)
             };
 
             if (_stats.SnapInput)

@@ -66,8 +66,7 @@ public class Boomerang : MonoBehaviour
     private Slopburger slop;
     public bool hasTped;
     //sum flagign ghtings for forest
-    //uh im setting this to true by default for now
-    private bool teleportEnabled = true;
+    private bool teleportEnabled = false;
     public bool TeleportEnabled => teleportEnabled;
 
     [ContextMenu("Enable Teleport")]
