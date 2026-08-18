@@ -15315,7 +15315,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 6
-      m_TileSpriteIndex: 5
+      m_TileSpriteIndex: 7
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -19080,12 +19080,12 @@ Tilemap:
     m_Data: {fileID: 8052331809672542060, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
   - m_RefCount: 77
     m_Data: {fileID: 1244883665796627830, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 852322773404206940, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
-  - m_RefCount: 45
-    m_Data: {fileID: -5994442892657783106, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 45
+    m_Data: {fileID: -5994442892657783106, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 852322773404206940, guid: a597f1a8740f793488f83fc3af462b3e, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 659
     m_Data:
@@ -71152,6 +71152,7 @@ GameObject:
   - component: {fileID: 1339243775}
   - component: {fileID: 1339243774}
   - component: {fileID: 1339243773}
+  - component: {fileID: 1339243778}
   m_Layer: 0
   m_Name: capfire (09)
   m_TagString: Breakable Vines
@@ -71312,7 +71313,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5966170932973372047, guid: 63c35c57336dc4547b361a85b7c1f325, type: 3}
+  m_Sprite: {fileID: 1296392514328493373, guid: a831a715e39790941bff84309cce7ab5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -71331,12 +71332,34 @@ Transform:
   m_GameObject: {fileID: 1339243772}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2172.0635, y: 869.50433, z: 0}
-  m_LocalScale: {x: 0.3553317, y: 0.282296, z: 1}
+  m_LocalPosition: {x: 2172.0635, y: 870.1246, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1339243778
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339243772}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa9992ef44de9ac418fcc8c32a867816, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1361015390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71785,6 +71808,7 @@ GameObject:
   - component: {fileID: 1556731468}
   - component: {fileID: 1556731467}
   - component: {fileID: 1556731466}
+  - component: {fileID: 1556731471}
   m_Layer: 0
   m_Name: capfire (12)
   m_TagString: Breakable Vines
@@ -71945,7 +71969,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5966170932973372047, guid: 63c35c57336dc4547b361a85b7c1f325, type: 3}
+  m_Sprite: {fileID: 1296392514328493373, guid: a831a715e39790941bff84309cce7ab5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -71964,12 +71988,34 @@ Transform:
   m_GameObject: {fileID: 1556731465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2339.251, y: 949.50433, z: 0}
-  m_LocalScale: {x: 0.3553317, y: 0.282296, z: 1}
+  m_LocalPosition: {x: 2339.251, y: 950.1246, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1556731471
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556731465}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa9992ef44de9ac418fcc8c32a867816, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1626874707
 GameObject:
   m_ObjectHideFlags: 0
@@ -122618,6 +122664,7 @@ GameObject:
   - component: {fileID: 1896839306}
   - component: {fileID: 1896839305}
   - component: {fileID: 1896839304}
+  - component: {fileID: 1896839309}
   m_Layer: 0
   m_Name: capfire (11)
   m_TagString: Breakable Vines
@@ -122778,7 +122825,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5966170932973372047, guid: 63c35c57336dc4547b361a85b7c1f325, type: 3}
+  m_Sprite: {fileID: 1296392514328493373, guid: a831a715e39790941bff84309cce7ab5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -122797,12 +122844,34 @@ Transform:
   m_GameObject: {fileID: 1896839303}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2204.751, y: 943.50433, z: 0}
-  m_LocalScale: {x: 0.3553317, y: 0.282296, z: 1}
+  m_LocalPosition: {x: 2204.751, y: 944.1246, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1896839309
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896839303}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa9992ef44de9ac418fcc8c32a867816, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1963109437
 GameObject:
   m_ObjectHideFlags: 0
@@ -122976,6 +123045,7 @@ GameObject:
   - component: {fileID: 2098765896}
   - component: {fileID: 2098765895}
   - component: {fileID: 2098765894}
+  - component: {fileID: 2098765899}
   m_Layer: 0
   m_Name: capfire (08)
   m_TagString: Breakable Vines
@@ -123136,7 +123206,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5966170932973372047, guid: 63c35c57336dc4547b361a85b7c1f325, type: 3}
+  m_Sprite: {fileID: 1296392514328493373, guid: a831a715e39790941bff84309cce7ab5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123155,12 +123225,34 @@ Transform:
   m_GameObject: {fileID: 2098765893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2046.751, y: 854.00433, z: 0}
-  m_LocalScale: {x: 0.3553317, y: 0.282296, z: 1}
+  m_LocalPosition: {x: 2046.751, y: 854.6246, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2098765899
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098765893}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa9992ef44de9ac418fcc8c32a867816, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2141380504
 GameObject:
   m_ObjectHideFlags: 0
@@ -123174,6 +123266,7 @@ GameObject:
   - component: {fileID: 2141380507}
   - component: {fileID: 2141380506}
   - component: {fileID: 2141380505}
+  - component: {fileID: 2141380510}
   m_Layer: 0
   m_Name: capfire (10)
   m_TagString: Breakable Vines
@@ -123334,7 +123427,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5966170932973372047, guid: 63c35c57336dc4547b361a85b7c1f325, type: 3}
+  m_Sprite: {fileID: 1296392514328493373, guid: a831a715e39790941bff84309cce7ab5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -123353,12 +123446,34 @@ Transform:
   m_GameObject: {fileID: 2141380504}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2171.251, y: 907.00433, z: 0}
-  m_LocalScale: {x: 0.3553317, y: 0.282296, z: 1}
+  m_LocalPosition: {x: 2171.251, y: 907.6246, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2141380510
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141380504}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aa9992ef44de9ac418fcc8c32a867816, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2143508012
 GameObject:
   m_ObjectHideFlags: 0
