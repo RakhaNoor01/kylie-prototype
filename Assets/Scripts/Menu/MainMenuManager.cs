@@ -1,4 +1,4 @@
-// MainMenuManager.cs - FULL CODE (dengan Credits Escape fix)
+// MainMenuManager.cs - FULL CODE (dengan Credits Escape fix + Ruins auto-open)
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
@@ -38,6 +38,65 @@ public class MainMenuManager : MonoBehaviour
     private void Start()
     {
         navigator.ResetSelection();
+
+        // 🔥 CEK FLAG: APAKAH PLAYER DATANG DARI RUINS?
+        if (PauseMenuManager.IsFromRuins)
+        {
+            Debug.Log("[MainMenuManager] Player came from Ruins! Auto-opening Level Select...");
+            
+            // Reset flag dulu biar ga ke-trigger lagi
+            PauseMenuManager.ResetFromRuinsFlag();
+
+            // Buka Level Select otomatis + highlight Ruins
+            StartCoroutine(Co_AutoOpenLevelSelect());
+        }
+    }
+
+    private IEnumerator Co_AutoOpenLevelSelect()
+    {
+        // Tunggu 1 frame biar UI siap
+        yield return null;
+
+        if (levelSelectManager == null)
+        {
+            Debug.LogWarning("[MainMenuManager] levelSelectManager belum di-set di Inspector");
+            yield break;
+        }
+
+        // Siapkan transisi
+        levelSelectManager.PrepareTransition();
+
+        // Animasi pindah ke Level Select
+        _currentTween?.Kill();
+        yield return StartCoroutine(Co_SwapPanels(groupMainMenu, groupLevelSelect, zoomIn: false));
+
+        _isInLevelSelect = true;
+        levelSelectManager.OnEnter();
+
+        // 🔥 BUKA PANEL RUINS DI LEVEL SELECT
+        // Coba panggil method OpenRuinsPanel() kalau ada
+        var method = levelSelectManager.GetType().GetMethod("OpenRuinsPanel");
+        if (method != null)
+        {
+            method.Invoke(levelSelectManager, null);
+            Debug.Log("[MainMenuManager] Called OpenRuinsPanel() via reflection");
+        }
+        else
+        {
+            // Alternative: coba panggil SelectLevel dengan index Ruins
+            var selectMethod = levelSelectManager.GetType().GetMethod("SelectLevel");
+            if (selectMethod != null)
+            {
+                // Asumsi Ruins adalah level index terakhir
+                int ruinsIndex = 3; // Sesuaikan dengan index Ruins di LevelSelectManager
+                selectMethod.Invoke(levelSelectManager, new object[] { ruinsIndex });
+                Debug.Log($"[MainMenuManager] Called SelectLevel({ruinsIndex}) via reflection");
+            }
+            else
+            {
+                Debug.LogWarning("[MainMenuManager] LevelSelectManager doesn't have OpenRuinsPanel() or SelectLevel() method!");
+            }
+        }
     }
 
     private void Update()
