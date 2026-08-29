@@ -6,6 +6,8 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Boomerang : MonoBehaviour
 {
+    public static Boomerang instance;
+
     public GameObject player;
     public GameObject horror;
 
@@ -67,19 +69,19 @@ public class Boomerang : MonoBehaviour
     public bool hasTped;
     //sum flagign ghtings for forest
     private bool teleportEnabled = false;
-    public bool TeleportEnabled => teleportEnabled;
+    //public bool TeleportEnabled => teleportEnabled;
 
-    [ContextMenu("Enable Teleport")]
-    private void DebugEnableTeleport()
-    {
-        SetTeleportEnabled(true);
-    }
+    //[ContextMenu("Enable Teleport")]
+    //private void DebugEnableTeleport()
+    //{
+    //    SetTeleportEnabled(true);
+    //}
 
-    [ContextMenu("Disable Teleport")]
-    private void DebugDisableTeleport()
-    {
-        SetTeleportEnabled(false);
-    }
+    //[ContextMenu("Disable Teleport")]
+    //private void DebugDisableTeleport()
+    //{
+    //    SetTeleportEnabled(false);
+    //}
     //end shere
     private bool isTping;
 
@@ -100,6 +102,11 @@ public class Boomerang : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
+
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 

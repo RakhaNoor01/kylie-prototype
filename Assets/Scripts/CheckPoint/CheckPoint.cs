@@ -6,6 +6,8 @@ public class Checkpoint : MonoBehaviour
     [Header("Settings")]
     public bool isStartingPoint = false;
 
+    public bool nablerangtp = true;
+
     [Tooltip("if this field is not null, the checkpoint will respawn at the setLocation instead of this gameObject's transform")]
     public Transform setLocation;
 
@@ -41,6 +43,8 @@ public class Checkpoint : MonoBehaviour
                 currentlyActiveCheckpoint.DeactivateCheckpoint();
 
             ActivateCheckpoint();
+
+            Boomerang.instance.SetTeleportEnabled(nablerangtp);
         }
     }
 
