@@ -226,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &46287642
 Transform:
   m_ObjectHideFlags: 0
@@ -6263,9 +6263,9 @@ MonoBehaviour:
   _stats: {fileID: 11400000, guid: e69198ddfb77fe544951684e905a1805, type: 2}
   _frameVelocity: {x: 0, y: 0}
   _glideStamina: 0
-  dashkey: 108
+  dashkey: 304
   _grounded: 0
-  wallClingKey: 107
+  wallClingKey: 324
   _wallCoyoteTimer: 0
   blockExVel: 0
   doWeDeserveDestruction: 0
@@ -34547,7 +34547,7 @@ Canvas:
   m_GameObject: {fileID: 1422194449}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 1561298934}
   m_PlaneDistance: 100
   m_PixelPerfect: 1
@@ -39706,7 +39706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: 0bd464478c047fc4ab3658467537f105, type: 2}
-  m_Color: {r: 1, g: 0.024585318, b: 0, a: 0.101960786}
+  m_Color: {r: 0.25, g: 0.005859375, b: 0, a: 0.101960786}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -39780,10 +39780,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.1178782
-    width: 0.7071823
-    height: 0.7076641
+    x: 0.0006333122
+    y: 0
+    width: 0.999231
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60.000004
@@ -39955,7 +39955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1567085358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39969,7 +39969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 2100000, guid: cdc64822fbf81094e9fef4d951c7cfbb, type: 2}
-  m_Color: {r: 1, g: 0.68882424, b: 0, a: 0.101960786}
+  m_Color: {r: 0.25, g: 0.15640539, b: 0, a: 0.101960786}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -46275,8 +46275,8 @@ Canvas:
   m_GameObject: {fileID: 1872542466}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1561298934}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -57190,8 +57190,6 @@ GameObject:
   - component: {fileID: 2044532195}
   - component: {fileID: 2044532194}
   - component: {fileID: 2044532193}
-  - component: {fileID: 2044532192}
-  - component: {fileID: 2044532191}
   m_Layer: 5
   m_Name: Enviro
   m_TagString: Untagged
@@ -57199,40 +57197,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &2044532191
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044532190}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7916d5ad3d227014abd378b37b24b46f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2044532192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044532190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf55eda4b8188144a09988e4550c9bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIFadeManager
 --- !u!114 &2044532193
 MonoBehaviour:
   m_ObjectHideFlags: 0

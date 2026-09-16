@@ -33,12 +33,18 @@ public class Bomb : MonoBehaviour
     private Collider2D col;
     private ParticleSystem farticle;
     private Vector2 spawnPos;
+    private Transform originalParent;
 
     private float realTimer = 0;
 
     private void Start()
     {
         spawnPos = transform.position;
+
+        //messy
+        originalParent = new GameObject("bombspawn").transform;
+        originalParent.parent = transform;
+        originalParent.parent = null;
 
         if (TempData.HasKey(bombID))
         {
@@ -197,6 +203,9 @@ public class Bomb : MonoBehaviour
         hi = null;
         pulse.gameObject.SetActive(false);
         fuse.SetActive(false);
+
+        transform.parent = originalParent;
+        transform.parent = null;
 
         StartCoroutine(Whoa(hitBreakable));
 

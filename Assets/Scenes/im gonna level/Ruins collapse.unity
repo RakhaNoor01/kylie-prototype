@@ -875,6 +875,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   target: {fileID: 981527395}
   moveDur: 0.35
   useSpeed: 0
@@ -1178,6 +1179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   target: {fileID: 1420815662}
   moveDur: 0.35
   useSpeed: 0
@@ -1507,8 +1509,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1728,6 +1746,63 @@ Transform:
   - {fileID: 95385429}
   m_Father: {fileID: 3668024}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &52373881
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -58.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30981782062815066, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5631412988142251162, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
+      propertyPath: m_Name
+      value: Recharge (5)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b09f929a25bb12541a02c7c95de68623, type: 3}
 --- !u!1 &56753494
 GameObject:
   m_ObjectHideFlags: 0
@@ -3289,6 +3364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 2032609146}
 --- !u!4 &101221723
 Transform:
@@ -5496,7 +5572,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.25, y: 1.25}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -5553,7 +5629,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 999
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 822fa24463971334693d2d42a3a3c6f0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f8e3c3233980f546b6ff17f0ce31e0e, type: 3}
   m_Color: {r: 0.5283019, g: 0.2090265, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5632,6 +5708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 1634083488}
 --- !u!4 &174884913
 Transform:
@@ -10472,10 +10549,12 @@ MonoBehaviour:
   autoSaveState: 0
   manualSaveState: {fileID: 165917669}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &349124021
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10610,6 +10689,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 349124020}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -10694,10 +10774,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 0
   objectActivated: {fileID: 1777152021}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &352625316
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10832,6 +10914,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 352625315}
   inverted: 0
+  blocked: 0
   duration: 2
   magnitude: 2
   magDecay: -1
@@ -10865,6 +10948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 352625315}
   inverted: 0
+  blocked: 0
   thing: {fileID: 1896029710}
 --- !u!1 &358425871
 GameObject:
@@ -11584,6 +11668,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17619,10 +17723,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 0
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!114 &432028486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17637,6 +17743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 1592086430}
 --- !u!1 &436059366
 GameObject:
@@ -24192,6 +24299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 352625315}
   inverted: 0
+  blocked: 0
   target: {fileID: 205145607}
   moveDur: 0.3
   useSpeed: 0
@@ -26036,6 +26144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 874045198}
   inverted: 0
+  blocked: 0
   target: {fileID: 884543497}
   moveDur: 0
   useSpeed: 1
@@ -27110,6 +27219,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27643,8 +27772,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28874,6 +29019,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   target: {fileID: 1107238270}
   moveDur: 0.75
   useSpeed: 0
@@ -28919,6 +29065,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   target: {fileID: 1530862930}
   moveDur: 0.75
   useSpeed: 0
@@ -28964,6 +29111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   target: {fileID: 2139690628}
   moveDur: 0.75
   useSpeed: 0
@@ -29009,6 +29157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   target: {fileID: 835836053}
   moveDur: 0.75
   useSpeed: 0
@@ -30087,6 +30236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 943992658}
 --- !u!4 &689792654
 Transform:
@@ -31646,6 +31796,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -31862,6 +32032,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -32144,10 +32334,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!1 &765299264
 GameObject:
   m_ObjectHideFlags: 0
@@ -32446,10 +32638,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &772507377
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -32865,6 +33059,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38544,10 +38758,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &836496297
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -39464,10 +39680,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!1 &852576297
 GameObject:
   m_ObjectHideFlags: 0
@@ -39613,6 +39831,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 120074641}
 --- !u!4 &856060171
 Transform:
@@ -39976,6 +40195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 352625315}
   inverted: 0
+  blocked: 0
   target: {fileID: 265150652}
   moveDur: 0.3
   useSpeed: 0
@@ -40046,10 +40266,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!114 &874045199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40064,6 +40286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 874045198}
   inverted: 0
+  blocked: 0
   thing: {fileID: 570727250}
 --- !u!61 &874045200
 BoxCollider2D:
@@ -45581,6 +45804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 884543500}
   inverted: 1
+  blocked: 0
   thing: {fileID: 570727250}
 --- !u!58 &884543499
 CircleCollider2D:
@@ -45637,10 +45861,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 570727256}
   buttonTargets: []
+  timerRunning: 0
 --- !u!1 &886664096
 GameObject:
   m_ObjectHideFlags: 0
@@ -46592,6 +46818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 2082761960}
   moveDur: 1.1
   useSpeed: 0
@@ -47037,10 +47264,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!114 &917201437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47055,6 +47284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 917201436}
   inverted: 0
+  blocked: 0
   duration: 0.7
   magnitude: 0.5
   magDecay: -1
@@ -47072,6 +47302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1863362132}
   inverted: 0
+  blocked: 0
   target: {fileID: 1863362135}
   moveDur: 0.1
   useSpeed: 0
@@ -50870,8 +51101,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -50935,16 +51182,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.2360099
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.46226418
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -75187,8 +75442,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -75502,6 +75773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 836496296}
   inverted: 0
+  blocked: 0
   target: {fileID: 457060830}
   moveDur: 0.15
   useSpeed: 0
@@ -75798,6 +76070,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 428513898}
   moveDur: 0.8
   useSpeed: 0
@@ -76049,6 +76322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   target: {fileID: 1313304556}
   moveDur: 0.6
   useSpeed: 0
@@ -76905,8 +77179,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -82383,6 +82673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 0
+  blocked: 0
   thing: {fileID: 317337114}
 --- !u!4 &1244819520
 Transform:
@@ -82914,6 +83205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 432028485}
   inverted: 1
+  blocked: 0
   target: {fileID: 770473360}
   moveDur: 0.3
   useSpeed: 0
@@ -115072,6 +115364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 349124020}
   inverted: 0
+  blocked: 0
   target: {fileID: 130735395}
   moveDur: 1
   useSpeed: 1
@@ -115227,6 +115520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 850946837}
   inverted: 0
+  blocked: 0
   target: {fileID: 1411119859}
   moveDur: 0.5
   useSpeed: 0
@@ -115569,10 +115863,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1317436401
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -115707,6 +116003,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1317436400}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -120743,6 +121040,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   target: {fileID: 1547831372}
   moveDur: 0.45
   useSpeed: 0
@@ -121200,6 +121498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 432028485}
   inverted: 1
+  blocked: 0
   thing: {fileID: 1185595927}
 --- !u!1 &1359468232
 GameObject:
@@ -122335,6 +122634,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -156987,6 +157306,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -180
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -158403,10 +158742,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!1 &1472970262
 GameObject:
   m_ObjectHideFlags: 0
@@ -160158,6 +160499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1536644198}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -160180,10 +160522,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1536644199
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160318,6 +160662,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 1536644198}
   inverted: 0
+  blocked: 0
   thing: {fileID: 2086684861}
 --- !u!114 &1536644203
 MonoBehaviour:
@@ -160674,10 +161019,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1548699820
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160812,6 +161159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1548699819}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -163532,6 +163880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 1982690116}
   moveDur: 2.5
   useSpeed: 0
@@ -163577,6 +163926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -163594,6 +163944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1472206240}
   inverted: 0
+  blocked: 0
   target: {fileID: 724178395}
   moveDur: 2.5
   useSpeed: 0
@@ -163639,6 +163990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1472206240}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -164766,6 +165118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   thing: {fileID: 838827799}
 --- !u!212 &1674948974
 SpriteRenderer:
@@ -164856,6 +165209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   target: {fileID: 1686486744}
   moveDur: 1
   useSpeed: 1
@@ -165709,6 +166063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.5
   magDecay: -1
@@ -165731,10 +166086,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 1
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1697034237
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -171590,6 +171947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1697034236}
   inverted: 0
+  blocked: 0
   target: {fileID: 2032939536}
   moveDur: 0.25
   useSpeed: 0
@@ -172483,6 +172841,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -172962,6 +173340,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 917201436}
   inverted: 0
+  blocked: 0
   target: {fileID: 952103117}
   moveDur: 1
   useSpeed: 1
@@ -174047,6 +174426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 772507376}
   inverted: 0
+  blocked: 0
   target: {fileID: 654261202}
   moveDur: 1
   useSpeed: 0
@@ -175590,10 +175970,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1857070784
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175728,6 +176110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 1857070783}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -175848,10 +176231,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 0
   objectActivated: {fileID: 570727256}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &1863362133
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175986,6 +176371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 1863362132}
   inverted: 0
+  blocked: 0
   thing: {fileID: 511655005}
 --- !u!114 &1863362137
 MonoBehaviour:
@@ -176001,6 +176387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 1863362132}
   inverted: 0
+  blocked: 0
   thing: {fileID: 557901924}
 --- !u!1001 &1869949714
 PrefabInstance:
@@ -176284,6 +176671,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 349124020}
   inverted: 0
+  blocked: 0
   target: {fileID: 223094187}
   moveDur: 0.25
   useSpeed: 0
@@ -177561,8 +177949,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -190126,8 +190530,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
       propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.b
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2360099
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: m_Color.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532887525843968617, guid: a3c0bb402b3660b4faff692ed392afd3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -190424,10 +190844,12 @@ MonoBehaviour:
   autoSaveState: 1
   manualSaveState: {fileID: 0}
   onlyIfPlayerMoved: 0
+  blockableByTargets: 1
   boomerActivated: 0
   playerActivated: 1
   objectActivated: {fileID: 0}
   buttonTargets: []
+  timerRunning: 0
 --- !u!61 &2000360471
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -190562,6 +190984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonScreenshake
   button: {fileID: 2000360470}
   inverted: 0
+  blocked: 0
   duration: 0.5
   magnitude: 0.1
   magDecay: -1
@@ -476358,6 +476781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonMover
   button: {fileID: 1536644198}
   inverted: 0
+  blocked: 0
   target: {fileID: 1301690251}
   moveDur: 1
   useSpeed: 1
@@ -476403,6 +476827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSetActive
   button: {fileID: 762004507}
   inverted: 1
+  blocked: 0
   thing: {fileID: 2088749245}
 --- !u!1 &2088749245
 GameObject:
@@ -483421,7 +483846,7 @@ Transform:
   m_GameObject: {fileID: 7058681792111909043}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 90, y: -61.5, z: 0}
+  m_LocalPosition: {x: -8.5, y: -51.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -484085,6 +484510,7 @@ SceneRoots:
   - {fileID: 1790898729}
   - {fileID: 954160135}
   - {fileID: 2065238068}
+  - {fileID: 52373881}
   - {fileID: 2133801586}
   - {fileID: 1110619019}
   - {fileID: 1142910666}

@@ -28,4 +28,9 @@ public class SoloLeveling : MonoBehaviour
                 RoomManager.Instance?.InitializeStartRoom();
         };
     }
+
+    public void EvilLoadLevel (string sceneName)
+    {
+        LoadLevel(sceneName);
+    }
 }
